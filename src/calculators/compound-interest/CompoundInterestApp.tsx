@@ -12,6 +12,7 @@ import { GitCompare } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { SegmentedControl, SegmentedOption } from '../../components/ui/segmented-control';
 import { siteConfig } from '../../config/site';
+import { decodeCompoundQuery, encodeCompoundQuery, syncUrlQuery } from '../../utils/deepLink';
 
 const MOBILE_TAB_OPTIONS: SegmentedOption<'A' | 'B'>[] = [
   { id: 'A', label: '시나리오 A' },
@@ -62,6 +63,33 @@ export const CompoundInterestApp: React.FC<CompoundInterestAppProps> = () => {
     DEFAULT_SCENARIO_B
   );
 
+  const isInitialMount = React.useRef(true);
+
+  // 1. 초기 마운트 시 URL 쿼리 파라미터(딥링크)가 있으면 LocalStorage보다 최우선 복원
+  useEffect(() => {
+    document.title = siteConfig.getTitle('연복리 & 자산성장 계산기');
+
+    if (typeof window !== 'undefined' && window.location.search) {
+      const fromUrl = decodeCompoundQuery(window.location.search);
+      if (fromUrl) {
+        setScenarioA((prev) => ({
+          ...prev,
+          ...fromUrl,
+        }));
+      }
+    }
+  }, []);
+
+  // 2. 조건 변경 시 브라우저 주소창 URL 쿼리를 실시간 갱신 (기본값이면 정리)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    const isDefault = JSON.stringify(scenarioA) === JSON.stringify(DEFAULT_SCENARIO_A);
+    syncUrlQuery(isDefault ? '' : encodeCompoundQuery(scenarioA));
+  }, [scenarioA]);
+
   const [activeMobileTab, setActiveMobileTab] = useState<'A' | 'B'>('A');
 
   const resultA = useMemo(() => calculateCompoundInterest(scenarioA), [scenarioA]);
@@ -71,15 +99,12 @@ export const CompoundInterestApp: React.FC<CompoundInterestAppProps> = () => {
     [scenarioA, scenarioB]
   );
 
-  useEffect(() => {
-    document.title = siteConfig.getTitle('연복리 & 자산성장 계산기');
-  }, []);
-
   const handleReset = () => {
     setScenarioA(DEFAULT_SCENARIO_A);
     setScenarioB(DEFAULT_SCENARIO_B);
     setIsComparisonMode(false);
     setActiveMobileTab('A');
+    syncUrlQuery('');
   };
 
   const handleCopyAtoB = () => {

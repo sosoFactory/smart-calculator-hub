@@ -8,6 +8,7 @@ import { SalaryChartDashboard } from './components/SalaryChartDashboard';
 import { DeductionBreakdownTable } from './components/DeductionBreakdownTable';
 import { SalaryInfoCard } from './components/SalaryInfoCard';
 import { siteConfig } from '../../config/site';
+import { decodeSalaryQuery, encodeSalaryQuery, syncUrlQuery } from '../../utils/deepLink';
 
 const DEFAULT_SALARY_INPUT: SalaryInput = {
   paymentType: 'annual',
@@ -26,12 +27,36 @@ export const SalaryApp: React.FC = () => {
     DEFAULT_SALARY_INPUT
   );
 
+  const isInitialMount = React.useRef(true);
+
+  // 1. 초기 마운트 시 URL 쿼리 파라미터(딥링크)가 있으면 LocalStorage보다 최우선 복원
   useEffect(() => {
     document.title = siteConfig.getTitle('연봉 실수령액 계산기');
+
+    if (typeof window !== 'undefined' && window.location.search) {
+      const fromUrl = decodeSalaryQuery(window.location.search);
+      if (fromUrl) {
+        setInput((prev) => ({
+          ...prev,
+          ...fromUrl,
+        }));
+      }
+    }
   }, []);
+
+  // 2. 조건 변경 시 브라우저 주소창 URL 쿼리를 실시간 갱신 (기본값이면 정리)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    const isDefault = JSON.stringify(input) === JSON.stringify(DEFAULT_SALARY_INPUT);
+    syncUrlQuery(isDefault ? '' : encodeSalaryQuery(input));
+  }, [input]);
 
   const handleReset = () => {
     setInput(DEFAULT_SALARY_INPUT);
+    syncUrlQuery('');
   };
 
   const result = useMemo(() => {

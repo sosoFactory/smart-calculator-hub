@@ -9,6 +9,7 @@ import { LoanChartDashboard } from './components/LoanChartDashboard';
 import { LoanScheduleTable } from './components/LoanScheduleTable';
 import { LoanInfoCard } from './components/LoanInfoCard';
 import { siteConfig } from '../../config/site';
+import { decodeLoanQuery, encodeLoanQuery, syncUrlQuery } from '../../utils/deepLink';
 
 const DEFAULT_LOAN_INPUT: LoanInput = {
   loanAmount: 300_000_000, // 3억 원
@@ -28,13 +29,36 @@ const STORAGE_KEY = 'loan_calculator_input_v1';
 
 export const LoanApp: React.FC = () => {
   const [input, setInput] = useLocalStorage<LoanInput>(STORAGE_KEY, DEFAULT_LOAN_INPUT);
+  const isInitialMount = React.useRef(true);
 
+  // 1. 초기 마운트 시 URL 쿼리 파라미터(딥링크)가 있으면 LocalStorage보다 최우선 복원
   useEffect(() => {
     document.title = siteConfig.getTitle('대출이자 계산기');
+
+    if (typeof window !== 'undefined' && window.location.search) {
+      const fromUrl = decodeLoanQuery(window.location.search);
+      if (fromUrl) {
+        setInput((prev) => ({
+          ...prev,
+          ...fromUrl,
+        }));
+      }
+    }
   }, []);
+
+  // 2. 사용자가 조건 변경 시 브라우저 주소창 URL 쿼리를 실시간 갱신 (기본값이면 정리)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    const isDefault = JSON.stringify(input) === JSON.stringify(DEFAULT_LOAN_INPUT);
+    syncUrlQuery(isDefault ? '' : encodeLoanQuery(input));
+  }, [input]);
 
   const handleReset = () => {
     setInput(DEFAULT_LOAN_INPUT);
+    syncUrlQuery('');
   };
 
   // 선택한 상환 방식 결과

@@ -3,6 +3,24 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.24] - 2026-09-13
+ 
+### 금융 3대 계산기 URL 쿼리 기반 딥링크 및 상태 복원 시스템 구축 (Deep Link Query State Sync)
+- **금융 3대 계산기 URL 쿼리 파라미터 실시간 동기화 (`deepLink.ts`)**:
+  - `대출이자 계산기 (/loan)`: 원금(`amount`), 금리(`rate`), 대출기간(`years`), 거치기간(`grace`), 상환방식(`method`), 조기상환 조건 URL 동기화.
+  - `연복리 계산기 (/compound)`: 초기원금(`principal`), 월적립액(`contribution`), 적립주기(`contribFreq`), 투자기간(`years`), 수익률(`rate`), 복리주기(`compFreq`), 과세유형(`tax`) URL 동기화.
+  - `연봉 실수령액 계산기 (/salary)`: 세전금액(`gross`), 지급형태(`type`), 퇴직금(`severance`), 비과세식대(`nonTax`), 부양가족(`family`), 자녀수(`children`) URL 동기화.
+- **순수 브라우저 URL 동기화 및 딥링크 복원 흐름**:
+  - 불필요한 공유 UI 버튼을 배제하고, 입력값 변경 시 `window.history.replaceState`를 통해 주소창 URL을 조용히 실시간 갱신 (기본값과 동일할 경우 깨끗한 경로 유지).
+  - 공유받은 링크로 접속 시 `LocalStorage` 값보다 **URL 쿼리 파라미터가 최우선 적용**되어 폼과 계산 결과가 즉시 로드.
+- **적용 대상 원칙 준수**:
+  - `BMI 계산기`: 민감 개인 신체 정보 보호를 위해 URL 파라미터화 배제 (기기 `LocalStorage` 전용 안전 보관 유지).
+  - `단위 변환기`, `환율 계산기`: 1회성 유틸리티 및 실시간 환율 변동 보호를 위해 제외.
+- **품질 검증 및 단위 테스트**:
+  - `deepLink.test.ts` (6개), `deepLinkIntegration.test.tsx` (3개) 신규 테스트 추가.
+  - 총 25개 테스트 스위트, 121개 단위 테스트 100% 통과 (Pass).
+  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `PRD.md`, `TODO.md` 버전 `v1.9.24` 동기화.
+
 ## [1.9.23] - 2026-09-13
  
 ### BMI 계산기 디자인 시스템 통일, 스펙트럼 마커 불일치 결함 수정 및 폼 최적화 (BMI Polish & Form UX)
