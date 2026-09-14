@@ -54,4 +54,30 @@ describe('BmiApp Component', () => {
     // 기본값 65kg 복원 -> 정상
     expect(screen.getAllByText('정상').length).toBeGreaterThanOrEqual(1);
   });
+
+  it('adjusts height and weight by 1 unit when -1 and +1 stepper buttons are clicked', () => {
+    render(<BmiApp />);
+
+    const heightInput = screen.getByLabelText('신장 (cm)') as HTMLInputElement;
+    const weightInput = screen.getByLabelText('체중 (kg)') as HTMLInputElement;
+
+    expect(heightInput.value).toBe('170');
+    expect(weightInput.value).toBe('65');
+
+    // 신장 1cm 증가 및 감소
+    const heightPlus = screen.getByLabelText('신장 1cm 증가');
+    const heightMinus = screen.getByLabelText('신장 1cm 감소');
+    fireEvent.click(heightPlus);
+    expect(heightInput.value).toBe('171');
+    fireEvent.click(heightMinus);
+    expect(heightInput.value).toBe('170');
+
+    // 체중 1kg 증가 및 감소
+    const weightPlus = screen.getByLabelText('체중 1kg 증가');
+    const weightMinus = screen.getByLabelText('체중 1kg 감소');
+    fireEvent.click(weightPlus);
+    expect(weightInput.value).toBe('66');
+    fireEvent.click(weightMinus);
+    expect(weightInput.value).toBe('65');
+  });
 });

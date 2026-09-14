@@ -98,18 +98,44 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
         <label htmlFor="bmi-height" className="block text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer mb-1.5">
           신장 (cm)
         </label>
-        <NumericInput
-          id="bmi-height"
-          aria-label="신장 (cm)"
-          type="number"
-          min="100"
-          max="250"
-          value={heightInput.value}
-          onChange={heightInput.onChange}
-          onBlur={heightInput.onBlur}
-          placeholder="170"
-          suffix="cm"
-        />
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-11 w-11 shrink-0 rounded-xl border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm select-none"
+            onClick={() => updateField('height', Math.max(100, input.height - 1))}
+            disabled={input.height <= 100}
+            aria-label="신장 1cm 감소"
+          >
+            -1
+          </Button>
+          <div className="flex-1 min-w-0">
+            <NumericInput
+              id="bmi-height"
+              aria-label="신장 (cm)"
+              type="number"
+              min="100"
+              max="250"
+              value={heightInput.value}
+              onChange={heightInput.onChange}
+              onBlur={heightInput.onBlur}
+              placeholder="170"
+              suffix="cm"
+            />
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-11 w-11 shrink-0 rounded-xl border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm select-none"
+            onClick={() => updateField('height', Math.min(250, input.height + 1))}
+            disabled={input.height >= 250}
+            aria-label="신장 1cm 증가"
+          >
+            +1
+          </Button>
+        </div>
         <Slider
           id="bmi-height-slider"
           min={100}
@@ -138,27 +164,53 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
         <label htmlFor="bmi-weight" className="block text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer mb-1.5">
           체중 (kg)
         </label>
-        <NumericInput
-          id="bmi-weight"
-          aria-label="체중 (kg)"
-          type="number"
-          step="1"
-          min="30"
-          max="200"
-          value={weightInput.value}
-          onChange={weightInput.onChange}
-          onBlur={weightInput.onBlur}
-          placeholder="65"
-          suffix="kg"
-          allowDecimals
-        />
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-11 w-11 shrink-0 rounded-xl border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm select-none"
+            onClick={() => updateField('weight', Math.max(30, Math.round(input.weight - 1)))}
+            disabled={input.weight <= 30}
+            aria-label="체중 1kg 감소"
+          >
+            -1
+          </Button>
+          <div className="flex-1 min-w-0">
+            <NumericInput
+              id="bmi-weight"
+              aria-label="체중 (kg)"
+              type="number"
+              step="1"
+              min="30"
+              max="200"
+              value={weightInput.value}
+              onChange={weightInput.onChange}
+              onBlur={weightInput.onBlur}
+              placeholder="65"
+              suffix="kg"
+              allowDecimals
+            />
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-11 w-11 shrink-0 rounded-xl border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm select-none"
+            onClick={() => updateField('weight', Math.min(200, Math.round(input.weight + 1)))}
+            disabled={input.weight >= 200}
+            aria-label="체중 1kg 증가"
+          >
+            +1
+          </Button>
+        </div>
         <Slider
           id="bmi-weight-slider"
           min={30}
           max={150}
-          step={0.5}
+          step={1}
           value={[input.weight]}
-          onValueChange={([val]) => updateField('weight', Number(val.toFixed(1)))}
+          onValueChange={([val]) => updateField('weight', Math.round(val))}
           className="my-3"
           aria-label="체중 슬라이더"
         />
