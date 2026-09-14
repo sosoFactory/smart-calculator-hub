@@ -3,6 +3,19 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.25] - 2026-09-14
+ 
+### 환율 계산기 원화(KRW) 선택 시 기준 환율 표기 개선 (Exchange Rate Display Polish)
+- **우상단 기준 환율 0달러/0엔 표기 방지 및 국내 금융 관행 표준 역산 표기 적용 (`getExchangeRateText`)**:
+  - 원화(`KRW`)가 입력 통화로 선택되었을 때 소수점 2자리 반올림으로 인해 `1 KRW = 0.00 USD` (0달러) 또는 `1 KRW = 0 JPY` (0엔)으로 절사되던 결함을 해결.
+  - 한국 금융 환경(네이버, 시중은행, 포털)의 표준 관행에 맞추어 외화 1단위당 원화 가치로 역산 표기 (`1 USD = 1,350 KRW`, `1 EUR = 1,470 KRW` 등).
+  - 일본 엔화(`JPY`)의 경우 국내 관행인 100엔 기준으로 자동 환산 표기 (`100 JPY = 900 KRW`).
+  - 엔화가 입력 통화인 경우에도 100엔 기준 상대 통화 환율 표기 지원.
+- **품질 검증 및 테스트**:
+  - `exchangeCalculator.test.ts`에 `getExchangeRateText` 스마트 환율 표기 관련 6개 단위 테스트 추가.
+  - 총 25개 테스트 스위트, 127개 단위 테스트 100% 통과 (Pass).
+  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `PRD.md` 버전 `v1.9.25` 동기화.
+
 ## [1.9.24] - 2026-09-13
  
 ### 금융 3대 계산기 URL 쿼리 기반 딥링크 및 상태 복원 시스템 구축 (Deep Link Query State Sync)

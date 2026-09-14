@@ -8,6 +8,7 @@ import {
 import {
   CURRENCIES_DATA,
   formatCurrencyAmount,
+  getExchangeRateText,
 } from '../../../utils/exchangeCalculator';
 import { CurrencySelect } from './CurrencySelect';
 import { ArrowLeftRight, Check, Copy, TrendingUp, Calendar } from 'lucide-react';
@@ -118,7 +119,7 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
             </div>
             <div className="flex items-center gap-1 text-[11px] sm:text-xs truncate">
               <TrendingUp className="w-3.5 h-3.5 text-[#15171a] dark:text-[#d1ff19] shrink-0" />
-              <span className="truncate">1 {fromCode} = {formatCurrencyAmount(appliedRate, toCode)} {toCode}</span>
+              <span className="truncate">{getExchangeRateText(fromCode, toCode, appliedRate)}</span>
             </div>
           </div>
         </div>

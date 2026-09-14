@@ -231,6 +231,67 @@ export function formatCurrencyAmount(amount: number, code: CurrencyCode): string
 }
 
 /**
+ * 우상단 기준 환율 안내 텍스트 생성 (국내 금융 관행 반영)
+ * - 원화(KRW) -> 외화인 경우: 소수점 절사로 인한 0달러/0엔 표시를 방지하고,
+ *   한국인에게 직관적인 외화 1단위(엔화는 100엔)당 원화 가치로 역산 표기
+ * - 외화가 입력인 경우: 외화 1단위(엔화는 100엔)당 상대 통화 가치 표기
+ */
+export function getExchangeRateText(
+  fromCode: CurrencyCode,
+  toCode: CurrencyCode,
+  appliedRate: number
+): string {
+  if (fromCode === toCode) {
+    return `1 ${fromCode} = 1 ${toCode}`;
+  }
+
+  // 1. 입력이 원화(KRW)이고 대상이 외화인 경우 -> 외화 기준 역산 표기
+  if (fromCode === 'KRW') {
+    if (appliedRate <= 0) {
+      return toCode === 'JPY' ? '100 JPY = - KRW' : `1 ${toCode} = - KRW`;
+    }
+    if (toCode === 'JPY') {
+      const rateFor100 = 100 / appliedRate;
+      const formatted = rateFor100.toLocaleString('ko-KR', {
+        minimumFractionDigits: rateFor100 % 1 === 0 ? 0 : 2,
+        maximumFractionDigits: 2,
+      });
+      return `100 JPY = ${formatted} KRW`;
+    }
+    const rateFor1 = 1 / appliedRate;
+    const formatted = rateFor1.toLocaleString('ko-KR', {
+      minimumFractionDigits: rateFor1 % 1 === 0 ? 0 : 2,
+      maximumFractionDigits: 2,
+    });
+    return `1 ${toCode} = ${formatted} KRW`;
+  }
+
+  // 2. 입력이 엔화(JPY)인 경우 -> 100엔 기준 표기
+  if (fromCode === 'JPY') {
+    const rateFor100 = appliedRate * 100;
+    const formatted =
+      toCode === 'KRW'
+        ? rateFor100.toLocaleString('ko-KR', {
+            minimumFractionDigits: rateFor100 % 1 === 0 ? 0 : 2,
+            maximumFractionDigits: 2,
+          })
+        : formatCurrencyAmount(rateFor100, toCode);
+    return `100 JPY = ${formatted} ${toCode}`;
+  }
+
+  // 3. 그 외 외화 (USD, EUR, CNY, GBP 등)
+  const formatted =
+    toCode === 'KRW'
+      ? appliedRate.toLocaleString('ko-KR', {
+          minimumFractionDigits: appliedRate % 1 === 0 ? 0 : 2,
+          maximumFractionDigits: 2,
+        })
+      : formatCurrencyAmount(appliedRate, toCode);
+
+  return `1 ${fromCode} = ${formatted} ${toCode}`;
+}
+
+/**
  * 공개 환율 API(open.er-api.com)를 통한 최신 고시 환율 비동기 동기화
  */
 export async function fetchLiveExchangeRates(): Promise<ExchangeRateSnapshot | null> {
