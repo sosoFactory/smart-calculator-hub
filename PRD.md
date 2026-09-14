@@ -1,6 +1,6 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.9.27  
+> **버전**: v1.9.28  
 > **최종 갱신일**: 2026-09-14  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
@@ -24,8 +24,9 @@
    - 3.2 [생활/측정] 단위 변환기 (`UnitConverterApp` - 구현 완료)
    - 3.3 [통화/글로벌] 환율 계산기 (`ExchangeApp` - 구현 완료)
    - 3.4 [금융/투자] 대출 이자 및 상환방식 비교 계산기 (`LoanApp` - 구현 완료)
-   - 3.5 [금융/급여] 연봉 실수령액 계산기 (`SalaryApp` - 신규 기획)
-   - 3.6 향후 확장 예정 모듈 (Roadmap)
+   - 3.5 [금융/급여] 연봉 실수령액 계산기 (`SalaryApp` - 구현 완료)
+   - 3.6 [생활/건강] BMI & 비만도 계산기 (`BmiApp` - 구현 완료)
+   - 3.7 향후 확장 예정 모듈 (Roadmap)
 4. [데이터 모델 (Data Models)](#4-데이터-모델-data-models)
    - 4.0 사이트 전역 설정 모델 (`src/config/site.ts`)
    - 4.1 글로벌 네비게이션 모델 (`src/types/navigation.ts`)
@@ -34,6 +35,7 @@
    - 4.4 환율 계산 데이터 모델 (`src/types/exchange.ts`)
    - 4.5 대출 이자 계산 데이터 모델 (`src/types/loan.ts`)
    - 4.6 연봉 및 급여 계산 데이터 모델 (`src/types/salary.ts`)
+   - 4.7 BMI 및 신체 계측 데이터 모델 (`src/types/bmi.ts`)
 5. [기술 스택 및 아키텍처](#5-기술-스택-및-아키텍처)
 6. [비기능적 요구사항 및 품질 검증 기준](#6-비기능적-요구사항-및-품질-검증-기준)
 7. [검색엔진 최적화 (SEO) 전략 및 웹 분석 명세](#7-검색엔진-최적화-seo-전략-및-웹-분석-명세)
@@ -142,6 +144,8 @@ src/
 │       ├── components/              # SalaryForm, SalarySummaryCards, DeductionBreakdownTable 등
 │       └── SalaryApp.tsx            # 연봉 계산기 메인 뷰
 ├── components/
+│   ├── common/                      # 공통 전역 유틸리티 컴포넌트
+│   │   └── FloatingShareButton.tsx  # 전 페이지 일관 우하단 플로팅 공유 버튼(FAB)
 │   ├── ui/                          # shadcn/ui 기반 표준 토큰 컴포넌트
 │   │   ├── badge.tsx                # Badge (메타 정보 및 상태 뱃지)
 │   │   ├── button.tsx               # Button (통일된 호버 및 상태 인터랙션)
@@ -165,6 +169,7 @@ src/
 ├── context/
 │   └── ThemeContext.tsx             # 테마(light/dark/system) 관리 Context
 ├── types/
+│   ├── bmi.ts                       # BMI 및 신체 계측 타입
 │   ├── calculator.ts                # 연복리 계산 타입
 │   ├── exchange.ts                  # 환율 계산 타입
 │   ├── loan.ts                      # 대출 이자 계산 타입
@@ -172,7 +177,9 @@ src/
 │   ├── salary.ts                    # 연봉 및 급여 계산 타입
 │   └── unit.ts                      # 단위 변환 타입
 └── utils/
+    ├── bmiCalculator.ts             # BMI 및 KSSO 기준 판정 로직
     ├── calculator.ts                # 복리 연산 비즈니스 로직
+    ├── deepLink.ts                  # URL 쿼리 파라미터 딥링크 인코딩/디코딩 로직
     ├── exchangeCalculator.ts        # 환율 및 우대율 연산 로직
     ├── formatters.ts                # 통화, 한글 단위, 백분율 포매터
     ├── loanCalculator.ts            # 대출 3대 상환방식 및 중도상환 수학 로직
