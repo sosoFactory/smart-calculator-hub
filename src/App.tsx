@@ -10,6 +10,7 @@ import { Toaster } from './components/ui/toaster';
 import { PWAUpdateToast } from './components/pwa/PWAUpdateToast';
 import { PWAInstallModal } from './components/pwa/PWAInstallModal';
 import { usePWAInstall } from './hooks/usePWAInstall';
+import { FloatingShareButton } from './components/common/FloatingShareButton';
 import { Analytics } from '@vercel/analytics/react';
 
 const HomeApp = lazy(() =>
@@ -132,6 +133,7 @@ export const App: React.FC = () => {
         onInstall={install}
         isInstallable={isInstallable}
       />
+      <FloatingShareButton />
       <Toaster />
       <Analytics />
     </div>

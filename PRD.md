@@ -1,6 +1,6 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.9.26  
+> **버전**: v1.9.27  
 > **최종 갱신일**: 2026-09-14  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
@@ -17,6 +17,8 @@
    - 2.4 모듈형 컴포넌트 아키텍처 (디렉터리 구조)
    - 2.5 전역 다크 모드 지원 및 전환 인터랙션
    - 2.6 스마트 계산기 허브 메인 홈 화면 명세 (Home Dashboard)
+   - 2.7 금융 시나리오 딥링크(Deep Link) 및 상태 공유 시스템
+   - 2.8 전역 플로팅 공유 버튼 (Floating Share Button)
 3. [계산기 모듈별 상세 기능 명세](#3-계산기-모듈별-상세-기능-명세)
    - 3.1 [금융/투자] 연복리 & 자산 성장 계산기 (`CompoundInterestApp` - 구현 완료)
    - 3.2 [생활/측정] 단위 변환기 (`UnitConverterApp` - 구현 완료)
@@ -244,6 +246,27 @@ src/
      - `대출 (/loan)`: `amount`, `rate`, `years`, `grace`, `method`, `early`, `earlyMonth`, `earlyAmount`, `earlyFee`
      - `복리 (/compound)`: `principal`, `contribution`, `contribFreq`, `years`, `rate`, `compFreq`, `tax`, `taxRate`
      - `연봉 (/salary)`: `gross`, `type`, `severance`, `nonTax`, `family`, `children`
+
+### 2.8 전역 플로팅 공유 버튼 (Floating Share Button)
+- **도입 목적**:
+  - 모바일 사용자를 최우선으로 고려하여, 상단 고정 헤더의 공간 부족 문제를 해소하고 **모든 페이지에서 완벽하게 동일한 위치**에서 1터치로 현재 계산기 및 계산 결과를 공유할 수 있는 전역 플로팅 액션 버튼(FAB) 구축.
+- **핵심 UI/UX 명세**:
+  1. **배치 위치 (Placement & Thumb Zone)**:
+     - 모바일 화면 우측 하단(`fixed bottom-6 right-4 sm:bottom-8 sm:right-8 z-40`)에 항상 떠 있는 플로팅 버튼으로 배치.
+     - 한 손 조작 시 모바일 엄지손가락 조작 반경(Thumb Zone)에 위치하여 접근성 극대화.
+     - 메인 홈 대시보드 및 모든 계산기 페이지에서 일관되게 동일한 위치에 상시 노출.
+  2. **디자인 및 시각 피드백 (Ghost Design System)**:
+     - 크기: 지름 48px 터치 친화적 원형 버튼 (`h-12 w-12 rounded-full`).
+     - 서피스: 다크 흑연(`bg-[#15171a] dark:bg-slate-800`), 테두리(`border border-slate-700/60 dark:border-slate-700`), 아이콘(`Share2`, `text-white hover:text-[#d1ff19]`), 그림자(`shadow-lg shadow-black/15 dark:shadow-black/40`).
+     - 클릭 시 복사 완료 애니메이션 피드백(`Check` 아이콘으로 2초간 일시 전환).
+     - 데스크톱 호버 시 "현재 페이지 링크 공유" 툴팁 노출.
+  3. **공유 및 클립보드 복사 로직**:
+     - **Web Share API (`navigator.share`) 지원 환경 (모바일 및 데스크톱 브라우저)**:
+       - 브라우저 및 OS 순정 공유 창(모바일: 카카오톡/문자/에어드랍 등, 데스크톱: 링크 복사 및 시스템 공유 앱) 호출.
+       - 제목(`title`), 페이지 설명(`text`), 현재 주소창 URL(`url`)을 함께 전달.
+     - **Web Share API 미지원 환경**:
+       - 현재 URL 클립보드 자동 복사 (`navigator.clipboard.writeText`).
+       - shadcn/ui Toast 배너로 *"공유 링크가 복사되었습니다"* 안내 팝업.
 
 ---
 

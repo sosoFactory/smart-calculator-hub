@@ -1,9 +1,16 @@
-﻿# Agent Execution Protocol
+# Agent Execution Protocol
 
 All AI coding assistants must follow this protocol. Read the applicable rule file before beginning work in that domain.
 
-## 1. Core Rules
+## 1. Absolute Core Rules (CRITICAL - HIGHEST PRIORITY)
 
+- **NEVER MODIFY CODE OR EXECUTE WRITE TOOLS WITHOUT EXPLICIT USER INSTRUCTION**:
+  - Only edit files, create files, or run modifying commands when the user explicitly instructs you to do so (e.g., "작업해", "수정해줘", "진행해", "fix this", "implement this").
+  - When the user asks a question, expresses doubt, or reports an observation/issue (e.g., "~왜 이래?", "~뜨는데?", "why does this happen?"), **PROVIDE ONLY AN EXPLANATION AND TEXT ANSWER**. Never touch the code or make tool calls to edit files.
+- **EXPLAIN AND PROPOSE FIRST, AWAIT CONFIRMATION**:
+  - Clearly explain the cause and the proposed solution first. Do NOT start implementing until the user explicitly approves.
+- **NEVER PUSH AUTOMATICALLY UPON COMMIT**:
+  - Commit locally only after explicit approval. Never run `git push` unless the user explicitly requests a push.
 - Analyze the request and relevant code before implementing feature work, spec changes, or bug fixes.
 - Update ./PRD.md before changing code when the request affects the product or behavior.
 - Ask the user when the PRD impact is unclear, and wait for explicit approval before implementation.

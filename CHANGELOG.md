@@ -3,6 +3,22 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.27] - 2026-09-14
+ 
+### 전 페이지 일관 모바일 최우선 전역 플로팅 공유 버튼 구축 (Floating Share Button)
+- **전 페이지 일관 우하단 플로팅 액션 버튼(FAB) 배치 (`FloatingShareButton.tsx`)**:
+  - 모바일 뷰포트 상단 헤더 공간 협소 문제를 해소하고, 메인 홈(`/`), 대출(`/loan`), 연봉(`/salary`), 복리(`/compound`), BMI(`/bmi`), 환율(`/exchange`), 단위(`/unit`) 등 **모든 페이지에서 100% 동일한 위치(우측 하단 엄지손가락 영역)**에서 공유 기능 지원.
+  - Ghost 디자인 시스템 적용: 지름 48px 터치 친화적 원형(`w-12 h-12 rounded-full`), 다크 흑연 서피스(`bg-[#15171a] dark:bg-slate-800`), 테두리(`border border-slate-700/60 dark:border-slate-700`), `Share2` 아이콘.
+  - 클릭 시 2초간 `Check` 아이콘 전환 피드백 및 데스크톱 호버 시 툴팁 제공.
+- **Web Share API 및 클립보드 폴백 지원**:
+  - Web Share API 지원 환경(모바일 스마트폰 및 데스크톱 브라우저): OS 및 브라우저 순정 공유 창(카카오톡, 메시지, 에어드랍, 앱 공유 등) 호출.
+  - 미지원 브라우저: 클립보드 URL 자동 복사 및 shadcn/ui Toast 배너(*"공유 링크가 복사되었습니다"*) 안내 팝업.
+- **가이드 및 프로토콜 영문화 동기화 (`GEMINI.md`, `rules/git-workflow.md`)**:
+  - 사용자 명시적 지시 시에만 작업 진행, 질문 시 답변만 제공 원칙 및 커밋 시 자동 푸시 금지 원칙 영문화 반영.
+- **품질 검증 및 테스트**:
+  - `FloatingShareButton.test.tsx` 신규 단위 테스트(3개) 작성 및 전체 26개 테스트 스위트, 131개 단위 테스트 100% 통과 (Pass).
+  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `PRD.md` 버전 `v1.9.27` 동기화.
+
 ## [1.9.26] - 2026-09-14
  
 ### BMI 계산기 증감 단위 1 통일 및 미세 조절 버튼 추가 (BMI Stepper & Step Unification)
