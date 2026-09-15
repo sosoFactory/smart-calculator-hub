@@ -3,6 +3,17 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.29] - 2026-09-15
+ 
+### 연복리 연도별 상세 흐름표 모바일 CSV 다운로드 버튼 반응형 최적화 (Mobile CSV Button Polish)
+- **모바일 뷰포트(`< sm`) 다운로드 버튼 컴팩트화 (`DataTable.tsx`)**:
+  - 모바일(360~390px) 폭에서 긴 타이틀과 `CSV 다운로드` 텍스트 버튼이 한 줄에서 충돌하여 우측 버튼이 화면 밖으로 잘리던 결함 해결.
+  - 모바일 화면에서는 아이콘 버튼(`h-8 w-8`) 및 접근성 툴팁/스크린리더(`aria-label="CSV 다운로드"`)로 노출하고, 태블릿/데스크톱(`>= sm`)에서는 텍스트 병기 유지.
+  - 아코디언 헤더 패딩(`px-4 sm:px-5 py-3.5 sm:py-4`) 및 타이틀 영역 가로 축약(`truncate`)으로 모바일 전 기종에서 버튼 영역 완벽 보장.
+- **문서 및 버전 동기화**:
+  - `PRD.md` 섹션 3.1 복리 흐름표 명세 최신화.
+  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `README.md` 버전 `1.9.29` 동기화.
+
 ## [1.9.28] - 2026-09-14
  
 ### 프로젝트 전반 문서 정합성 점검 및 최신화 정리 (Documentation Consistency & Polish)

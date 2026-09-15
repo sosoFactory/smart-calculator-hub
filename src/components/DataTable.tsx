@@ -68,38 +68,44 @@ export const DataTable: React.FC<DataTableProps> = ({
   return (
     <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 overflow-hidden transition-colors">
       {/* 아코디언 헤더 */}
-      <div className="px-5 py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors select-none">
+      <div className="px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors select-none">
         <Button
           type="button"
           variant="ghost"
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
           aria-controls="data-table-content"
-          className="flex-1 h-auto justify-start p-0 text-left font-normal hover:bg-transparent dark:hover:bg-transparent"
+          className="flex-1 min-w-0 h-auto justify-start p-0 text-left font-normal hover:bg-transparent dark:hover:bg-transparent mr-2"
         >
-          <span className="flex items-center gap-2.5">
+          <span className="flex items-center gap-2 sm:gap-2.5 min-w-0">
             <TableIcon className="w-4 h-4 text-[#112220] dark:text-slate-100 shrink-0" />
-            <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100">
+            <h3 className="text-xs sm:text-base font-bold text-[#112220] dark:text-slate-100 truncate">
               연도별 상세 자산 흐름표
             </h3>
-            <span className="text-xs text-[#94a3b8] dark:text-slate-400 font-medium">
-              ({result.breakdown.length}개년 데이터)
+            <span className="text-[11px] sm:text-xs text-[#94a3b8] dark:text-slate-400 font-medium shrink-0">
+              ({result.breakdown.length}개년)
             </span>
           </span>
         </Button>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {isOpen && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={downloadCSV}
-              className="h-8 px-2.5 gap-1.5 text-xs text-[#112220] dark:text-slate-100 border-[#e5e7eb] dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg shrink-0"
-            >
-              <Download className="w-3.5 h-3.5 shrink-0" />
-              <span>CSV 다운로드</span>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={downloadCSV}
+                  aria-label="CSV 다운로드"
+                  className="h-8 w-8 sm:w-auto px-0 sm:px-2.5 gap-1.5 text-xs text-[#112220] dark:text-slate-100 border-[#e5e7eb] dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg shrink-0 flex items-center justify-center"
+                >
+                  <Download className="w-3.5 h-3.5 shrink-0" />
+                  <span className="hidden sm:inline">CSV 다운로드</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="sm:hidden">CSV 다운로드</TooltipContent>
+            </Tooltip>
           )}
 
           <Tooltip>
