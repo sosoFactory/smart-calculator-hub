@@ -3,6 +3,22 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.30] - 2026-09-15
+ 
+### 메인 화면 최하단 모바일 접속 QR 코드 및 독립 URL 복사 카드 구축 (Mobile Access QR Card)
+- **공식 URL 고해상도 QR 에셋 생성 및 PWA 오프라인 캐시 등록 (`site-qr.svg`, `vite.config.ts`)**:
+  - 공식 도메인(`https://soso-calculator.vercel.app`) 연결 벡터 QR 코드 에셋 생성.
+  - `vite.config.ts`의 `includeAssets`에 등록하여 100% 오프라인 PWA 환경에서도 즉시 로드 보장.
+- **메인 홈 화면 하단 모바일 접속 QR 카드 배치 (`HomeApp.tsx`)**:
+  - 데스크톱 사용자의 스마트폰 카메라 스캔 및 모바일 사용자의 대면 공유(지인/가족에게 내 폰의 QR을 찍게 하는 시나리오) 지원.
+  - 다크 모드에서도 카메라 스캔 대비가 완벽하도록 화이트 라운드 백그라운드(`bg-white rounded-xl border p-2`) 적용.
+  - QR 자체 터치 유추의 어려움을 해소하기 위해 독립적인 `[URL 복사]` 액션 버튼 배치 (클릭 시 클립보드 복사 + 2초간 `Check` 피드백 + 토스트 알림).
+  - 모바일에서는 세로 정렬, 태블릿/데스크톱에서는 가로 플렉스(`flex-col sm:flex-row`)로 자연스럽게 반응.
+- **품질 검증 및 테스트**:
+  - `HomeApp.test.tsx`에 QR 코드 렌더링 및 `URL 복사` 버튼 클립보드 복사 인터랙션 검증 단위 테스트 추가.
+  - 전체 26개 테스트 스위트, 132개 단위 테스트 100% 통과 (Pass).
+  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `PRD.md`, `README.md` 버전 `v1.9.30` 동기화.
+
 ## [1.9.29] - 2026-09-15
  
 ### 연복리 연도별 상세 흐름표 모바일 CSV 다운로드 버튼 반응형 최적화 (Mobile CSV Button Polish)

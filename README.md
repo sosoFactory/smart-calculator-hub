@@ -11,13 +11,13 @@
 
   <p>
     <a href="https://soso-calculator.vercel.app"><img src="https://img.shields.io/badge/Web_Beta-soso--calculator.vercel.app-d1ff19?style=flat-square&logo=vercel&logoColor=black&labelColor=15171a" alt="웹 베타 서비스" /></a>
-    <img src="https://img.shields.io/badge/version-1.9.29-d1ff19?style=flat-square&labelColor=15171a" alt="Version" />
+    <img src="https://img.shields.io/badge/version-1.9.30-d1ff19?style=flat-square&labelColor=15171a" alt="Version" />
     <img src="https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=black&labelColor=15171a" alt="React 18" />
     <img src="https://img.shields.io/badge/TypeScript-5.5-3178c6?style=flat-square&logo=typescript&logoColor=white&labelColor=15171a" alt="TypeScript" />
     <img src="https://img.shields.io/badge/Vite-5.4-646cff?style=flat-square&logo=vite&logoColor=white&labelColor=15171a" alt="Vite" />
     <img src="https://img.shields.io/badge/TailwindCSS-3.4-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white&labelColor=15171a" alt="Tailwind CSS" />
     <img src="https://img.shields.io/badge/PWA-Ready-10b981?style=flat-square&logo=pwa&logoColor=white&labelColor=15171a" alt="PWA" />
-    <img src="https://img.shields.io/badge/Tests-131%20Passed-success?style=flat-square&logo=vitest&logoColor=white&labelColor=15171a" alt="Tests" />
+    <img src="https://img.shields.io/badge/Tests-132%20Passed-success?style=flat-square&logo=vitest&logoColor=white&labelColor=15171a" alt="Tests" />
   </p>
 
 </div>
@@ -74,4 +74,4 @@ Font        Pretendard Variable (전역 단일 서체)
  
 - **제작**: © [sosoFactory](https://github.com/sosoFactory)
 - **라이선스**: MIT License
-- **버전**: `v1.9.29`
+- **버전**: `v1.9.30`

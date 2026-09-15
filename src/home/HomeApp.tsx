@@ -16,13 +16,48 @@ import {
   Wallet,
   ArrowRight,
   Activity,
+  Copy,
+  Check,
+  QrCode,
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
+import { useToast } from '../hooks/use-toast';
+import { siteConfig } from '../config/site';
 
 export const HomeApp: React.FC = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const handleCopyUrl = async () => {
+    const url = siteConfig.url;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      setCopied(true);
+      toast({
+        title: '사이트 주소가 복사되었습니다',
+        description: '원하는 곳에 붙여넣어 스마트 계산기를 공유해보세요.',
+      });
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast({
+        title: '주소 복사 실패',
+        description: '브라우저 주소창의 URL을 직접 복사해주세요.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   // 아이콘 렌더링 헬퍼
   const renderIcon = (id: string) => {
@@ -157,6 +192,61 @@ export const HomeApp: React.FC = () => {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* 3. 모바일 접속 QR 코드 및 URL 복사 카드 (PRD 2.6 명세 준수) */}
+      <section className="pt-2 sm:pt-4">
+        <div className="bg-white dark:bg-[#15171a] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-5 transition-colors shadow-sm">
+          {/* QR 코드 이미지 (고대비 화이트 라운드 패딩 백그라운드) */}
+          <div className="shrink-0 p-2 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center justify-center">
+            <img
+              src="/site-qr.svg"
+              alt="스마트 계산기 허브 모바일 접속 QR 코드"
+              className="w-20 h-20 sm:w-[88px] sm:h-[88px] object-contain"
+              loading="lazy"
+              width={88}
+              height={88}
+            />
+          </div>
+
+          {/* 안내 텍스트 및 액션 버튼 */}
+          <div className="flex-1 min-w-0 text-center sm:text-left space-y-2.5">
+            <div>
+              <div className="flex items-center justify-center sm:justify-start gap-1.5 mb-1">
+                <QrCode className="w-4 h-4 text-[#112220] dark:text-[#d1ff19]" />
+                <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100 tracking-tight">
+                  모바일로 바로 열기
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+                스마트폰 카메라로 QR 코드를 스캔하여 바로 접속하거나, 홈 화면에 추가하여 앱처럼 사용해보세요.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-center sm:justify-start gap-2 pt-0.5">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleCopyUrl}
+                aria-label="사이트 주소 복사"
+                className="h-8 px-3 gap-1.5 text-xs font-semibold rounded-lg bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-[#112220] dark:text-slate-100 transition-colors"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-500" />
+                    <span>복사 완료!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>URL 복사</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
     </div>

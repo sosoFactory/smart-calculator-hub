@@ -73,4 +73,25 @@ describe('HomeApp Compact Dashboard Tests', () => {
 
     expect(mockNavigate).toHaveBeenCalledWith('/loan');
   });
+
+  it('하단에 모바일 접속 QR 코드와 URL 복사 버튼이 올바르게 렌더링되고 복사 동작해야 한다', async () => {
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, {
+      clipboard: {
+        writeText: writeTextMock,
+      },
+    });
+
+    renderHomeApp();
+
+    expect(screen.getByAltText('스마트 계산기 허브 모바일 접속 QR 코드')).toBeInTheDocument();
+    expect(screen.getByText('모바일로 바로 열기')).toBeInTheDocument();
+
+    const copyBtn = screen.getByRole('button', { name: '사이트 주소 복사' });
+    expect(copyBtn).toBeInTheDocument();
+
+    fireEvent.click(copyBtn);
+    expect(writeTextMock).toHaveBeenCalledWith('https://soso-calculator.vercel.app');
+    expect(await screen.findByText('복사 완료!')).toBeInTheDocument();
+  });
 });
