@@ -30,7 +30,6 @@ describe('Compound Interest Calculator Unit Tests', () => {
       annualRate: NaN,
       compoundingFrequency: 'monthly',
       taxType: 'normal',
-      customTaxRate: NaN,
     });
 
     expect(Number.isFinite(result.totalPrincipal)).toBe(true);
@@ -61,7 +60,6 @@ describe('Compound Interest Calculator Unit Tests', () => {
     expect(getTaxRate('normal')).toBe(0.154);
     expect(getTaxRate('isa')).toBe(0.099);
     expect(getTaxRate('exempt')).toBe(0);
-    expect(getTaxRate('custom', 20)).toBe(0.2);
   });
 
   it('월 복리 실효 이율이 올바르게 계산되어야 한다', () => {

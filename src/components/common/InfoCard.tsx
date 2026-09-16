@@ -14,6 +14,10 @@ export interface InfoCardProps {
   className?: string;
 }
 
+/**
+ * 전 계산기 하단 공통 상식 및 유의사항 안내 패널 컴포넌트
+ * Ghost 디자인 시스템 기반의 단정한 단일 리스트 패널 규격 및 모노크롬 Info 헤더 제공
+ */
 export const InfoCard: React.FC<InfoCardProps> = ({
   title,
   items,

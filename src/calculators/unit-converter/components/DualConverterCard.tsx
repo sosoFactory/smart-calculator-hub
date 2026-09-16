@@ -94,11 +94,11 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
         </div>
       </div>
 
-      {/* 듀얼 인터랙티브 변환 영역 (모바일: 1열 세로, 데스크톱: 3열 좌/중/우) */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 items-center">
+      {/* 듀얼 인터랙티브 변환 영역 (모바일: 1열 세로, 데스크톱: 3열 좌/중/우 동일 높이 대칭) */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 items-stretch">
         {/* 1. 출발(From) 단위 입력 박스 */}
-        <div className="bg-slate-50/70 dark:bg-slate-900/60 border border-[#e5e7eb] dark:border-slate-700 rounded-2xl p-3.5 sm:p-4 focus-within:border-[#15171a] dark:focus-within:border-[#d1ff19] focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
-          <div className="flex items-center justify-between gap-2 mb-2">
+        <div className="flex flex-col justify-between h-full bg-slate-50/70 dark:bg-slate-900/60 border border-[#e5e7eb] dark:border-slate-700 rounded-2xl p-3.5 sm:p-4 focus-within:border-[#15171a] dark:focus-within:border-[#d1ff19] focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+          <div className="flex items-center justify-between gap-2 mb-2 min-h-[32px]">
             <label htmlFor="unit-convert-input" className="text-[11px] sm:text-xs font-bold text-[#64748b] dark:text-slate-400 uppercase tracking-wider whitespace-nowrap cursor-pointer">
               입력 (From)
             </label>
@@ -118,7 +118,7 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
             </div>
           </div>
 
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-2 py-1">
             <Input
               id="unit-convert-input"
               aria-label={`${fromUnit?.name || '출발 단위'} 수치 입력`}
@@ -141,15 +141,15 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
             </span>
           </div>
 
-          {fromUnit?.description && (
-            <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-2 truncate">
-              {fromUnit.description}
+          <div className="min-h-[18px] mt-2">
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
+              {fromUnit?.description || `${fromUnit?.name} (${fromUnit?.symbol})`}
             </p>
-          )}
+          </div>
         </div>
 
         {/* 2. 중앙 스왑(Swap) 버튼 */}
-        <div className="flex justify-center my-1 md:my-0">
+        <div className="flex justify-center self-center my-1 md:my-0">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -168,8 +168,8 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
         </div>
 
         {/* 3. 도착(To) 단위 결과 박스 */}
-        <div className="bg-[#15171a] dark:bg-slate-950 text-white rounded-2xl p-3.5 sm:p-4 border border-[#15171a] dark:border-slate-800 shadow-xs">
-          <div className="flex items-center justify-between gap-2 mb-2">
+        <div className="flex flex-col justify-between h-full bg-[#15171a] dark:bg-slate-950 text-white rounded-2xl p-3.5 sm:p-4 border border-[#15171a] dark:border-slate-800 shadow-xs">
+          <div className="flex items-center justify-between gap-2 mb-2 min-h-[32px]">
             <span className="text-[11px] sm:text-xs font-bold text-[#d1ff19] uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d1ff19] shrink-0" />
               결과 (To)
@@ -217,7 +217,7 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
             </div>
           </div>
 
-          <div className="flex items-baseline justify-between gap-2 overflow-x-auto">
+          <div className="flex items-baseline justify-between gap-2 overflow-x-auto py-1">
             <span className="font-extrabold text-2xl sm:text-3xl text-white tracking-tight break-all">
               {formattedConvertedValue}
             </span>
@@ -226,11 +226,11 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
             </span>
           </div>
 
-          {toUnit?.description && (
-            <p className="text-[11px] text-slate-400 mt-2 truncate">
-              {toUnit.description}
+          <div className="min-h-[18px] mt-2">
+            <p className="text-[11px] text-slate-400 truncate">
+              {toUnit?.description || `${toUnit?.name} (${toUnit?.symbol})`}
             </p>
-          )}
+          </div>
         </div>
       </div>
 

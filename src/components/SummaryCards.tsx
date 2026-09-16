@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CalculationResult } from '../types/calculator';
 import {
   formatCurrency,
@@ -6,8 +6,9 @@ import {
   formatMultiple,
   formatPercent,
 } from '../utils/formatters';
-import { Wallet, PiggyBank, ArrowUpRight, ShieldAlert } from 'lucide-react';
+import { Wallet, PiggyBank, ArrowUpRight, ShieldAlert, Copy, Check } from 'lucide-react';
 import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 import {
   Tooltip,
   TooltipContent,
@@ -20,11 +21,16 @@ interface SummaryCardsProps {
   theme?: 'teal' | 'indigo';
 }
 
+/**
+ * 연복리 계산기 핵심 요약 대시보드 컴포넌트
+ * 세후 최종 수령액 메인 하이라이트 카드 및 3단 서브 요약 카드(투자원금, 순이자, 소득세) 제공
+ */
 export const SummaryCards: React.FC<SummaryCardsProps> = ({
   result,
   title,
   theme = 'teal',
 }) => {
+  const [copied, setCopied] = useState(false);
   const isIndigo = theme === 'indigo';
   const principalRatio =
     result.futureValuePostTax > 0
@@ -32,6 +38,31 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
       : 0;
 
   const isLoss = result.netInterest < 0;
+
+  // 복리 결과 클립보드 원클릭 복사
+  const handleCopy = async () => {
+    const text = `[스마트 계산기] 연복리 자산 증식 계산 결과
+- 세후 최종 수령액: ${formatCurrency(result.futureValuePostTax)} (${formatKoreanUnit(result.futureValuePostTax)})
+- 총 투자원금: ${formatCurrency(result.totalPrincipal)} (${formatKoreanUnit(result.totalPrincipal)})
+- 세후 순수익: ${formatCurrency(result.netInterest)} (${formatKoreanUnit(result.netInterest)})
+- 이자소득세: ${formatCurrency(result.taxAmount)} (${formatKoreanUnit(result.taxAmount)})
+- 원금 대비 배수: ${formatMultiple(result.principalMultiple)}`;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <div className="space-y-3">
@@ -51,10 +82,31 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
             <Wallet className="w-4 h-4 text-[#d1ff19]" />
             <span>세후 최종 수령액</span>
           </div>
-          <div className={`flex items-center gap-1 px-2 py-0.5 rounded-sm text-[11px] font-bold ${
-            isLoss ? 'bg-rose-500/20 text-rose-300' : 'bg-[#d1ff19]/10 text-[#d1ff19]'
-          }`}>
-            <span>{formatMultiple(result.principalMultiple)}</span>
+          <div className="flex items-center gap-2">
+            <div className={`flex items-center gap-1 px-2 py-0.5 rounded-sm text-[11px] font-bold ${
+              isLoss ? 'bg-rose-500/20 text-rose-300' : 'bg-[#d1ff19]/10 text-[#d1ff19]'
+            }`}>
+              <span>{formatMultiple(result.principalMultiple)}</span>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCopy}
+              className="h-7 px-2.5 text-xs bg-slate-800/80 hover:bg-slate-700 border-slate-700 text-white shrink-0"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3 h-3 mr-1 text-[#d1ff19]" />
+                  복사 완료
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3 mr-1 text-slate-300" />
+                  결과 복사
+                </>
+              )}
+            </Button>
           </div>
         </div>
 

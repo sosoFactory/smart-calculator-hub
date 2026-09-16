@@ -10,7 +10,7 @@ import type {
 /**
  * 과세 유형별 실효 세율 반환
  */
-export function getTaxRate(taxType: TaxType, customRate?: number): number {
+export function getTaxRate(taxType: TaxType): number {
   switch (taxType) {
     case 'normal':
       return 0.154; // 이자소득세 14% + 지방소득세 1.4%
@@ -18,8 +18,6 @@ export function getTaxRate(taxType: TaxType, customRate?: number): number {
       return 0.099; // 9.9% 분리과세
     case 'exempt':
       return 0.0;
-    case 'custom':
-      return Math.max(0, (customRate ?? 0) / 100);
     default:
       return 0.154;
   }
@@ -61,7 +59,6 @@ export function calculateCompoundInterest(input: ScenarioInput): CalculationResu
   const rawContribution = Number.isFinite(input.regularContribution) ? (input.regularContribution ?? 0) : 0;
   const rawYears = Number.isFinite(input.years) ? (input.years ?? 10) : 10;
   const rawAnnualRate = Number.isFinite(input.annualRate) ? (input.annualRate ?? 7) : 7;
-  const rawCustomTax = Number.isFinite(input.customTaxRate) ? (input.customTaxRate ?? 15.4) : 15.4;
 
   const {
     contributionFrequency = 'monthly',
@@ -71,7 +68,7 @@ export function calculateCompoundInterest(input: ScenarioInput): CalculationResu
 
   const validYears = Math.max(1, Math.min(50, Math.round(rawYears)));
   const monthlyRate = getMonthlyEffectiveRate(rawAnnualRate, compoundingFrequency);
-  const taxRate = getTaxRate(taxType, rawCustomTax);
+  const taxRate = getTaxRate(taxType);
 
   let currentBalance = Math.max(0, rawPrincipal);
   let accumulatedPrincipal = Math.max(0, rawPrincipal);

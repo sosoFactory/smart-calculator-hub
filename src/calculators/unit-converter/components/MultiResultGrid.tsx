@@ -112,11 +112,11 @@ export const MultiResultGrid: React.FC<MultiResultGridProps> = ({
                 </span>
               </div>
 
-              {item.unit.description && (
-                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 truncate">
-                  {item.unit.description}
+              <div className="mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 min-h-[20px]">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">
+                  {item.unit.description || `${item.unit.name} (${item.unit.symbol})`}
                 </p>
-              )}
+              </div>
             </div>
           );
         })}

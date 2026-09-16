@@ -71,7 +71,6 @@ describe('Deep Link Utilities', () => {
       annualRate: 8.5,
       compoundingFrequency: 'quarterly',
       taxType: 'isa',
-      customTaxRate: 9.9,
     };
 
     it('correctly encodes and decodes compound interest scenario', () => {

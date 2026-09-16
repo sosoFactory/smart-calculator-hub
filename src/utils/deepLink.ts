@@ -104,9 +104,6 @@ export const encodeCompoundQuery = (input: ScenarioInput): string => {
   if (input.annualRate !== undefined) params.set('rate', String(input.annualRate));
   if (input.compoundingFrequency) params.set('compFreq', input.compoundingFrequency);
   if (input.taxType) params.set('tax', input.taxType);
-  if (input.taxType === 'custom' && input.customTaxRate !== undefined) {
-    params.set('taxRate', String(input.customTaxRate));
-  }
 
   return params.toString();
 };
@@ -152,8 +149,14 @@ export const decodeCompoundQuery = (search: string): Partial<ScenarioInput> | nu
   if (compFreqStr && ['monthly', 'quarterly', 'yearly', 'daily'].includes(compFreqStr)) {
     result.compoundingFrequency = compFreqStr;
   }
-  if (taxStr && ['normal', 'isa', 'tax_free', 'custom'].includes(taxStr)) {
-    result.taxType = taxStr;
+  if (taxStr) {
+    if (taxStr === 'normal' || taxStr === 'isa' || taxStr === 'exempt') {
+      result.taxType = taxStr;
+    } else if (taxStr === 'tax_free') {
+      result.taxType = 'exempt';
+    } else if (taxStr === 'custom') {
+      result.taxType = 'normal';
+    }
   }
   if (taxRateStr) {
     const parsed = Number(taxRateStr);

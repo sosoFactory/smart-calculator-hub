@@ -44,6 +44,12 @@ const RATE_PRESETS = [
   { label: '15%', rate: 15.0 },
 ];
 
+const TAX_OPTIONS: { id: TaxType; label: string; rateLabel: string }[] = [
+  { id: 'normal', label: '일반과세', rateLabel: '15.4%' },
+  { id: 'isa', label: 'ISA 절세', rateLabel: '9.9%' },
+  { id: 'exempt', label: '비과세', rateLabel: '0%' },
+];
+
 const YEAR_PRESETS = [5, 10, 20, 30];
 
 export const CalculatorForm: React.FC<CalculatorFormProps> = ({
@@ -265,49 +271,88 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
           </div>
         </div>
 
-        {/* 5. 복리 주기 및 과세 체계 (간결한 2분할 레이아웃) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#e5e7eb] dark:border-slate-800">
-          {/* 복리 주기 */}
-          <div>
-            <label className="block text-xs font-semibold text-[#112220] dark:text-slate-200 mb-1">
-              복리 주기
+        {/* 5. 복리 주기 (간결한 단일 행 드롭다운) */}
+        <div className="pt-2 border-t border-[#e5e7eb] dark:border-slate-800">
+          <label className="block text-xs font-semibold text-[#112220] dark:text-slate-200 mb-1">
+            복리 주기
+          </label>
+          <Select
+            value={scenario.compoundingFrequency}
+            onValueChange={(val) =>
+              updateField('compoundingFrequency', val as CompoundingFrequency)
+            }
+          >
+            <SelectTrigger className="h-[39px] text-xs font-semibold bg-slate-50 dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700">
+              <SelectValue placeholder="복리 주기 선택" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="monthly">월복리 (일반적/추천)</SelectItem>
+              <SelectItem value="annual">연복리</SelectItem>
+              <SelectItem value="quarterly">분기복리</SelectItem>
+              <SelectItem value="daily">일복리</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* 6. 이자소득 과세 방식 (독립된 3단 선택 칩 그룹 + 친절 안내 가이드 표준화) */}
+        <div className="pt-2 border-t border-[#e5e7eb] dark:border-slate-800">
+          <div className="flex items-center justify-between gap-1 mb-2">
+            <label className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 whitespace-nowrap">
+              이자소득 과세 방식
             </label>
-            <Select
-              value={scenario.compoundingFrequency}
-              onValueChange={(val) =>
-                updateField('compoundingFrequency', val as CompoundingFrequency)
-              }
-            >
-              <SelectTrigger className="h-[39px] text-xs font-semibold bg-slate-50 dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700">
-                <SelectValue placeholder="복리 주기 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="monthly">월복리 (일반적/추천)</SelectItem>
-                <SelectItem value="annual">연복리</SelectItem>
-                <SelectItem value="quarterly">분기복리</SelectItem>
-                <SelectItem value="daily">일복리</SelectItem>
-              </SelectContent>
-            </Select>
+            <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums whitespace-nowrap">
+              {scenario.taxType === 'normal' && (
+                <>
+                  <span className="hidden sm:inline">일반과세 </span>
+                  <span>(15.4%)</span>
+                </>
+              )}
+              {scenario.taxType === 'isa' && (
+                <>
+                  <span className="hidden sm:inline">ISA 절세 </span>
+                  <span>(9.9%)</span>
+                </>
+              )}
+              {scenario.taxType === 'exempt' && (
+                <>
+                  <span className="hidden sm:inline">비과세 </span>
+                  <span>(0%)</span>
+                </>
+              )}
+            </span>
           </div>
 
-          {/* 과세 체계 */}
-          <div>
-            <label className="block text-xs font-semibold text-[#112220] dark:text-slate-200 mb-1">
-              이자소득 과세
-            </label>
-            <Select
-              value={scenario.taxType}
-              onValueChange={(val) => updateField('taxType', val as TaxType)}
-            >
-              <SelectTrigger className="h-[39px] text-xs font-semibold bg-slate-50 dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700">
-                <SelectValue placeholder="과세 체계 선택" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="normal">일반과세 (15.4%)</SelectItem>
-                <SelectItem value="exempt">비과세 (0%)</SelectItem>
-                <SelectItem value="isa">세금우대/ISA (9.9%)</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-3 gap-2">
+            {TAX_OPTIONS.map((opt) => (
+              <SelectableChip
+                key={opt.id}
+                isSelected={scenario.taxType === opt.id}
+                onClick={() => updateField('taxType', opt.id)}
+                className="h-auto py-2 text-xs sm:text-sm font-semibold justify-center text-center"
+              >
+                <span>{opt.label}</span>
+                <span className="text-[11px] opacity-75 ml-1 hidden xs:inline">({opt.rateLabel})</span>
+              </SelectableChip>
+            ))}
+          </div>
+
+          {/* 과세 방식 친절 안내 가이드 */}
+          <div className="mt-2 text-xs text-[#64748b] dark:text-slate-400 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800/80 leading-relaxed">
+            {scenario.taxType === 'normal' && (
+              <p>
+                <strong className="text-slate-800 dark:text-slate-200 font-semibold">일반과세 (15.4%):</strong> 금융상품 이자·배당 수익에 기본 부과되는 소득세(14%)와 지방소득세(1.4%)가 원천징수됩니다.
+              </p>
+            )}
+            {scenario.taxType === 'isa' && (
+              <p>
+                <strong className="text-slate-800 dark:text-slate-200 font-semibold">ISA 절세 (9.9% 분리과세):</strong> 서민형/일반형 ISA 계좌로 순수익 200만~400만 원까지 비과세되며 초과분은 9.9% 분리과세됩니다.
+              </p>
+            )}
+            {scenario.taxType === 'exempt' && (
+              <p>
+                <strong className="text-slate-800 dark:text-slate-200 font-semibold">비과세 (0%):</strong> 청년도약계좌, 비과세종합저축 등 관련 법령에 따라 소득세가 전혀 발생하지 않는 절세 상품입니다.
+              </p>
+            )}
           </div>
         </div>
       </div>

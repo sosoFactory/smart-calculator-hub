@@ -28,7 +28,6 @@ const DEFAULT_SCENARIO_A: ScenarioInput = {
   annualRate: 7.0,
   compoundingFrequency: 'monthly',
   taxType: 'normal',
-  customTaxRate: 15.4,
 };
 
 const DEFAULT_SCENARIO_B: ScenarioInput = {
@@ -40,7 +39,6 @@ const DEFAULT_SCENARIO_B: ScenarioInput = {
   annualRate: 10.0,
   compoundingFrequency: 'monthly',
   taxType: 'isa',
-  customTaxRate: 9.9,
 };
 
 interface CompoundInterestAppProps {

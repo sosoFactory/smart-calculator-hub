@@ -1,4 +1,4 @@
-export type TaxType = 'normal' | 'exempt' | 'isa' | 'custom';
+export type TaxType = 'normal' | 'exempt' | 'isa';
 
 export type CompoundingFrequency = 'annual' | 'quarterly' | 'monthly' | 'daily';
 
@@ -13,7 +13,7 @@ export interface ScenarioInput {
   annualRate: number; // 연 수익률 (%)
   compoundingFrequency: CompoundingFrequency; // 복리 주기
   taxType: TaxType; // 과세 유형
-  customTaxRate?: number; // 직접 입력 세율 (%)
+  customTaxRate?: number; // (하위 호환용 선택 필드)
 }
 
 export interface YearlyBreakdown {

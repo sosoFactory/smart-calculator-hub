@@ -119,7 +119,10 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
           </Button>
         </div>
         {categories.map((cat) => {
-          const items = CALCULATORS_LIST.filter((calc) => calc.category === cat);
+          // 출시 예정(coming-soon) 항목은 메뉴 목록에서 제외
+          const items = CALCULATORS_LIST.filter(
+            (calc) => calc.category === cat && calc.status !== 'coming-soon'
+          );
           if (items.length === 0) return null;
 
           return (

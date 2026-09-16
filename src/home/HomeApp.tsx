@@ -84,10 +84,17 @@ export const HomeApp: React.FC = () => {
     }
   };
 
-  // 카테고리 필터링
+  // 카테고리 필터링 및 정렬 (활성 계산기 우선 노출, 출시 예정 항목은 목록 최하단 배치)
   const filteredCalculators = useMemo(() => {
-    if (selectedCategory === 'all') return CALCULATORS_LIST;
-    return CALCULATORS_LIST.filter((calc) => calc.category === selectedCategory);
+    const list =
+      selectedCategory === 'all'
+        ? [...CALCULATORS_LIST]
+        : CALCULATORS_LIST.filter((calc) => calc.category === selectedCategory);
+
+    return list.sort((a, b) => {
+      if (a.status === b.status) return 0;
+      return a.status === 'coming-soon' ? 1 : -1;
+    });
   }, [selectedCategory]);
 
   const categories: { key: string; label: string }[] = [
