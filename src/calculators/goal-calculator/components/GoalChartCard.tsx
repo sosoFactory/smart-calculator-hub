@@ -28,39 +28,39 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
   };
 
   return (
-    <div className='bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-4 shadow-2xs transition-colors'>
-      <div className='flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-slate-800'>
-        <div>
+    <div className='bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-4 shadow-2xs transition-colors w-full'>
+      <div className='flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-slate-800 gap-2'>
+        <div className='min-w-0 flex-1'>
           <h3 className='text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100'>
             목표 자산 형성 궤적
           </h3>
-          <p className='text-xs text-[#64748b] dark:text-slate-400 mt-0.5'>
+          <p className='text-xs text-[#64748b] dark:text-slate-400 mt-0.5 break-keep'>
             초기 목돈과 매월 적립금, 복리 수익이 누적되어 목표에 도달하는 흐름
           </p>
         </div>
-        <div className='text-right'>
+        <div className='text-right shrink-0'>
           <span className='text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums'>
             목표 {formatKoreanCurrency(targetAmount)}
           </span>
         </div>
       </div>
 
-      <div className='flex items-center justify-end gap-3 text-xs text-slate-500 dark:text-slate-400'>
-        <div className='flex items-center gap-1.5'>
-          <span className='w-2.5 h-2.5 rounded-xs bg-sky-400' />
+      <div className='flex flex-wrap items-center justify-start sm:justify-end gap-2.5 sm:gap-4 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400'>
+        <div className='flex items-center gap-1.5 shrink-0'>
+          <span className='w-2.5 h-2.5 rounded-xs bg-sky-400 shrink-0' />
           <span>초기 자금</span>
         </div>
-        <div className='flex items-center gap-1.5'>
-          <span className='w-2.5 h-2.5 rounded-xs bg-indigo-500' />
+        <div className='flex items-center gap-1.5 shrink-0'>
+          <span className='w-2.5 h-2.5 rounded-xs bg-indigo-500 shrink-0' />
           <span>누적 월적립 원금</span>
         </div>
-        <div className='flex items-center gap-1.5'>
-          <span className='w-2.5 h-2.5 rounded-xs bg-emerald-500' />
+        <div className='flex items-center gap-1.5 shrink-0'>
+          <span className='w-2.5 h-2.5 rounded-xs bg-emerald-500 shrink-0' />
           <span>복리 이자 수익</span>
         </div>
       </div>
 
-      <div className='h-64 sm:h-72 w-full pt-2'>
+      <div className='h-60 sm:h-72 w-full pt-2 min-w-0'>
         <ResponsiveContainer width='100%' height='100%'>
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <defs>

@@ -15,7 +15,12 @@
   - `GoalChartCard`: Recharts 기반 누적 영역형(AreaChart) 자산 형성 궤적 차트(초기 목돈 + 누적 적립 원금 + 누적 복리 이자).
   - `GoalRateComparisonCard`: 3대 대표 수익률 시나리오별 월 적립금 절감 효과 비교 카드.
   - `GoalInfoCard`: 시간의 힘, 시드머니 레버리지, ISA 절세계좌 활용 원칙 안내 카드.
-  - `GoalForm`: 모노크롬 Ghost 디자인 정돈(과도한 유채색 배제), 표준 ghost 초기화 버튼, 직접 숫자 입력(`useClampedNumberInput`) + 슬라이더(수익률 0~30%, step 0.5%) + 프리셋 칩 반응형 완벽 연동.
+  - `GoalForm`: 모노크롬 Ghost 디자인 정돈, 표준 ghost 초기화 버튼, 시원한 풀 와이드 단독 슬라이더(수익률 0~30%, step 0.5%) + 프리셋 칩, 과세 방식 `SegmentedControl` 탭 컴팩트화 및 상단 실시간 적용세율 표기.
+- **1024px 태블릿 및 모바일 반응형 무결점 레이아웃 최적화**:
+  - `GoalApp`: 플랫폼 공통 표준 2컬럼 레이아웃(`lg:grid-cols-12 gap-4 sm:gap-6`, 좌측 5 / 우측 7) 통일.
+  - `GoalSummaryCards` & `GoalRateComparisonCard` & `GoalInfoCard`: `grid-cols-[repeat(auto-fit,minmax(185px,1fr))]` 유동 적응 적용으로 1024px(우측 420px)에서 2열로 자동 리플로우되어 카드 찌그러짐 원천 차단.
+  - `GoalChartCard`: 상단 범례에 `flex-wrap` 적용하여 360px 모바일 화면에서도 잘림 없는 줄바꿈 보장.
+  - `GoalForm`: 헤더 `min-w-0` 및 초기화 버튼 `shrink-0` 적용, 과세 방식 반응형 텍스트 제어(`hidden xl:inline`으로 1024px 및 좁은 폭에서는 컴팩트 명칭 표기, 넓은 폭에서만 세율 병기)로 텍스트 넘침/깨짐 원천 차단, ISA 및 과세 방식을 모르는 사용자를 위한 친절한 설명 가이드 박스(일반과세 15.4%, ISA 9.9% 분리과세, 비과세 0%) 실시간 연동 제공.
 - **전역 라우팅 및 시스템 통합**:
   - `/goal` 경로 라우팅 등록 및 네비게이션 `active` 전환, 메인 홈 계산기 그리드 7대 모듈 확장.
   - 딥링크 인코딩/디코딩(`encodeGoalQuery`, `decodeGoalQuery`) 지원으로 목표 시나리오 실시간 URL 공유 가능.
