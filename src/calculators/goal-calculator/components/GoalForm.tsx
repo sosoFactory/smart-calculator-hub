@@ -5,7 +5,6 @@ import { NumericInput } from '../../../components/ui/numeric-input';
 import { Slider } from '../../../components/ui/slider';
 import { Button } from '../../../components/ui/button';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { SegmentedControl, SegmentedOption } from '../../../components/ui/segmented-control';
 import { RotateCcw, Target } from 'lucide-react';
 
 interface GoalFormProps {
@@ -39,31 +38,10 @@ const INITIAL_AMOUNT_PRESETS = [
   { label: '+1억', value: 100_000_000 },
 ];
 
-const TAX_OPTIONS: SegmentedOption<GoalTaxType>[] = [
-  {
-    id: 'normal',
-    label: (
-      <span>
-        일반<span className="hidden xl:inline font-normal opacity-80"> (15.4%)</span>
-      </span>
-    ),
-  },
-  {
-    id: 'isa',
-    label: (
-      <span>
-        ISA<span className="hidden xl:inline font-normal opacity-80"> (9.9%)</span>
-      </span>
-    ),
-  },
-  {
-    id: 'exempt',
-    label: (
-      <span>
-        비과세<span className="hidden xl:inline font-normal opacity-80"> (0%)</span>
-      </span>
-    ),
-  },
+const TAX_OPTIONS: { id: GoalTaxType; label: string; rateLabel: string }[] = [
+  { id: 'normal', label: '일반과세', rateLabel: '15.4%' },
+  { id: 'isa', label: 'ISA 절세', rateLabel: '9.9%' },
+  { id: 'exempt', label: '비과세', rateLabel: '0%' },
 ];
 
 export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) => {
@@ -274,13 +252,19 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
             </span>
           </div>
 
-          <SegmentedControl
-            options={TAX_OPTIONS}
-            value={input.taxType}
-            onChange={(val) => updateField('taxType', val)}
-            variant="dark-solid"
-            itemClassName="py-2 text-xs sm:text-sm font-semibold"
-          />
+          <div className="grid grid-cols-3 gap-2">
+            {TAX_OPTIONS.map((opt) => (
+              <SelectableChip
+                key={opt.id}
+                isSelected={input.taxType === opt.id}
+                onClick={() => updateField('taxType', opt.id)}
+                className="h-auto py-2 text-xs sm:text-sm font-semibold justify-center text-center"
+              >
+                <span>{opt.label}</span>
+                <span className="text-[11px] opacity-75 ml-1 hidden xs:inline">({opt.rateLabel})</span>
+              </SelectableChip>
+            ))}
+          </div>
 
           {/* ISA 및 과세 방식 친절 안내 가이드 */}
           <div className="mt-2 text-xs text-[#64748b] dark:text-slate-400 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800/80 leading-relaxed">

@@ -11,9 +11,8 @@ import { Copy, RotateCcw } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { SelectableChip } from './ui/selectable-chip';
-import { SegmentedControl, SegmentedOption } from './ui/segmented-control';
-import { Input } from './ui/input';
 import { NumericInput } from './ui/numeric-input';
+import { Input } from './ui/input';
 import { Slider } from './ui/slider';
 import {
   Select,
@@ -22,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
-import { useClampedNumberInput } from '../hooks/useClampedNumberInput';
 
 interface CalculatorFormProps {
   scenario: ScenarioInput;
@@ -34,7 +32,7 @@ interface CalculatorFormProps {
   onReset?: () => void;
 }
 
-const CONTRIBUTION_OPTIONS: SegmentedOption<ContributionFrequency>[] = [
+const CONTRIBUTION_OPTIONS: { id: ContributionFrequency; label: string }[] = [
   { id: 'monthly', label: '매월 적립' },
   { id: 'annual', label: '매년 적립' },
   { id: 'none', label: '적립 없음' },
@@ -60,7 +58,6 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
 }) => {
   const isIndigo = accentColor === 'indigo';
   const idPrefix = isIndigo ? 'scenario-b' : 'scenario-a';
-  const borderFocusClass = 'focus:border-[#15171a] dark:focus:border-[#d1ff19] focus:ring-1 focus:ring-[#15171a] dark:focus:ring-[#d1ff19]';
 
   const updateField = <K extends keyof ScenarioInput>(
     field: K,
@@ -71,25 +68,6 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
       [field]: value,
     });
   };
-
-  const yearsInput = useClampedNumberInput({
-    value: scenario.years,
-    onChange: (val) => updateField('years', val),
-    min: 1,
-    max: 40,
-    fallback: 1,
-    precision: 0,
-  });
-
-  const rateInput = useClampedNumberInput({
-    value: scenario.annualRate,
-    onChange: (val) => updateField('annualRate', val),
-    min: -5,
-    max: 50,
-    fallback: 0,
-    allowNegative: true,
-    precision: 1,
-  });
 
   return (
     <div
@@ -176,13 +154,18 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
             )}
           </div>
 
-          <SegmentedControl
-            options={CONTRIBUTION_OPTIONS}
-            value={scenario.contributionFrequency}
-            onChange={(val) => updateField('contributionFrequency', val)}
-            variant="dark-solid"
-            className="mb-2"
-          />
+          <div className="grid grid-cols-3 gap-2 mb-2">
+            {CONTRIBUTION_OPTIONS.map((opt) => (
+              <SelectableChip
+                key={opt.id}
+                isSelected={scenario.contributionFrequency === opt.id}
+                onClick={() => updateField('contributionFrequency', opt.id as any)}
+                className="h-auto py-2 text-xs sm:text-sm font-semibold justify-center text-center"
+              >
+                {opt.label}
+              </SelectableChip>
+            ))}
+          </div>
 
           {scenario.contributionFrequency !== 'none' && (
             <>
@@ -205,32 +188,14 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
           )}
         </div>
 
-        {/* 3. 목표 투자 기간 */}
+        {/* 3. 목표 투자 기간 (단독 슬라이더 + 상단 수치 표기) */}
         <div>
-          <div className="flex justify-between items-baseline mb-1">
+          <div className="flex justify-between items-baseline mb-2">
             <label htmlFor={`${idPrefix}-years`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer">
               목표 투자 기간
             </label>
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-              {(scenario.years || 0) * 12}개월
-            </span>
-          </div>
-          <div className="relative">
-            <Input
-              id={`${idPrefix}-years`}
-              aria-label="목표 투자 기간"
-              type="number"
-              min="1"
-              max="40"
-              step="1"
-              value={yearsInput.value}
-              placeholder="1"
-              onChange={yearsInput.onChange}
-              onBlur={yearsInput.onBlur}
-              className={`w-full text-right font-bold text-[#112220] dark:text-slate-100 pl-3 pr-10 py-2 border border-[#e5e7eb] dark:border-slate-700 rounded-md text-base sm:text-lg tracking-tight bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 transition-colors h-11 ${borderFocusClass}`}
-            />
-            <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400 dark:text-slate-500 pointer-events-none select-none">
-              년
+            <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
+              {scenario.years || 0}년 ({(scenario.years || 0) * 12}개월)
             </span>
           </div>
           <Slider
@@ -241,7 +206,7 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
             step={1}
             value={[Math.max(1, Math.min(40, scenario.years || 1))]}
             onValueChange={([val]) => updateField('years', val)}
-            className="my-2"
+            className="my-2.5"
           />
           {/* 기간 프리셋 버튼 */}
           <div className="flex items-center justify-between gap-1 mt-1">
@@ -258,9 +223,9 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
           </div>
         </div>
 
-        {/* 4. 예상 연수익률 */}
+        {/* 4. 예상 연수익률 (단독 슬라이더, step 0.5% 통일) */}
         <div>
-          <div className="flex justify-between items-baseline mb-1">
+          <div className="flex justify-between items-baseline mb-2">
             <label htmlFor={`${idPrefix}-annual-rate`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 flex items-center gap-1.5 cursor-pointer">
               <span>연 예상 수익률</span>
               {scenario.annualRate < 0 && (
@@ -269,26 +234,8 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
                 </span>
               )}
             </label>
-            <span className="text-xs font-semibold text-[#112220] dark:text-slate-200">
+            <span className={`text-xs font-bold tabular-nums ${scenario.annualRate < 0 ? 'text-rose-500' : 'text-[#112220] dark:text-[#d1ff19]'}`}>
               연 {scenario.annualRate !== undefined && !isNaN(scenario.annualRate) ? scenario.annualRate.toFixed(1) : '0.0'}%
-            </span>
-          </div>
-          <div className="relative">
-            <Input
-              id={`${idPrefix}-annual-rate`}
-              aria-label="연 예상 수익률"
-              type="number"
-              step="0.1"
-              min="-5"
-              max="50"
-              value={rateInput.value}
-              placeholder="0"
-              onChange={rateInput.onChange}
-              onBlur={rateInput.onBlur}
-              className={`w-full text-right font-bold ${scenario.annualRate < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-[#112220] dark:text-slate-100'} pl-3 pr-10 py-2 border border-[#e5e7eb] dark:border-slate-700 rounded-md text-base sm:text-lg tracking-tight bg-slate-50/50 dark:bg-slate-900/60 focus:bg-white dark:focus:bg-slate-900 transition-colors h-11 ${borderFocusClass}`}
-            />
-            <span className={`absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-medium ${scenario.annualRate < 0 ? 'text-rose-500' : 'text-slate-400 dark:text-slate-500'} pointer-events-none select-none`}>
-              %
             </span>
           </div>
           <Slider
@@ -296,15 +243,15 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
             aria-label="연 예상 수익률 슬라이더"
             min={-5}
             max={50}
-            step={0.1}
+            step={0.5}
             value={[isNaN(scenario.annualRate) ? 0 : Math.max(-5, Math.min(50, scenario.annualRate))]}
-            onValueChange={([val]) => updateField('annualRate', Math.round(val * 10) / 10)}
-            className="my-2"
+            onValueChange={([val]) => updateField('annualRate', Number(val.toFixed(1)))}
+            className="my-2.5"
           />
-          {/* 수익률 프리셋 칩 (수식어 없이 순수 수치만, 투자 기간 버튼과 동일한 flex-1 규격) */}
+          {/* 수익률 프리셋 칩 */}
           <div className="flex items-center justify-between gap-1 mt-1">
             {RATE_PRESETS.map((preset) => {
-              const isSelected = Math.abs((scenario.annualRate || 0) - preset.rate) < 0.05;
+              const isSelected = Math.abs((scenario.annualRate || 0) - preset.rate) < 0.25;
               return (
                 <SelectableChip
                   key={preset.rate}
@@ -371,7 +318,7 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
                   min="0"
                   max="50"
                   value={scenario.customTaxRate ?? 15.4}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     updateField('customTaxRate', parseFloat(e.target.value) || 0)
                   }
                   className="w-16 h-7 text-right text-xs font-bold py-1 px-1.5 border-[#e5e7eb] dark:border-slate-700 text-[#112220] dark:text-slate-100 bg-white dark:bg-slate-900 focus-visible:ring-[#15171a] dark:focus-visible:ring-[#d1ff19]"

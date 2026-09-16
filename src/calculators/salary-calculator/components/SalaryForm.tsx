@@ -4,7 +4,6 @@ import { NumericInput } from '../../../components/ui/numeric-input';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { SegmentedControl, SegmentedOption } from '../../../components/ui/segmented-control';
 import { RotateCcw, Users, Baby, HelpCircle } from 'lucide-react';
 import { formatKoreanUnit, formatNumberWithWon } from '../../../utils/formatters';
 
@@ -14,12 +13,12 @@ interface SalaryFormProps {
   onReset: () => void;
 }
 
-const PAYMENT_TYPE_OPTIONS: SegmentedOption<SalaryPaymentType>[] = [
+const PAYMENT_TYPE_OPTIONS: { id: SalaryPaymentType; label: string }[] = [
   { id: 'annual', label: '연봉 기준' },
   { id: 'monthly', label: '월급 기준' },
 ];
 
-const SEVERANCE_OPTIONS: SegmentedOption<SeveranceType>[] = [
+const SEVERANCE_OPTIONS: { id: SeveranceType; label: string }[] = [
   { id: 'separate', label: '퇴직금 별도' },
   { id: 'included', label: '퇴직금 포함 (1/13)' },
 ];
@@ -117,37 +116,42 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
         </Button>
       </div>
 
-      {/* 2. 급여 지급 기준 토글 */}
+      {/* 2. 급여 지급 기준 라디오 칩 그룹 */}
       <div>
         <label className="block text-xs font-bold text-[#112220] dark:text-slate-200 mb-2">
           급여 지급 형태
         </label>
-        <SegmentedControl
-          value={input.paymentType}
-          options={PAYMENT_TYPE_OPTIONS}
-          onChange={(val) => {
-            // 연봉 <-> 월급 전환 시 수치 자연스러운 환산
-            if (val === 'monthly' && input.paymentType === 'annual') {
-              const converted = Math.round(input.grossAmount / 12);
-              onChange({
-                ...input,
-                paymentType: val,
-                grossAmount: converted > 0 ? converted : 3_500_000,
-              });
-            } else if (val === 'annual' && input.paymentType === 'monthly') {
-              const converted = input.grossAmount * 12;
-              onChange({
-                ...input,
-                paymentType: val,
-                grossAmount: converted > 0 ? converted : 50_000_000,
-              });
-            } else {
-              updateField('paymentType', val);
-            }
-          }}
-          variant="dark-solid"
-          itemClassName="py-2 text-xs sm:text-sm"
-        />
+        <div className="grid grid-cols-2 gap-2">
+          {PAYMENT_TYPE_OPTIONS.map((opt) => (
+            <SelectableChip
+              key={opt.id}
+              isSelected={input.paymentType === opt.id}
+              onClick={() => {
+                const val = opt.id;
+                if (val === 'monthly' && input.paymentType === 'annual') {
+                  const converted = Math.round(input.grossAmount / 12);
+                  onChange({
+                    ...input,
+                    paymentType: val,
+                    grossAmount: converted > 0 ? converted : 3_500_000,
+                  });
+                } else if (val === 'annual' && input.paymentType === 'monthly') {
+                  const converted = input.grossAmount * 12;
+                  onChange({
+                    ...input,
+                    paymentType: val,
+                    grossAmount: converted > 0 ? converted : 50_000_000,
+                  });
+                } else {
+                  updateField('paymentType', val);
+                }
+              }}
+              className="h-auto py-2 text-xs sm:text-sm font-semibold justify-center text-center"
+            >
+              {opt.label}
+            </SelectableChip>
+          ))}
+        </div>
       </div>
 
       {/* 3. 세전 급여 금액 입력 */}
@@ -221,18 +225,23 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
         </div>
       </div>
 
-      {/* 4. 퇴직금 지급 방식 토글 */}
+      {/* 4. 퇴직금 지급 방식 라디오 칩 그룹 */}
       <div className="pt-2 border-t border-[#e5e7eb] dark:border-slate-800">
         <label className="block text-xs font-bold text-[#112220] dark:text-slate-200 mb-2">
           퇴직금 지급 방식
         </label>
-        <SegmentedControl
-          value={input.severanceType}
-          options={SEVERANCE_OPTIONS}
-          onChange={(val) => updateField('severanceType', val)}
-          variant="dark-solid"
-          itemClassName="py-1.5 text-xs"
-        />
+        <div className="grid grid-cols-2 gap-2">
+          {SEVERANCE_OPTIONS.map((opt) => (
+            <SelectableChip
+              key={opt.id}
+              isSelected={input.severanceType === opt.id}
+              onClick={() => updateField('severanceType', opt.id)}
+              className="h-auto py-2 text-xs sm:text-sm font-semibold justify-center text-center"
+            >
+              {opt.label}
+            </SelectableChip>
+          ))}
+        </div>
         <p className="text-[11px] text-[#64748b] dark:text-slate-400 mt-1.5">
           {input.severanceType === 'included'
             ? '연봉을 13분할하여 1개월분을 퇴직충당금으로 공제합니다.'

@@ -11,8 +11,8 @@ describe('BmiApp Component', () => {
     expect(screen.getByText('초기화')).toBeInTheDocument();
 
     // 입력 라벨
-    expect(screen.getByText('신장 (cm)')).toBeInTheDocument();
-    expect(screen.getByText('체중 (kg)')).toBeInTheDocument();
+    expect(screen.getByText('신장 (키)')).toBeInTheDocument();
+    expect(screen.getByText('체중 (몸무게)')).toBeInTheDocument();
     expect(screen.getByText('성별')).toBeInTheDocument();
 
     // 결과 대시보드
@@ -26,24 +26,23 @@ describe('BmiApp Component', () => {
     expect(screen.getByText('BMI 체질량지수 및 건강 관리 상식')).toBeInTheDocument();
   });
 
-  it('updates BMI and status when weight input changes', () => {
+  it('updates BMI and status when weight preset is clicked', () => {
     render(<BmiApp />);
 
-    const weightInput = screen.getByLabelText('체중 (kg)');
-    // 체중을 85kg으로 변경 (키 170cm 기준 BMI 29.4 -> 1단계 비만)
-    fireEvent.change(weightInput, { target: { value: '85' } });
-    fireEvent.blur(weightInput);
+    // 80kg 프리셋 칩 클릭 (키 170cm 기준 BMI 27.7 -> 1단계 비만)
+    const weight80Btn = screen.getByRole('button', { name: '80kg' });
+    fireEvent.click(weight80Btn);
 
     expect(screen.getByText('1단계 비만')).toBeInTheDocument();
-    expect(screen.getAllByText(/29.4/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/27.7/).length).toBeGreaterThanOrEqual(1);
   });
 
   it('resets inputs to default when reset button is clicked', () => {
     render(<BmiApp />);
 
-    const weightInput = screen.getByLabelText('체중 (kg)');
-    fireEvent.change(weightInput, { target: { value: '95' } });
-    fireEvent.blur(weightInput);
+    // 90kg 프리셋 클릭 -> 2단계 비만
+    const weight90Btn = screen.getByRole('button', { name: '90kg' });
+    fireEvent.click(weight90Btn);
 
     expect(screen.getByText('2단계 비만')).toBeInTheDocument();
 
@@ -55,29 +54,21 @@ describe('BmiApp Component', () => {
     expect(screen.getAllByText('정상').length).toBeGreaterThanOrEqual(1);
   });
 
-  it('adjusts height and weight by 1 unit when -1 and +1 stepper buttons are clicked', () => {
+  it('updates height and weight when preset chips are clicked', () => {
     render(<BmiApp />);
 
-    const heightInput = screen.getByLabelText('신장 (cm)') as HTMLInputElement;
-    const weightInput = screen.getByLabelText('체중 (kg)') as HTMLInputElement;
+    // 신장 180cm 프리셋 클릭
+    const height180Btn = screen.getByRole('button', { name: '180cm' });
+    fireEvent.click(height180Btn);
+    expect(screen.getByText('180 cm')).toBeInTheDocument();
 
-    expect(heightInput.value).toBe('170');
-    expect(weightInput.value).toBe('65');
+    // 체중 70kg 프리셋 클릭
+    const weight70Btn = screen.getByRole('button', { name: '70kg' });
+    fireEvent.click(weight70Btn);
+    expect(screen.getByText('70 kg')).toBeInTheDocument();
 
-    // 신장 1cm 증가 및 감소
-    const heightPlus = screen.getByLabelText('신장 1cm 증가');
-    const heightMinus = screen.getByLabelText('신장 1cm 감소');
-    fireEvent.click(heightPlus);
-    expect(heightInput.value).toBe('171');
-    fireEvent.click(heightMinus);
-    expect(heightInput.value).toBe('170');
-
-    // 체중 1kg 증가 및 감소
-    const weightPlus = screen.getByLabelText('체중 1kg 증가');
-    const weightMinus = screen.getByLabelText('체중 1kg 감소');
-    fireEvent.click(weightPlus);
-    expect(weightInput.value).toBe('66');
-    fireEvent.click(weightMinus);
-    expect(weightInput.value).toBe('65');
+    // 180cm, 70kg -> BMI 21.6 (정상)
+    expect(screen.getAllByText('정상').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/21.6/).length).toBeGreaterThanOrEqual(1);
   });
 });

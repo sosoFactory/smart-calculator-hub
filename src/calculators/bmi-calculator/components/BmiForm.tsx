@@ -1,13 +1,10 @@
 import React from 'react';
 import { BmiInput, Gender } from '../../../types/bmi';
+import { Slider } from '../../../components/ui/slider';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
-import { NumericInput } from '../../../components/ui/numeric-input';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { Slider } from '../../../components/ui/slider';
-import { SegmentedControl, SegmentedOption } from '../../../components/ui/segmented-control';
 import { RotateCcw } from 'lucide-react';
-import { useClampedNumberInput } from '../../../hooks/useClampedNumberInput';
 
 interface BmiFormProps {
   input: BmiInput;
@@ -15,9 +12,9 @@ interface BmiFormProps {
   onReset: () => void;
 }
 
-const GENDER_OPTIONS: SegmentedOption<Gender>[] = [
-  { id: 'male', label: '남성' },
-  { id: 'female', label: '여성' },
+const GENDER_OPTIONS = [
+  { id: 'male' as Gender, label: '남성' },
+  { id: 'female' as Gender, label: '여성' },
 ];
 
 const HEIGHT_PRESETS = [160, 165, 170, 175, 180];
@@ -30,24 +27,6 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
       [field]: val,
     });
   };
-
-  const heightInput = useClampedNumberInput({
-    value: input.height,
-    onChange: (val) => updateField('height', val),
-    min: 100,
-    max: 250,
-    fallback: 170,
-    precision: 0,
-  });
-
-  const weightInput = useClampedNumberInput({
-    value: input.weight,
-    onChange: (val) => updateField('weight', val),
-    min: 30,
-    max: 200,
-    fallback: 65,
-    precision: 1,
-  });
 
   return (
     <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-5 shadow-2xs transition-colors">
@@ -79,62 +58,34 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
         </Button>
       </div>
 
-      {/* 2. 성별 선택 탭 */}
+      {/* 2. 성별 선택 (독립 라디오 칩 그룹) */}
       <div>
         <label className="block text-xs font-bold text-[#112220] dark:text-slate-200 mb-2">
           성별
         </label>
-        <SegmentedControl
-          options={GENDER_OPTIONS}
-          value={input.gender}
-          onChange={(val) => updateField('gender', val)}
-          variant="slate-solid"
-          itemClassName="py-2 text-xs sm:text-sm font-bold"
-        />
+        <div className="grid grid-cols-2 gap-2">
+          {GENDER_OPTIONS.map((opt) => (
+            <SelectableChip
+              key={opt.id}
+              isSelected={input.gender === opt.id}
+              onClick={() => updateField('gender', opt.id)}
+              className="h-auto py-2 text-xs sm:text-sm font-semibold text-center justify-center"
+            >
+              {opt.label}
+            </SelectableChip>
+          ))}
+        </div>
       </div>
 
-      {/* 3. 신장 (키) */}
+      {/* 3. 신장 (단독 슬라이더 + 상단 수치 표기) */}
       <div>
-        <label htmlFor="bmi-height" className="block text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer mb-1.5">
-          신장 (cm)
-        </label>
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="h-11 w-11 shrink-0 rounded-xl border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm select-none"
-            onClick={() => updateField('height', Math.max(100, input.height - 1))}
-            disabled={input.height <= 100}
-            aria-label="신장 1cm 감소"
-          >
-            -1
-          </Button>
-          <div className="flex-1 min-w-0">
-            <NumericInput
-              id="bmi-height"
-              aria-label="신장 (cm)"
-              type="number"
-              min="100"
-              max="250"
-              value={heightInput.value}
-              onChange={heightInput.onChange}
-              onBlur={heightInput.onBlur}
-              placeholder="170"
-              suffix="cm"
-            />
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="h-11 w-11 shrink-0 rounded-xl border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm select-none"
-            onClick={() => updateField('height', Math.min(250, input.height + 1))}
-            disabled={input.height >= 250}
-            aria-label="신장 1cm 증가"
-          >
-            +1
-          </Button>
+        <div className="flex justify-between items-baseline mb-2">
+          <label htmlFor="bmi-height-slider" className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer">
+            신장 (키)
+          </label>
+          <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
+            {input.height} cm
+          </span>
         </div>
         <Slider
           id="bmi-height-slider"
@@ -143,7 +94,7 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
           step={1}
           value={[input.height]}
           onValueChange={([val]) => updateField('height', val)}
-          className="my-3"
+          className="my-2.5"
           aria-label="신장 슬라이더"
         />
         <div className="flex items-center gap-1.5 mt-2 flex-wrap">
@@ -152,6 +103,7 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
               key={preset}
               isSelected={input.height === preset}
               onClick={() => updateField('height', preset)}
+              size="sm"
             >
               {preset}cm
             </SelectableChip>
@@ -159,50 +111,15 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
         </div>
       </div>
 
-      {/* 4. 체중 (몸무게) */}
+      {/* 4. 체중 (단독 슬라이더 + 상단 수치 표기) */}
       <div>
-        <label htmlFor="bmi-weight" className="block text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer mb-1.5">
-          체중 (kg)
-        </label>
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="h-11 w-11 shrink-0 rounded-xl border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm select-none"
-            onClick={() => updateField('weight', Math.max(30, Math.round(input.weight - 1)))}
-            disabled={input.weight <= 30}
-            aria-label="체중 1kg 감소"
-          >
-            -1
-          </Button>
-          <div className="flex-1 min-w-0">
-            <NumericInput
-              id="bmi-weight"
-              aria-label="체중 (kg)"
-              type="number"
-              step="1"
-              min="30"
-              max="200"
-              value={weightInput.value}
-              onChange={weightInput.onChange}
-              onBlur={weightInput.onBlur}
-              placeholder="65"
-              suffix="kg"
-              allowDecimals
-            />
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="h-11 w-11 shrink-0 rounded-xl border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-sm select-none"
-            onClick={() => updateField('weight', Math.min(200, Math.round(input.weight + 1)))}
-            disabled={input.weight >= 200}
-            aria-label="체중 1kg 증가"
-          >
-            +1
-          </Button>
+        <div className="flex justify-between items-baseline mb-2">
+          <label htmlFor="bmi-weight-slider" className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer">
+            체중 (몸무게)
+          </label>
+          <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
+            {input.weight} kg
+          </span>
         </div>
         <Slider
           id="bmi-weight-slider"
@@ -211,7 +128,7 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
           step={1}
           value={[input.weight]}
           onValueChange={([val]) => updateField('weight', Math.round(val))}
-          className="my-3"
+          className="my-2.5"
           aria-label="체중 슬라이더"
         />
         <div className="flex items-center gap-1.5 mt-2 flex-wrap">
@@ -220,6 +137,7 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
               key={preset}
               isSelected={input.weight === preset}
               onClick={() => updateField('weight', preset)}
+              size="sm"
             >
               {preset}kg
             </SelectableChip>

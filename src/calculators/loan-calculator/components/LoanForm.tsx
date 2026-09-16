@@ -7,7 +7,6 @@ import { Slider } from '../../../components/ui/slider';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { SegmentedControl, SegmentedOption } from '../../../components/ui/segmented-control';
 import { RotateCcw } from 'lucide-react';
 import { useClampedNumberInput } from '../../../hooks/useClampedNumberInput';
 
@@ -17,7 +16,7 @@ interface LoanFormProps {
   onReset: () => void;
 }
 
-const REPAYMENT_OPTIONS: SegmentedOption<RepaymentMethod>[] = [
+const REPAYMENT_OPTIONS: { id: RepaymentMethod; label: string }[] = [
   { id: 'equal_payment', label: '원리금균등' },
   { id: 'equal_principal', label: '원금균등' },
   { id: 'bullet', label: '만기일시' },
@@ -128,18 +127,23 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
         </Button>
       </div>
 
-      {/* 2. 상환 방식 선택 탭 (원리금균등 / 원금균등 / 만기일시) */}
+      {/* 2. 상환 방식 선택 (독립 라디오 칩 그룹) */}
       <div>
         <label className="block text-xs font-bold text-[#112220] dark:text-slate-200 mb-2">
           상환 방식
         </label>
-        <SegmentedControl
-          options={REPAYMENT_OPTIONS}
-          value={input.repaymentMethod}
-          onChange={(val) => updateField('repaymentMethod', val)}
-          variant="dark-solid"
-          itemClassName="py-2 text-xs sm:text-sm"
-        />
+        <div className="grid grid-cols-3 gap-2">
+          {REPAYMENT_OPTIONS.map((opt) => (
+            <SelectableChip
+              key={opt.id}
+              isSelected={input.repaymentMethod === opt.id}
+              onClick={() => updateField('repaymentMethod', opt.id)}
+              className="h-auto py-2 text-xs sm:text-sm font-semibold justify-center text-center"
+            >
+              {opt.label}
+            </SelectableChip>
+          ))}
+        </div>
       </div>
 
       {/* 3. 대출 원금 */}
@@ -272,13 +276,13 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
               : `${Math.floor(input.gracePeriodMonths / 12)}년 (${input.gracePeriodMonths}개월)`}
           </span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {GRACE_PRESETS.map((preset) => (
             <SelectableChip
               key={preset.label}
               isSelected={input.gracePeriodMonths === preset.months}
               onClick={() => updateField('gracePeriodMonths', preset.months)}
-              className="h-auto py-2 text-center justify-center"
+              className="h-auto py-2 text-xs sm:text-sm font-semibold text-center justify-center"
             >
               {preset.label}
             </SelectableChip>
