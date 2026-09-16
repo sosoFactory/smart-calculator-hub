@@ -6,7 +6,8 @@ import { Slider } from '../../../components/ui/slider';
 import { Button } from '../../../components/ui/button';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
 import { SegmentedControl, SegmentedOption } from '../../../components/ui/segmented-control';
-import { RotateCcw, Target, Calendar, TrendingUp, Wallet, Shield } from 'lucide-react';
+import { RotateCcw, Target } from 'lucide-react';
+import { useClampedNumberInput } from '../../../hooks/useClampedNumberInput';
 
 interface GoalFormProps {
   input: GoalInput;
@@ -53,6 +54,24 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
     });
   };
 
+  const yearsInput = useClampedNumberInput({
+    value: input.targetYears,
+    onChange: (val) => updateField('targetYears', val),
+    min: 1,
+    max: 40,
+    fallback: 10,
+    precision: 0,
+  });
+
+  const rateInput = useClampedNumberInput({
+    value: input.annualRate,
+    onChange: (val) => updateField('annualRate', Number(val.toFixed(1))),
+    min: 0,
+    max: 30,
+    fallback: 7.0,
+    precision: 1,
+  });
+
   const handleAddTargetAmount = (addVal: number) => {
     const next = Math.min(10_000_000_000, input.targetAmount + addVal);
     updateField('targetAmount', next);
@@ -68,32 +87,38 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
   };
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-6 shadow-2xs transition-colors">
+    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-5 shadow-2xs transition-colors">
+      {/* 상단 타이틀 & 표준 초기화 버튼 */}
       <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-slate-800">
-        <h2 className="text-base font-bold text-[#112220] dark:text-slate-100 flex items-center gap-2">
-          <Target className="w-5 h-5 text-[#d1ff19]" />
-          <span>목표 조건 설정</span>
-        </h2>
+        <div className="space-y-0.5">
+          <h2 className="text-base sm:text-lg font-bold text-[#112220] dark:text-slate-100 flex items-center gap-2">
+            <Target className="w-5 h-5 text-[#112220] dark:text-[#d1ff19]" />
+            <span>목표 조건 설정</span>
+          </h2>
+          <p className="text-xs text-[#64748b] dark:text-slate-400">
+            목표 자산과 기간, 예상 수익률을 입력하면 필요한 매월 적립액을 계산합니다
+          </p>
+        </div>
         <Button
-          variant="outline"
+          type="button"
+          variant="ghost"
           size="sm"
           onClick={onReset}
-          className="h-8 px-2.5 text-xs text-[#64748b] dark:text-slate-400 hover:text-[#112220] dark:hover:text-slate-200 border-[#e5e7eb] dark:border-slate-700"
+          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
         >
-          <RotateCcw className="w-3.5 h-3.5 mr-1" />
-          초기화
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span>초기화</span>
         </Button>
       </div>
 
       <div className="space-y-5">
         {/* 1. 목표 자산 (원) */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-[#112220] dark:text-slate-200 flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-violet-500" />
-              <span>목표 자산</span>
+        <div>
+          <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1.5">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
+              목표 자산
             </label>
-            <span className="text-xs font-bold text-violet-600 dark:text-violet-400">
+            <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19]">
               {formatKoreanCurrency(input.targetAmount)}
             </span>
           </div>
@@ -106,7 +131,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
             placeholder="500,000,000"
           />
 
-          <div className="flex flex-wrap gap-1.5 pt-1">
+          <div className="flex flex-wrap gap-1.5 pt-2">
             {TARGET_AMOUNT_PRESETS.map((p) => (
               <SelectableChip
                 key={p.label}
@@ -121,26 +146,34 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
         </div>
 
         {/* 2. 달성 목표 기간 (년) */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-[#112220] dark:text-slate-200 flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-sky-500" />
-              <span>목표 달성 기간</span>
+        <div>
+          <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1.5">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
+              목표 달성 기간
             </label>
-            <span className="text-xs font-bold text-sky-600 dark:text-sky-400">
+            <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19]">
               {input.targetYears}년 ({input.targetYears * 12}개월)
             </span>
           </div>
 
-          <Slider
-            value={[input.targetYears]}
-            onValueChange={([val]) => updateField('targetYears', val)}
-            min={1}
-            max={40}
-            step={1}
-          />
+          <div className="space-y-3">
+            <NumericInput
+              value={yearsInput.value}
+              onChange={yearsInput.onChange}
+              onBlur={yearsInput.onBlur}
+              suffix="년"
+              placeholder="10"
+            />
+            <Slider
+              value={[input.targetYears]}
+              onValueChange={([val]) => updateField('targetYears', val)}
+              min={1}
+              max={40}
+              step={1}
+            />
+          </div>
 
-          <div className="flex flex-wrap gap-1.5 pt-1">
+          <div className="flex flex-wrap gap-1.5 pt-2">
             {TARGET_YEAR_PRESETS.map((years) => (
               <SelectableChip
                 key={years}
@@ -154,27 +187,35 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
           </div>
         </div>
 
-        {/* 3. 예상 연 수익률 (%) */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-[#112220] dark:text-slate-200 flex items-center gap-1.5">
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
-              <span>예상 연 수익률</span>
+        {/* 3. 예상 연 수익률 (%) - step 0.5, min 0 */}
+        <div>
+          <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1.5">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
+              예상 연 수익률
             </label>
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+            <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19]">
               {input.annualRate.toFixed(1)}%
             </span>
           </div>
 
-          <Slider
-            value={[input.annualRate]}
-            onValueChange={([val]) => updateField('annualRate', Number(val.toFixed(1)))}
-            min={-5}
-            max={30}
-            step={0.1}
-          />
+          <div className="space-y-3">
+            <NumericInput
+              value={rateInput.value}
+              onChange={rateInput.onChange}
+              onBlur={rateInput.onBlur}
+              suffix="%"
+              placeholder="7.0"
+            />
+            <Slider
+              value={[input.annualRate]}
+              onValueChange={([val]) => updateField('annualRate', Number(val.toFixed(1)))}
+              min={0}
+              max={30}
+              step={0.5}
+            />
+          </div>
 
-          <div className="flex flex-wrap gap-1.5 pt-1">
+          <div className="flex flex-wrap gap-1.5 pt-2">
             {RATE_PRESETS.map((p) => (
               <SelectableChip
                 key={p.label}
@@ -189,13 +230,12 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
         </div>
 
         {/* 4. 현재 보유 초기 자금 (원) */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-[#112220] dark:text-slate-200 flex items-center gap-1.5">
-              <Wallet className="w-3.5 h-3.5 text-amber-500" />
-              <span>초기 보유 자금 (거치금)</span>
+        <div>
+          <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1.5">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
+              초기 보유 자금 (거치금)
             </label>
-            <span className="text-xs font-bold text-amber-600 dark:text-amber-400">
+            <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19]">
               {formatKoreanCurrency(input.initialAmount)}
             </span>
           </div>
@@ -208,7 +248,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
             placeholder="0"
           />
 
-          <div className="flex flex-wrap gap-1.5 pt-1">
+          <div className="flex flex-wrap gap-1.5 pt-2">
             {INITIAL_AMOUNT_PRESETS.map((p) => (
               <SelectableChip
                 key={p.label}
@@ -223,15 +263,16 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
         </div>
 
         {/* 5. 이자소득 과세 방식 */}
-        <div className="space-y-2">
-          <label className="text-xs font-semibold text-[#112220] dark:text-slate-200 flex items-center gap-1.5">
-            <Shield className="w-3.5 h-3.5 text-indigo-500" />
-            <span>과세 방식</span>
+        <div>
+          <label className="block text-xs font-bold text-[#112220] dark:text-slate-200 mb-2">
+            과세 방식
           </label>
           <SegmentedControl
             options={TAX_OPTIONS}
             value={input.taxType}
             onChange={(val) => updateField('taxType', val)}
+            variant="dark-solid"
+            itemClassName="py-2 text-xs sm:text-sm"
           />
         </div>
       </div>

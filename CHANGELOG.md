@@ -15,7 +15,7 @@
   - `GoalChartCard`: Recharts 기반 누적 영역형(AreaChart) 자산 형성 궤적 차트(초기 목돈 + 누적 적립 원금 + 누적 복리 이자).
   - `GoalRateComparisonCard`: 3대 대표 수익률 시나리오별 월 적립금 절감 효과 비교 카드.
   - `GoalInfoCard`: 시간의 힘, 시드머니 레버리지, ISA 절세계좌 활용 원칙 안내 카드.
-  - `GoalForm`: 한글 금액 단위 변환 및 퀵 프리셋 칩, 슬라이더, SegmentedControl 기반 직관적 입력 폼.
+  - `GoalForm`: 모노크롬 Ghost 디자인 정돈(과도한 유채색 배제), 표준 ghost 초기화 버튼, 직접 숫자 입력(`useClampedNumberInput`) + 슬라이더(수익률 0~30%, step 0.5%) + 프리셋 칩 반응형 완벽 연동.
 - **전역 라우팅 및 시스템 통합**:
   - `/goal` 경로 라우팅 등록 및 네비게이션 `active` 전환, 메인 홈 계산기 그리드 7대 모듈 확장.
   - 딥링크 인코딩/디코딩(`encodeGoalQuery`, `decodeGoalQuery`) 지원으로 목표 시나리오 실시간 URL 공유 가능.

@@ -1,9 +1,9 @@
-﻿export type GoalTaxType = 'normal' | 'exempt' | 'isa';
+export type GoalTaxType = 'normal' | 'exempt' | 'isa';
 
 export interface GoalInput {
   targetAmount: number;        // 목표 자산 (원, 1,000만 ~ 100억)
   targetYears: number;         // 달성 목표 기간 (년, 1 ~ 40)
-  annualRate: number;          // 예상 연 수익률 (%, -5 ~ 30)
+  annualRate: number;          // 예상 연 수익률 (%, 0 ~ 30)
   initialAmount: number;       // 현재 보유 초기 자금 (원, 0 ~ 목표 자산)
   taxType: GoalTaxType;        // 과세 유형 (일반 15.4%, ISA 9.9%, 비과세 0%)
 }
