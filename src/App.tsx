@@ -34,6 +34,9 @@ const SalaryApp = lazy(() =>
 const BmiApp = lazy(() =>
   import('./calculators/bmi-calculator/BmiApp').then((m) => ({ default: m.BmiApp }))
 );
+const GoalApp = lazy(() =>
+  import('./calculators/goal-calculator/GoalApp').then((m) => ({ default: m.GoalApp }))
+);
 
 const CalculatorLoadingFallback = () => (
   <div className="w-full py-20 flex flex-col items-center justify-center space-y-3">
@@ -112,12 +115,7 @@ export const App: React.FC = () => {
                 />
                 <Route
                   path="/goal"
-                  element={
-                    <PlaceholderView
-                      calculator={CALCULATORS_LIST.find((c) => c.id === 'goal') ?? CALCULATORS_LIST[0]}
-                      onGoToCompound={() => navigate('/')}
-                    />
-                  }
+                  element={<GoalApp />}
                 />
                 {/* 정의되지 않은 경로는 메인 홈 대시보드로 리다이렉트 */}
                 <Route path="*" element={<Navigate to="/" replace />} />

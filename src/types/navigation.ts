@@ -107,7 +107,7 @@ export const CALCULATORS_LIST: CalculatorItem[] = [
     shortName: '목표자산 역산',
     description: 'N년 뒤 목표 금액 달성에 필요한 월 적립 투자금 역산',
     category: 'finance',
-    status: 'coming-soon',
+    status: 'active',
     keywords: ['목표', '목표자산', '역산', '은퇴', '10억', '노후', '월적립', '파이어족'],
   },
 ];

@@ -1,7 +1,7 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.9.30  
-> **최종 갱신일**: 2026-09-15  
+> **버전**: v1.9.31  
+> **최종 갱신일**: 2026-09-16  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
 
@@ -26,7 +26,8 @@
    - 3.4 [금융/투자] 대출 이자 및 상환방식 비교 계산기 (`LoanApp` - 구현 완료)
    - 3.5 [금융/급여] 연봉 실수령액 계산기 (`SalaryApp` - 구현 완료)
    - 3.6 [생활/건강] BMI & 비만도 계산기 (`BmiApp` - 구현 완료)
-   - 3.7 향후 확장 예정 모듈 (Roadmap)
+   - 3.7 [금융/투자] 목표 자산 역산 계산기 (`GoalApp` - 구현 완료)
+   - 3.8 향후 확장 예정 모듈 (Roadmap)
 4. [데이터 모델 (Data Models)](#4-데이터-모델-data-models)
    - 4.0 사이트 전역 설정 모델 (`src/config/site.ts`)
    - 4.1 글로벌 네비게이션 모델 (`src/types/navigation.ts`)
@@ -36,6 +37,7 @@
    - 4.5 대출 이자 계산 데이터 모델 (`src/types/loan.ts`)
    - 4.6 연봉 및 급여 계산 데이터 모델 (`src/types/salary.ts`)
    - 4.7 BMI 및 신체 계측 데이터 모델 (`src/types/bmi.ts`)
+   - 4.8 목표 자산 역산 데이터 모델 (`src/types/goal.ts`)
 5. [기술 스택 및 아키텍처](#5-기술-스택-및-아키텍처)
 6. [비기능적 요구사항 및 품질 검증 기준](#6-비기능적-요구사항-및-품질-검증-기준)
 7. [검색엔진 최적화 (SEO) 전략 및 웹 분석 명세](#7-검색엔진-최적화-seo-전략-및-웹-분석-명세)
@@ -137,6 +139,9 @@ src/
 │   ├── bmi-calculator/              # BMI & 비만도 측정 모듈
 │   │   ├── components/              # BmiForm, BmiSummaryCards, BmiGaugeCard, BmiInfoCard
 │   │   └── BmiApp.tsx               # BMI 계산기 메인 뷰
+│   ├── goal-calculator/             # 목표 자산 역산 모듈
+│   │   ├── components/              # GoalForm, GoalSummaryCards, GoalChartCard, GoalRateComparisonCard, GoalInfoCard
+│   │   └── GoalApp.tsx              # 목표 자산 역산 메인 뷰
 │   ├── loan-calculator/             # 대출이자 & 상환방식 비교 모듈
 │   │   ├── components/              # LoanForm, LoanComparisonCard, LoanScheduleTable 등
 │   │   └── LoanApp.tsx              # 대출 계산기 메인 뷰
@@ -172,6 +177,7 @@ src/
 │   ├── bmi.ts                       # BMI 및 신체 계측 타입
 │   ├── calculator.ts                # 연복리 계산 타입
 │   ├── exchange.ts                  # 환율 계산 타입
+│   ├── goal.ts                      # 목표 자산 역산 계산 타입
 │   ├── loan.ts                      # 대출 이자 계산 타입
 │   ├── navigation.ts                # 네비게이션 및 메뉴 타입
 │   ├── salary.ts                    # 연봉 및 급여 계산 타입
@@ -182,6 +188,7 @@ src/
     ├── deepLink.ts                  # URL 쿼리 파라미터 딥링크 인코딩/디코딩 로직
     ├── exchangeCalculator.ts        # 환율 및 우대율 연산 로직
     ├── formatters.ts                # 통화, 한글 단위, 백분율 포매터
+    ├── goalCalculator.ts            # 목표 자산 역산(PMT 공식) 비즈니스 로직
     ├── loanCalculator.ts            # 대출 3대 상환방식 및 중도상환 수학 로직
     ├── salaryCalculator.ts          # 4대보험 및 근로소득 간이세액표 연산 로직
     └── unitConverter.ts             # 단위 환산 계수 및 비선형 온도 변환 로직
@@ -245,10 +252,11 @@ src/
 - **도입 목적 및 적용 원칙**:
   - 금융 의사결정(대출 상환, 복리 자산 형성, 연봉 협상) 시 복잡한 계산 조건과 결과를 가족, 지인, 재테크 커뮤니티, 공인중개사, 대출 상담사 등과 빠르고 정확하게 공유할 수 있도록 **URL 쿼리 파라미터 기반 딥링크(Deep Link)** 시스템 구축.
   - **선택적 적용 원칙**:
-    - **적용 대상 (3대 금융 계산기)**:
+    - **적용 대상 (4대 금융 계산기)**:
       - `대출이자 계산기 (/loan)`: 주담대·전세대출 상환 조건 링크 공유 및 상담.
       - `연복리 계산기 (/compound)`: 은퇴·자산 포트폴리오 시나리오 공유.
       - `연봉 실수령액 계산기 (/salary)`: 세후 월 실수령액 및 공제 내역 공유.
+      - `목표 자산 역산 계산기 (/goal)`: 목표 달성 기간, 목표액, 예상 수익률, 필요 월 적립액 조건 링크 공유.
     - **원천 배제 대상 (개인 프라이버시 보호 및 1회성 유틸리티)**:
       - `BMI 계산기 (/bmi)`: 민감한 개인 신체 정보(키, 몸무게)이므로 URL 파라미터화 원천 배제 (개인 기기 LocalStorage에만 안전 보관).
       - `단위 변환기 (/unit)`: 1초 만에 확인하고 종료하는 1회성 조회 도구로 불필요.
@@ -264,6 +272,7 @@ src/
      - `대출 (/loan)`: `amount`, `rate`, `years`, `grace`, `method`, `early`, `earlyMonth`, `earlyAmount`, `earlyFee`
      - `복리 (/compound)`: `principal`, `contribution`, `contribFreq`, `years`, `rate`, `compFreq`, `tax`, `taxRate`
      - `연봉 (/salary)`: `gross`, `type`, `severance`, `nonTax`, `family`, `children`
+     - `목표자산 (/goal)`: `target`, `years`, `rate`, `initial`, `tax`
 
 ### 2.8 전역 플로팅 공유 버튼 (Floating Share Button)
 - **도입 목적**:
@@ -485,13 +494,39 @@ src/
      - BMI의 한계점: 근육량이 많은 운동선수의 경우 체지방률과 무관하게 비만으로 분류될 수 있음.
      - 복부 비만과 허리둘레 기준: 남성 90cm 이상, 여성 85cm 이상 주의.
 
-### 3.7 향후 확장 예정 모듈 및 TODO (Roadmap)
+### 3.7 [금융/투자] 목표 자산 역산 계산기 (`GoalApp` - 구현 완료)
+- **기능 요약**: "N년 뒤 목표 자산(예: 5억, 10억)을 모으려면 매월 얼마씩 저축/투자해야 할까?"를 재무 PMT 공식을 기반으로 역산하는 금융 계산기.
+- **주요 기능 명세**:
+  1. **핵심 역산 로직 (Financial PMT & 월복리 공식)**:
+     - 목표 자산($FV$), 목표 투자 기간($n$년), 예상 연수익률($r$), 현재 보유 초기 자금($PV$)을 기반으로 월초 납입 기준 필요 월 적립액($PMT$) 도출.
+     - 초기 목돈($PV$)의 미래 가치($FV_{PV} = PV \times (1 + i)^m$)를 차감한 순수 적립 목표액을 기준으로 정밀 계산.
+     - 수익률 0% 및 음수/하락장 상황까지 수학적 예외 없이 안정적 처리.
+     - 한국형 과세 체계(일반과세 15.4%, ISA 9.9%, 비과세 0%)를 반영한 세후 목표 달성 필요 적립액 산출 지원.
+  2. **입력 폼 표준화 (`GoalForm.tsx`)**:
+     - 목표 자산 ($FV$): 직접 입력(1,000만 ~ 100억 원) + 4대 퀵 프리셋 칩 (`1억`, `3억`, `5억`, `10억`).
+     - 목표 기간 ($n$): 직접 입력(1~40년) + 정밀 슬라이더 + 4대 프리셋 (`3년`, `5년`, `10년`, `20년`).
+     - 연 예상 수익률 ($r$): 직접 입력(-5%~30%) + 정밀 슬라이더 + 4대 프리셋 (`3.5%`, `5%`, `7%`, `10%`).
+     - 현재 보유 초기 자금 ($PV$): 직접 입력(0원 ~ 목표 자산) + 프리셋 (`0원`, `1천만`, `3천만`, `5천만`).
+     - 과세 유형: shadcn `Select` (일반과세 15.4%, ISA 9.9%, 비과세 0%).
+  3. **결과 요약 대시보드 (`GoalSummaryCards.tsx`)**:
+     - **메인 결과 카드**: 목표 달성에 필요한 **매월 적립액** (예: `월 234만 원`)을 일렉트릭 라임 액센트와 한글 단위로 대형 강조.
+     - **3단 서브 요약 지표**:
+       - `총 투입 원금`: 초기 자금 + (월 적립액 × 개월 수)
+       - `예상 복리 수익`: 목표 자산 - 총 투입 원금
+       - `이자/수익 기여도`: 전체 목표 자산 중 복리 이자가 차지하는 비중 (%)
+  4. **자산 형성 궤적 차트 (`GoalChartCard.tsx`)**:
+     - 0년부터 목표 연차까지 [초기 자금 + 누적 적립 원금 + 누적 복리 수익]이 목표 금액으로 도달하는 Recharts 기반 누적 영역형 차트(`AreaChart`).
+  5. **수익률 시나리오 대조 카드 (`GoalRateComparisonCard.tsx`)**:
+     - 동일한 목표 기간 동안 예적금(연 3.5%), 인덱스 펀드(연 7%), 적극 투자(연 10%) 시 매월 넣어야 하는 적립금의 격차를 비교하여 높은 수익률이 가져오는 저축 부담 경감 효과를 직관적으로 체감.
+  6. **목표 달성 가이드 카드 (`GoalInfoCard.tsx`)**:
+     - 초기 시드머니의 위력, 복리와 시간의 상관관계, 현실적인 투자 수익률 설정 팁 제공 (Ghost 디자인 및 컬러 이모지 배제 원칙).
+
+### 3.8 향후 확장 예정 모듈 및 TODO (Roadmap)
 - **[TODO] BMI 종합 헬스케어 확장 (기초대사량 BMR & 하루 권장 칼로리 TDEE)**:
   - 활동량 수준(좌식 생활, 가벼운 활동, 보통 활동, 격렬한 활동 등) 선택 옵션 추가.
   - Mifflin-St Jeor 공식을 적용한 기초대사량(BMR) 산출.
   - 하루 유지 칼로리(TDEE) 및 체중 감량/증량 목표별 하루 권장 칼로리 식단 가이드 탭 제공.
 - **배당금 및 월 배당 달력 계산기 (`dividend`)**: 배당주 포트폴리오의 월별 배당금 캘린더 및 배당소득세(15.4%) 차감 후 실수령액 계산.
-- **목표 자산 역산 계산기 (`goal`)**: "N년 후 1억/5억/10억을 모으려면 매월 얼마씩 투자해야 할까?" 역산 시뮬레이터.
 - **예·적금 만기 수령액 계산기**: 단리/복리, 세금우대, 만기 이자 지급 방식별 실수령액 계산.
 - **대출 갈아타기 (대환대출) 비교 계산기**: 기존 대출과 신규 대출 간 중도상환수수료 및 금리 인하에 따른 총 절감 비용 비교.
 
@@ -806,6 +841,50 @@ export interface BmiResult {
   weightDiff: number;          // 정상 범위 도달을 위한 체중 차이 (kg)
   weightDiffLabel: string;     // 체중 조절 안내 문구
   description: string;         // 의학적 건강 상태 한 줄 진단
+}
+```
+
+### 4.8 목표 자산 역산 데이터 모델 (`src/types/goal.ts`)
+```typescript
+export type GoalTaxType = 'normal' | 'exempt' | 'isa';
+
+export interface GoalInput {
+  targetAmount: number;        // 목표 자산 (원, 1,000만 ~ 100억)
+  targetYears: number;         // 달성 목표 기간 (년, 1 ~ 40)
+  annualRate: number;          // 예상 연 수익률 (%, -5 ~ 30)
+  initialAmount: number;       // 현재 보유 초기 자금 (원, 0 ~ 목표 자산)
+  taxType: GoalTaxType;        // 과세 유형 (일반 15.4%, ISA 9.9%, 비과세 0%)
+}
+
+export interface GoalYearlyBreakdown {
+  year: number;                // 경과 연차
+  initialValue: number;        // 초기 자금 미래 가치
+  accumulatedContribution: number; // 누적 월 적립 원금
+  accumulatedInterest: number; // 누적 복리 수익
+  totalAsset: number;          // 총 평가 자산
+}
+
+export interface RateComparisonItem {
+  rate: number;                // 비교 연 수익률 (%)
+  monthlyContribution: number; // 필요 월 적립액 (원)
+  totalPrincipal: number;      // 총 납입 원금 (원)
+  totalInterest: number;       // 총 복리 수익 (원)
+  diffVsTarget: number;        // 기준 시나리오 대비 월 적립액 차이 (원)
+}
+
+export interface GoalCalculationResult {
+  targetAmount: number;        // 목표 자산
+  targetYears: number;         // 목표 기간 (년)
+  annualRate: number;          // 적용 연 수익률 (%)
+  initialAmount: number;       // 초기 자금
+  monthlyContribution: number; // 필요 월 적립액 (원)
+  totalMonths: number;         // 총 투자 개월 수
+  totalContribution: number;   // 총 월 적립 원금 (monthlyContribution * totalMonths)
+  totalPrincipal: number;      // 총 투입 원금 (initialAmount + totalContribution)
+  totalInterest: number;       // 예상 복리 이자 (targetAmount - totalPrincipal)
+  interestRatio: number;       // 전체 목표 중 복리 수익 비중 (%)
+  breakdown: GoalYearlyBreakdown[]; // 연도별 자산 형성 흐름표
+  rateComparisons: RateComparisonItem[]; // 대표 수익률 시나리오 대조 (3.5%, 7%, 10%)
 }
 ```
 

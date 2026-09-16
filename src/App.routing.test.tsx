@@ -83,4 +83,16 @@ describe('Seam 2-1: React Router Navigation and Routing', () => {
     expect(await screen.findByText('신체 정보 입력', {}, { timeout: 10000 })).toBeInTheDocument();
     expect(await screen.findByText('비만도 스펙트럼 게이지', {}, { timeout: 10000 })).toBeInTheDocument();
   }, 15000);
+
+  it('/goal 경로에서는 목표 자산 역산 계산기 화면이 렌더링되어야 한다', async () => {
+    render(
+      <MemoryRouter initialEntries={['/goal']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    expect(screen.getAllByText('목표 자산 역산 계산기').length).toBeGreaterThanOrEqual(1);
+    expect(await screen.findByText('목표 조건 설정', {}, { timeout: 10000 })).toBeInTheDocument();
+    expect(await screen.findByText('목표 달성 필요 월 적립액', {}, { timeout: 10000 })).toBeInTheDocument();
+  }, 15000);
 });

@@ -51,6 +51,11 @@ export function formatKoreanUnit(value: number): string {
 }
 
 /**
+ * formatKoreanUnit의 별칭 (호환성 유지)
+ */
+export const formatKoreanCurrency = formatKoreanUnit;
+
+/**
  * 백분율 포맷팅 (예: 12.34%, +5.67%)
  */
 export function formatPercent(value: number, includeSign = false): string {

@@ -29,16 +29,17 @@ describe('HomeApp Compact Dashboard Tests', () => {
 
     expect(screen.getByRole('button', { name: '전체' })).toBeInTheDocument();
 
-    // 5대 활성 계산기 shortName 노출 확인
+    // 활성 계산기 shortName 노출 확인
     expect(screen.getByText('연복리 계산기')).toBeInTheDocument();
     expect(screen.getByText('대출이자 계산기')).toBeInTheDocument();
     expect(screen.getByText('연봉 계산기')).toBeInTheDocument();
     expect(screen.getByText('단위 변환기')).toBeInTheDocument();
     expect(screen.getByText('환율 계산기')).toBeInTheDocument();
+    expect(screen.getByText('BMI 계산기')).toBeInTheDocument();
+    expect(screen.getByText('목표자산 역산')).toBeInTheDocument();
 
     // 준비 중인 계산기 노출 확인
     expect(screen.getByText('배당금 계산기')).toBeInTheDocument();
-    expect(screen.getByText('목표자산 역산')).toBeInTheDocument();
   });
 
   it('카테고리 칩 "생활 & 측정" 클릭 시 단위 변환기만 필터링되어야 한다', () => {

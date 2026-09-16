@@ -78,7 +78,7 @@ export const HomeApp: React.FC = () => {
       case 'dividend':
         return <Calendar className={`${iconCls} text-slate-400`} />;
       case 'goal':
-        return <Target className={`${iconCls} text-slate-400`} />;
+        return <Target className={`${iconCls} text-violet-500 dark:text-violet-400`} />;
       default:
         return <Calculator className={`${iconCls} text-slate-400`} />;
     }

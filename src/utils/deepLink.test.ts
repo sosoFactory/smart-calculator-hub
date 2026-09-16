@@ -6,10 +6,13 @@ import {
   decodeCompoundQuery,
   encodeSalaryQuery,
   decodeSalaryQuery,
+  encodeGoalQuery,
+  decodeGoalQuery,
 } from './deepLink';
 import { LoanInput } from '../types/loan';
 import { ScenarioInput } from '../types/calculator';
 import { SalaryInput } from '../types/salary';
+import { GoalInput } from '../types/goal';
 
 describe('Deep Link Utilities', () => {
   describe('Loan Calculator Deep Linking', () => {
@@ -126,6 +129,37 @@ describe('Deep Link Utilities', () => {
 
     it('returns null for empty query', () => {
       expect(decodeSalaryQuery('')).toBeNull();
+    });
+  });
+
+  describe('Goal Target Calculator Deep Linking', () => {
+    const sampleGoal: GoalInput = {
+      targetAmount: 500_000_000,
+      targetYears: 10,
+      annualRate: 7.0,
+      initialAmount: 20_000_000,
+      taxType: 'isa',
+    };
+
+    it('correctly encodes and decodes goal target input', () => {
+      const query = encodeGoalQuery(sampleGoal);
+      expect(query).toContain('target=500000000');
+      expect(query).toContain('years=10');
+      expect(query).toContain('rate=7');
+      expect(query).toContain('initial=20000000');
+      expect(query).toContain('tax=isa');
+
+      const decoded = decodeGoalQuery(`?${query}`);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.targetAmount).toBe(500_000_000);
+      expect(decoded?.targetYears).toBe(10);
+      expect(decoded?.annualRate).toBe(7.0);
+      expect(decoded?.initialAmount).toBe(20_000_000);
+      expect(decoded?.taxType).toBe('isa');
+    });
+
+    it('returns null for empty query', () => {
+      expect(decodeGoalQuery('')).toBeNull();
     });
   });
 });

@@ -1,7 +1,7 @@
 {
   "name": "smart-calculator-hub",
   "private": true,
-  "version": "1.9.30",
+  "version": "1.9.31",
   "homepage": "https://soso-calculator.vercel.app",
   "type": "module",
   "scripts": {

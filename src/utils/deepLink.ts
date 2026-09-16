@@ -1,6 +1,7 @@
 import { LoanInput, RepaymentMethod } from '../types/loan';
 import { ScenarioInput, TaxType, ContributionFrequency, CompoundingFrequency } from '../types/calculator';
 import { SalaryInput, SalaryPaymentType, SeveranceType } from '../types/salary';
+import { GoalInput, GoalTaxType } from '../types/goal';
 
 /**
  * 브라우저 히스토리 스택을 오염시키지 않고 주소창 URL 쿼리를 실시간 갱신
@@ -217,6 +218,61 @@ export const decodeSalaryQuery = (search: string): Partial<SalaryInput> | null =
   if (childrenStr) {
     const parsed = Number(childrenStr);
     if (!isNaN(parsed) && parsed >= 0) result.childrenCount = parsed;
+  }
+
+  return Object.keys(result).length > 0 ? result : null;
+};
+
+// ==========================================
+// 4. 목표 자산 역산 계산기 (/goal)
+// ==========================================
+
+export const encodeGoalQuery = (input: GoalInput): string => {
+  const params = new URLSearchParams();
+
+  if (input.targetAmount > 0) params.set('target', String(input.targetAmount));
+  if (input.targetYears > 0) params.set('years', String(input.targetYears));
+  if (input.annualRate !== undefined) params.set('rate', String(input.annualRate));
+  if (input.initialAmount > 0) params.set('initial', String(input.initialAmount));
+  if (input.taxType && input.taxType !== 'normal') params.set('tax', input.taxType);
+
+  return params.toString();
+};
+
+export const decodeGoalQuery = (search: string): Partial<GoalInput> | null => {
+  if (!search) return null;
+  const params = new URLSearchParams(search);
+
+  const targetStr = params.get('target');
+  const yearsStr = params.get('years');
+  const rateStr = params.get('rate');
+  const initialStr = params.get('initial');
+  const taxStr = params.get('tax') as GoalTaxType | null;
+
+  if (!targetStr && !yearsStr && !rateStr && !initialStr && !taxStr) {
+    return null;
+  }
+
+  const result: Partial<GoalInput> = {};
+
+  if (targetStr) {
+    const parsed = Number(targetStr);
+    if (!isNaN(parsed) && parsed > 0) result.targetAmount = parsed;
+  }
+  if (yearsStr) {
+    const parsed = Number(yearsStr);
+    if (!isNaN(parsed) && parsed > 0) result.targetYears = parsed;
+  }
+  if (rateStr) {
+    const parsed = Number(rateStr);
+    if (!isNaN(parsed)) result.annualRate = parsed;
+  }
+  if (initialStr) {
+    const parsed = Number(initialStr);
+    if (!isNaN(parsed) && parsed >= 0) result.initialAmount = parsed;
+  }
+  if (taxStr && ['normal', 'exempt', 'isa'].includes(taxStr)) {
+    result.taxType = taxStr;
   }
 
   return Object.keys(result).length > 0 ? result : null;
