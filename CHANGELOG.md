@@ -28,6 +28,15 @@
   - 단위 테스트 및 라우팅 테스트 추가로 전체 27개 테스트 스위트, 139개 테스트 100% Pass 달성.
   - 프로덕션 번들 빌드(`tsc -b && vite build`) 통과 및 코드 스플리팅(`GoalApp` 청크 분리).
  
+### 전 계산기 하단 상식 및 유의사항 안내 카드 단일 규격 일원화 (`InfoCard.tsx`)
+- **공통 `InfoCard` 컴포넌트 신설 (`src/components/common/InfoCard.tsx`)**:
+  - 단일 패널 배경(`bg-slate-50 dark:bg-slate-900/60`, `rounded-2xl`, `border`) + 상단 모노크롬 `Info` 아이콘 헤더 + 불릿 목록 + 하단 작은 유의사항 고지문(`※ ...`) 표준 규격 단일화.
+- **7대 계산기 전역 스타일 통일 및 톤앤매너 정돈**:
+  - `BmiInfoCard`: 유채색 아이콘(빨강/파랑/초록/노랑) 및 독립 그리드 박스를 제거하고 표준 리스트 패널로 통일하여 Ghost 디자인 시스템 일관성 확보.
+  - `GoalInfoCard`: 독립 그리드 박스 구조에서 표준 리스트 패널로 일원화.
+  - `UnitInfoCard`: 단위 변환기 하단에 국민평형 84㎡ 유래, 순금 1돈 기준 등 생활 도량형 상식 안내 신설 및 `UnitConverterApp` 연동.
+  - `CompoundInfoCard`, `LoanInfoCard`, `SalaryInfoCard`, `ExchangeInfoCard`: 공통 `InfoCard` 기반으로 리팩토링하여 패딩, 구분선, 서체 100% 동일화.
+
 ### 메인 화면 최하단 모바일 접속 QR 코드 및 독립 URL 복사 카드 구축 (Mobile Access QR Card)
 - **공식 URL 고해상도 QR 에셋 생성 및 PWA 오프라인 캐시 등록 (`site-qr.svg`, `vite.config.ts`)**:
   - 공식 도메인(`https://soso-calculator.vercel.app`) 연결 벡터 QR 코드 에셋 생성.

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Info } from 'lucide-react';
 import { DecimalPrecision, QuickPreset, UnitCategory } from '../../types/unit';
 import {
   UNITS_DATA,
@@ -12,6 +11,7 @@ import { UnitCategoryTabs } from './components/UnitCategoryTabs';
 import { DualConverterCard } from './components/DualConverterCard';
 import { QuickPresetChips } from './components/QuickPresetChips';
 import { MultiResultGrid } from './components/MultiResultGrid';
+import { UnitInfoCard } from './components/UnitInfoCard';
 import { siteConfig } from '../../config/site';
 
 const STORAGE_KEY = 'smart_calculator_unit_converter_v1';
@@ -224,23 +224,7 @@ export const UnitConverterApp: React.FC = () => {
       />
 
       {/* 5. 생활 상식 및 안내 팁 카드 */}
-      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#1e293b] border border-[#e5e7eb] dark:border-slate-800 text-xs text-[#64748b] dark:text-slate-300 transition-colors">
-        <div className="space-y-1.5 leading-relaxed">
-          <p className="font-bold text-[#112220] dark:text-slate-100 text-xs pb-1.5 border-b border-[#e5e7eb] dark:border-slate-800 flex items-center gap-1.5">
-            <Info className="w-3.5 h-3.5 text-[#112220] dark:text-[#d1ff19] shrink-0" />
-            <span>대한민국 부동산 및 일상 단위 안내</span>
-          </p>
-          <p>
-            • <strong>아파트 평수</strong>: 아파트 입주자 모집공고의 전용면적 84㎡는 실평수 약 25.4평이며, 주거공용면적을 합산한 공급평형은 통상 <strong>33~34평형</strong>으로 부릅니다.
-          </p>
-          <p>
-            • <strong>순금 1돈</strong>: 정확히 <strong>3.75g</strong>이며, 10돈은 1냥(37.5g)입니다.
-          </p>
-          <p>
-            • <strong>고기 1근</strong>: 육류 기준 1근은 <strong>600g</strong>이며, 채소 1근은 보통 400g을 의미합니다.
-          </p>
-        </div>
-      </div>
+      <UnitInfoCard />
     </div>
   );
 };
