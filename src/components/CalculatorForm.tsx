@@ -12,7 +12,6 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { SelectableChip } from './ui/selectable-chip';
 import { NumericInput } from './ui/numeric-input';
-import { Input } from './ui/input';
 import { Slider } from './ui/slider';
 import {
   Select,
@@ -307,25 +306,8 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
                 <SelectItem value="normal">일반과세 (15.4%)</SelectItem>
                 <SelectItem value="exempt">비과세 (0%)</SelectItem>
                 <SelectItem value="isa">세금우대/ISA (9.9%)</SelectItem>
-                <SelectItem value="custom">직접 입력</SelectItem>
               </SelectContent>
             </Select>
-            {scenario.taxType === 'custom' && (
-              <div className="mt-1.5 flex items-center justify-end gap-1">
-                <Input
-                  type="number"
-                  step="0.1"
-                  min="0"
-                  max="50"
-                  value={scenario.customTaxRate ?? 15.4}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    updateField('customTaxRate', parseFloat(e.target.value) || 0)
-                  }
-                  className="w-16 h-7 text-right text-xs font-bold py-1 px-1.5 border-[#e5e7eb] dark:border-slate-700 text-[#112220] dark:text-slate-100 bg-white dark:bg-slate-900 focus-visible:ring-[#15171a] dark:focus-visible:ring-[#d1ff19]"
-                />
-                <span className="text-xs text-slate-500 dark:text-slate-400 font-bold">%</span>
-              </div>
-            )}
           </div>
         </div>
       </div>
