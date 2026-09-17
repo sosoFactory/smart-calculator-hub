@@ -38,9 +38,9 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
           onActionComplete?.();
           openModal();
         }}
-        className={`w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold text-[#112220] dark:text-slate-100 border border-[#e5e7eb] dark:border-slate-700 transition-colors ${className}`}
+        className={`w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white dark:bg-ghost-dark-surface hover:bg-slate-50 dark:hover:bg-ghost-dark-hover text-xs font-semibold text-[#112220] dark:text-ghost-dark-ink border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft transition-colors ${className}`}
       >
-        <Smartphone className="w-4 h-4 text-[#112220] dark:text-slate-100 shrink-0" />
+        <Smartphone className="w-4 h-4 text-[#112220] dark:text-ghost-dark-ink shrink-0" />
         <span className="truncate">앱 설치 가이드</span>
       </Button>
     );
@@ -56,9 +56,9 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
         size="sm"
         aria-label="스마트 계산기 앱 설치"
         onClick={install}
-        className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 text-xs font-semibold rounded-md border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#112220] dark:text-slate-100 transition-colors"
+        className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 text-xs font-semibold rounded-md border-[#e5e7eb] dark:border-ghost-dark-hairline-soft bg-white dark:bg-ghost-dark-surface hover:bg-slate-50 dark:hover:bg-ghost-dark-hover text-[#112220] dark:text-ghost-dark-ink transition-colors"
       >
-        <Download className="w-4 h-4 text-[#112220] dark:text-slate-100 shrink-0" />
+        <Download className="w-4 h-4 text-[#112220] dark:text-ghost-dark-ink shrink-0" />
         <span>앱 설치</span>
       </Button>
 
@@ -71,10 +71,10 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
               variant="outline"
               size="icon"
               onClick={install}
-              className="h-9 w-9 rounded-md border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#112220] dark:text-slate-100 transition-colors"
+              className="h-9 w-9 rounded-md border-[#e5e7eb] dark:border-ghost-dark-hairline-soft bg-white dark:bg-ghost-dark-surface hover:bg-slate-50 dark:hover:bg-ghost-dark-hover text-[#112220] dark:text-ghost-dark-ink transition-colors"
               aria-label="스마트 계산기 앱 설치"
             >
-              <Download className="w-4 h-4 text-[#112220] dark:text-slate-100" />
+              <Download className="w-4 h-4 text-[#112220] dark:text-ghost-dark-ink" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">앱 설치</TooltipContent>

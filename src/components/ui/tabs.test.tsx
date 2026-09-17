@@ -47,7 +47,7 @@ describe('Tabs Component Tests', () => {
 
     const list = container.querySelector('[role="tablist"]');
     expect(list).toBeInTheDocument();
-    expect(list?.className).toContain('dark:bg-slate-900');
+    expect(list?.className).toContain('dark:bg-ghost-dark-surface-deep');
     expect(list?.className).toContain('h-8');
   });
 });

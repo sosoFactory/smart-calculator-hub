@@ -55,13 +55,13 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
   }
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] p-4 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 shadow-sm transition-colors space-y-4">
+    <div className="bg-white dark:bg-ghost-dark-surface p-4 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100">
+          <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink">
             상환 추이 시각화 차트
           </h3>
-          <p className="text-xs text-[#64748b] dark:text-slate-400">
+          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute">
             연차별 대출 잔액 감소 곡선 및 누적 납입 비율
           </p>
         </div>
@@ -116,7 +116,7 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
                     return (
-                      <div className="bg-[#15171a] text-white p-3 rounded-xl shadow-lg border border-slate-700 text-xs space-y-1">
+                      <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white p-3 rounded-xl shadow-lg border border-slate-700 dark:border-ghost-dark-hairline-soft text-xs space-y-1">
                         <div className="font-bold text-[#d1ff19]">{data.name}말 기준</div>
                         <div>남은 잔액: {formatKoreanLoanAmount(data.remainingBalance)}</div>
                         <div className="text-slate-400">
@@ -170,7 +170,7 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
                     return (
-                      <div className="bg-[#15171a] text-white p-3 rounded-xl shadow-lg border border-slate-700 text-xs space-y-1">
+                      <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white p-3 rounded-xl shadow-lg border border-slate-700 dark:border-ghost-dark-hairline-soft text-xs space-y-1">
                         <div className="font-bold text-[#d1ff19]">{data.name} 누적 납입액</div>
                         <div className="text-sky-400">
                           납입 원금: {formatKoreanLoanAmount(data.cumulativePrincipal)}
@@ -178,7 +178,7 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
                         <div className="text-rose-400">
                           납입 이자: {formatKoreanLoanAmount(data.cumulativeInterest)}
                         </div>
-                        <div className="text-slate-300 font-bold border-t border-slate-700 pt-1 mt-1">
+                        <div className="text-slate-300 font-bold border-t border-slate-700 dark:border-ghost-dark-hairline-soft pt-1 mt-1">
                           총 합계: {formatKoreanLoanAmount(data.totalPaid)}
                         </div>
                       </div>

@@ -86,7 +86,7 @@ const NumericInput = React.forwardRef<HTMLInputElement, NumericInputProps>(
           onChange={handleChange}
           placeholder={placeholder}
           className={cn(
-            "w-full text-right font-bold text-[#112220] dark:text-slate-100 pl-3 pr-10 py-2 border border-[#e5e7eb] dark:border-slate-700 rounded-xl text-base sm:text-lg tracking-tight bg-slate-50/50 dark:bg-slate-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15171a] dark:focus-visible:ring-[#d1ff19] focus-visible:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-colors h-11",
+            "w-full text-right font-bold text-[#112220] dark:text-ghost-dark-ink pl-3 pr-10 py-2 border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft rounded-xl text-base sm:text-lg tracking-tight bg-slate-50/50 dark:bg-ghost-dark-surface-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15171a] dark:focus-visible:ring-[#d1ff19] focus-visible:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-colors h-11",
             !suffix && "pr-3",
             className
           )}
@@ -94,7 +94,7 @@ const NumericInput = React.forwardRef<HTMLInputElement, NumericInputProps>(
           {...props}
         />
         {suffix && (
-          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400 dark:text-slate-500 pointer-events-none select-none">
+          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400 dark:text-ghost-dark-ink-stone pointer-events-none select-none">
             {suffix}
           </span>
         )}

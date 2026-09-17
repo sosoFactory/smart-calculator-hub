@@ -60,9 +60,9 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
     return `${val}`;
   };
 
-  const gridStroke = isDark ? '#334155' : '#e5e7eb';
-  const axisStroke = isDark ? '#475569' : '#cbd5e1';
-  const tickFill = isDark ? '#94a3b8' : '#64748b';
+  const gridStroke = isDark ? '#22252a' : '#e5e7eb';
+  const axisStroke = isDark ? '#2a2e36' : '#cbd5e1';
+  const tickFill = isDark ? '#8a919e' : '#64748b';
   const primaryStroke = isDark ? '#d1ff19' : '#15171a';
 
   // 커스텀 툴팁
@@ -70,7 +70,7 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#15171a] dark:bg-slate-900 text-white rounded-lg p-3 shadow-xl border border-[#1f2937] dark:border-slate-700 text-xs space-y-2 min-w-[170px] z-50">
+        <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white rounded-lg p-3 shadow-xl border border-[#1f2937] dark:border-ghost-dark-hairline-soft text-xs space-y-2 min-w-[170px] z-50">
           <div className="font-bold border-b border-white/10 pb-1.5 flex justify-between items-center">
             <span>{label}차 경과</span>
           </div>
@@ -101,13 +101,13 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] p-5 sm:p-6 border border-[#e5e7eb] dark:border-slate-800 transition-colors">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-[#e5e7eb] dark:border-slate-800">
+    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] p-5 sm:p-6 border border-[#e5e7eb] dark:border-ghost-dark-hairline transition-colors">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
         <div>
-          <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100">
+          <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink">
             {isComparisonMode ? '시나리오 A / B 자산 성장 비교' : '연도별 자산 성장 시뮬레이션'}
           </h3>
-          <p className="text-xs text-[#64748b] dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute mt-0.5">
             {isComparisonMode
               ? '동일 기간 동안 두 전략의 자산 축적 차이를 확인하세요.'
               : '납입 원금과 복리 순이자의 누적 성장 추이입니다.'}

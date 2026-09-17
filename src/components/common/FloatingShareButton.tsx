@@ -71,7 +71,7 @@ export const FloatingShareButton: React.FC = () => {
             type="button"
             size="icon"
             onClick={handleShare}
-            className="w-12 h-12 rounded-full bg-[#15171a] dark:bg-slate-800 text-white dark:text-slate-100 hover:bg-slate-800 dark:hover:bg-slate-700 hover:text-[#d1ff19] dark:hover:text-[#d1ff19] border border-slate-700/60 dark:border-slate-700 shadow-lg shadow-black/15 dark:shadow-black/40 active:scale-95 transition-all duration-150 cursor-pointer flex items-center justify-center shrink-0"
+            className="w-12 h-12 rounded-full bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white dark:text-ghost-dark-ink hover:bg-slate-800 dark:hover:bg-[#252a32] hover:text-[#d1ff19] dark:hover:text-[#d1ff19] border border-slate-700/60 dark:border-ghost-dark-hairline-soft shadow-lg shadow-black/15 dark:shadow-black/40 active:scale-95 transition-all duration-150 cursor-pointer flex items-center justify-center shrink-0"
             aria-label="현재 페이지 공유하기"
           >
             {copied ? (

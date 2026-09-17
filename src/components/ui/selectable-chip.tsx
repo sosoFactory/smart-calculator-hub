@@ -22,7 +22,7 @@ export const SelectableChip = React.forwardRef<HTMLButtonElement, SelectableChip
           'h-7 px-2.5 text-xs font-semibold rounded-md border transition-all shadow-2xs',
           isSelected
             ? 'border-[#15171a] hover:border-[#2e3238] dark:border-white bg-[#15171a] hover:bg-[#2e3238] dark:bg-white dark:hover:bg-slate-100 text-white hover:text-white dark:text-[#112220] dark:hover:text-[#112220] font-bold'
-            : 'bg-white dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700 text-[#64748b] dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-[#112220] dark:hover:text-white',
+            : 'bg-white dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft text-[#64748b] dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-white',
           className
         )}
         {...props}

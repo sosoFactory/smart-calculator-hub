@@ -44,14 +44,14 @@ export const DeductionBreakdownTable: React.FC<DeductionBreakdownTableProps> = (
   };
 
   return (
-    <div className="@container bg-white dark:bg-[#1e293b] p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 shadow-sm transition-colors space-y-4">
+    <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-4">
       {/* 헤더: 타이틀 & 근로자/회사 탭 */}
-      <div className="flex flex-col @lg:flex-row @lg:items-center justify-between gap-3 pb-2 border-b border-[#e5e7eb] dark:border-slate-800/80">
+      <div className="flex flex-col @lg:flex-row @lg:items-center justify-between gap-3 pb-2 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
         <div>
-          <h3 className="text-base font-bold text-[#112220] dark:text-slate-100">
+          <h3 className="text-base font-bold text-[#112220] dark:text-ghost-dark-ink">
             공제 항목별 세부 명세표
           </h3>
-          <p className="text-xs text-[#64748b] dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute mt-0.5">
             4대 사회보험료 및 국세청 간이세액표 기준 세금 공제액
           </p>
         </div>
@@ -91,21 +91,21 @@ export const DeductionBreakdownTable: React.FC<DeductionBreakdownTableProps> = (
 
               return (
                 <TableRow key={item.id}>
-                  <TableCell className="font-bold text-[#112220] dark:text-slate-100 whitespace-nowrap">
+                  <TableCell className="font-bold text-[#112220] dark:text-ghost-dark-ink whitespace-nowrap">
                     {item.name}
                   </TableCell>
-                  <TableCell className="text-[#64748b] dark:text-slate-400">
+                  <TableCell className="text-[#64748b] dark:text-ghost-dark-ink-mute">
                     {isTaxItem && !isEmployee
                       ? '해당 없음 (근로자 본인 납부)'
                       : item.description}
                   </TableCell>
-                  <TableCell className="font-bold text-right text-[#112220] dark:text-slate-100 tabular-nums whitespace-nowrap">
+                  <TableCell className="font-bold text-right text-[#112220] dark:text-ghost-dark-ink tabular-nums whitespace-nowrap">
                     {monthly > 0 ? formatNumberWithWon(monthly) : '-'}
                   </TableCell>
-                  <TableCell className="text-right text-[#64748b] dark:text-slate-400 tabular-nums whitespace-nowrap">
+                  <TableCell className="text-right text-[#64748b] dark:text-ghost-dark-ink-mute tabular-nums whitespace-nowrap">
                     {monthly > 0 ? formatNumberWithWon(monthly * 12) : '-'}
                   </TableCell>
-                  <TableCell className="text-right text-[#64748b] dark:text-slate-400 tabular-nums whitespace-nowrap">
+                  <TableCell className="text-right text-[#64748b] dark:text-ghost-dark-ink-mute tabular-nums whitespace-nowrap">
                     {formatRatio(monthly, result.grossMonthlySalary, item.percentageOfGross)}
                   </TableCell>
                 </TableRow>
@@ -114,17 +114,17 @@ export const DeductionBreakdownTable: React.FC<DeductionBreakdownTableProps> = (
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell className="font-bold text-[#112220] dark:text-slate-100 whitespace-nowrap">총 합계</TableCell>
-              <TableCell className="text-[#64748b] dark:text-slate-400 font-normal">
+              <TableCell className="font-bold text-[#112220] dark:text-ghost-dark-ink whitespace-nowrap">총 합계</TableCell>
+              <TableCell className="text-[#64748b] dark:text-ghost-dark-ink-mute font-normal">
                 {isEmployee ? '4대 보험 + 세금 합산' : '4대 보험 회사 지원 합산'}
               </TableCell>
-              <TableCell className="text-right text-[#112220] dark:text-slate-100 tabular-nums text-sm font-bold whitespace-nowrap">
+              <TableCell className="text-right text-[#112220] dark:text-ghost-dark-ink tabular-nums text-sm font-bold whitespace-nowrap">
                 {formatNumberWithWon(totalMonthly)}
               </TableCell>
-              <TableCell className="text-right text-[#64748b] dark:text-slate-400 tabular-nums text-sm font-bold whitespace-nowrap">
+              <TableCell className="text-right text-[#64748b] dark:text-ghost-dark-ink-mute tabular-nums text-sm font-bold whitespace-nowrap">
                 {formatNumberWithWon(totalAnnual)}
               </TableCell>
-              <TableCell className="text-right text-[#112220] dark:text-slate-100 tabular-nums font-bold whitespace-nowrap">
+              <TableCell className="text-right text-[#112220] dark:text-ghost-dark-ink tabular-nums font-bold whitespace-nowrap">
                 {result.grossMonthlySalary > 0
                   ? `${((totalMonthly / result.grossMonthlySalary) * 100).toFixed(
                       1

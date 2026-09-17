@@ -76,17 +76,17 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
 
   return (
     <div
-      className={`bg-white dark:bg-[#1e293b] rounded-[24px] p-5 sm:p-6 border border-[#e5e7eb] dark:border-slate-800 transition-colors ${
+      className={`bg-white dark:bg-ghost-dark-surface rounded-[24px] p-5 sm:p-6 border border-[#e5e7eb] dark:border-ghost-dark-hairline transition-colors ${
         isIndigo ? 'ring-1 ring-slate-900/5' : ''
       }`}
     >
       {/* 상단 뱃지 및 타이틀 & 액션 버튼 */}
-      <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100 dark:border-slate-800 gap-2">
+      <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100 dark:border-ghost-dark-hairline gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <Badge variant={isIndigo ? 'indigo' : 'teal'} className="font-bold uppercase tracking-wider shrink-0">
             {badgeTitle || scenario.name}
           </Badge>
-          <h2 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap">
+          <h2 className="text-sm sm:text-base font-bold text-slate-800 dark:text-ghost-dark-ink whitespace-nowrap">
             투자 조건 설정
           </h2>
         </div>
@@ -98,7 +98,7 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
               variant="outline"
               size="sm"
               onClick={onCopyFromOther}
-              className="h-8 px-2.5 text-xs gap-1.5 text-slate-600 dark:text-slate-300 rounded-lg shrink-0"
+              className="h-8 px-2.5 text-xs gap-1.5 text-slate-600 dark:text-ghost-dark-ink-soft rounded-lg shrink-0"
             >
               <Copy className="w-3.5 h-3.5" />
               <span>{copyButtonLabel || '복사'}</span>
@@ -111,7 +111,7 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
               variant="ghost"
               size="sm"
               onClick={onReset}
-              className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
+              className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>초기화</span>
@@ -124,10 +124,10 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
         {/* 1. 초기 원금 */}
         <div>
           <div className="flex justify-between items-baseline mb-1">
-            <label htmlFor={`${idPrefix}-principal`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer">
+            <label htmlFor={`${idPrefix}-principal`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
               초기 투자 원금
             </label>
-            <span className="text-xs font-semibold text-[#112220] dark:text-slate-200">
+            <span className="text-xs font-semibold text-[#112220] dark:text-ghost-dark-ink-base">
               {formatKoreanUnit(scenario.principal)}
             </span>
           </div>
@@ -149,11 +149,11 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
         {/* 2. 정기 적립액 및 주기 */}
         <div>
           <div className="flex justify-between items-baseline mb-1.5">
-            <label htmlFor={`${idPrefix}-regular-contribution`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer">
+            <label htmlFor={`${idPrefix}-regular-contribution`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
               정기 추가 적립금
             </label>
             {scenario.contributionFrequency !== 'none' && (
-              <span className="text-xs font-semibold text-[#112220] dark:text-slate-200">
+              <span className="text-xs font-semibold text-[#112220] dark:text-ghost-dark-ink-base">
                 {formatKoreanUnit(scenario.regularContribution)}
               </span>
             )}
@@ -196,7 +196,7 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
         {/* 3. 목표 투자 기간 (단독 슬라이더 + 상단 수치 표기) */}
         <div>
           <div className="flex justify-between items-baseline mb-2">
-            <label htmlFor={`${idPrefix}-years`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer">
+            <label htmlFor={`${idPrefix}-years`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
               목표 투자 기간
             </label>
             <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
@@ -231,7 +231,7 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
         {/* 4. 예상 연수익률 (단독 슬라이더, step 0.5% 통일) */}
         <div>
           <div className="flex justify-between items-baseline mb-2">
-            <label htmlFor={`${idPrefix}-annual-rate`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 flex items-center gap-1.5 cursor-pointer">
+            <label htmlFor={`${idPrefix}-annual-rate`} className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-ghost-dark-ink-base flex items-center gap-1.5 cursor-pointer">
               <span>연 예상 수익률</span>
               {scenario.annualRate < 0 && (
                 <span className="text-[10px] text-rose-500 font-bold bg-rose-50 dark:bg-rose-950/40 px-1.5 py-0.5 rounded">
@@ -272,8 +272,8 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
         </div>
 
         {/* 5. 복리 주기 (간결한 단일 행 드롭다운) */}
-        <div className="pt-2 border-t border-[#e5e7eb] dark:border-slate-800">
-          <label className="block text-xs font-semibold text-[#112220] dark:text-slate-200 mb-1">
+        <div className="pt-2 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline">
+          <label className="block text-xs font-semibold text-[#112220] dark:text-ghost-dark-ink-base mb-1">
             복리 주기
           </label>
           <Select
@@ -282,7 +282,7 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
               updateField('compoundingFrequency', val as CompoundingFrequency)
             }
           >
-            <SelectTrigger className="h-[39px] text-xs font-semibold bg-slate-50 dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700">
+            <SelectTrigger className="h-[39px] text-xs font-semibold bg-slate-50 dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft">
               <SelectValue placeholder="복리 주기 선택" />
             </SelectTrigger>
             <SelectContent>
@@ -295,9 +295,9 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
         </div>
 
         {/* 6. 이자소득 과세 방식 (독립된 3단 선택 칩 그룹 + 친절 안내 가이드 표준화) */}
-        <div className="pt-2 border-t border-[#e5e7eb] dark:border-slate-800">
+        <div className="pt-2 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline">
           <div className="flex items-center justify-between gap-1 mb-2">
-            <label className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 whitespace-nowrap">
+            <label className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-ghost-dark-ink-base whitespace-nowrap">
               이자소득 과세 방식
             </label>
             <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums whitespace-nowrap">
@@ -337,20 +337,20 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
           </div>
 
           {/* 과세 방식 친절 안내 가이드 */}
-          <div className="mt-2 text-xs text-[#64748b] dark:text-slate-400 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800/80 leading-relaxed">
+          <div className="mt-2 text-xs text-[#64748b] dark:text-ghost-dark-ink-mute bg-slate-50 dark:bg-ghost-dark-surface-deep p-2.5 rounded-lg border border-slate-200/80 dark:border-ghost-dark-hairline leading-relaxed">
             {scenario.taxType === 'normal' && (
               <p>
-                <strong className="text-slate-800 dark:text-slate-200 font-semibold">일반과세 (15.4%):</strong> 금융상품 이자·배당 수익에 기본 부과되는 소득세(14%)와 지방소득세(1.4%)가 원천징수됩니다.
+                <strong className="text-slate-800 dark:text-ghost-dark-ink-base font-semibold">일반과세 (15.4%):</strong> 금융상품 이자·배당 수익에 기본 부과되는 소득세(14%)와 지방소득세(1.4%)가 원천징수됩니다.
               </p>
             )}
             {scenario.taxType === 'isa' && (
               <p>
-                <strong className="text-slate-800 dark:text-slate-200 font-semibold">ISA 절세 (9.9% 분리과세):</strong> 서민형/일반형 ISA 계좌로 순수익 200만~400만 원까지 비과세되며 초과분은 9.9% 분리과세됩니다.
+                <strong className="text-slate-800 dark:text-ghost-dark-ink-base font-semibold">ISA 절세 (9.9% 분리과세):</strong> 서민형/일반형 ISA 계좌로 순수익 200만~400만 원까지 비과세되며 초과분은 9.9% 분리과세됩니다.
               </p>
             )}
             {scenario.taxType === 'exempt' && (
               <p>
-                <strong className="text-slate-800 dark:text-slate-200 font-semibold">비과세 (0%):</strong> 청년도약계좌, 비과세종합저축 등 관련 법령에 따라 소득세가 전혀 발생하지 않는 절세 상품입니다.
+                <strong className="text-slate-800 dark:text-ghost-dark-ink-base font-semibold">비과세 (0%):</strong> 청년도약계좌, 비과세종합저축 등 관련 법령에 따라 소득세가 전혀 발생하지 않는 절세 상품입니다.
               </p>
             )}
           </div>

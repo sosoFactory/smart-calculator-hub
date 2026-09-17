@@ -44,15 +44,15 @@ export const CurrencySelect: React.FC<CurrencySelectProps> = ({
           id={id}
           className={`w-full h-8 text-xs font-bold transition-all px-2 sm:px-3 truncate ${
             isDark
-              ? 'bg-[#24272c] text-white border-slate-700 hover:bg-[#2e3238] focus:ring-[#d1ff19]'
-              : 'bg-white dark:bg-slate-800 border-[#e5e7eb] dark:border-slate-700 text-[#112220] dark:text-slate-100 hover:border-[#15171a] dark:hover:border-[#d1ff19]'
+              ? 'bg-[#24272c] dark:bg-ghost-dark-surface text-white border-slate-700 dark:border-ghost-dark-hairline-soft hover:bg-[#2e3238] dark:hover:bg-ghost-dark-hover focus:ring-[#d1ff19]'
+              : 'bg-white dark:bg-ghost-dark-surface-elevated border-[#e5e7eb] dark:border-ghost-dark-hairline-soft text-[#112220] dark:text-ghost-dark-ink hover:border-[#15171a] dark:hover:border-[#d1ff19]'
           }`}
         >
           <SelectValue placeholder="통화 선택" />
         </SelectTrigger>
         <SelectContent
           className={`max-h-72 ${
-            isDark ? 'bg-[#15171a] border-slate-800 text-white' : 'bg-white dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700 text-[#112220] dark:text-slate-100'
+            isDark ? 'bg-[#15171a] dark:bg-ghost-dark-surface-elevated border-slate-800 dark:border-ghost-dark-hairline-soft text-white' : 'bg-white dark:bg-ghost-dark-surface-elevated border-[#e5e7eb] dark:border-ghost-dark-hairline-soft text-[#112220] dark:text-ghost-dark-ink'
           }`}
         >
           {currencies.map((curr) => (
@@ -61,20 +61,20 @@ export const CurrencySelect: React.FC<CurrencySelectProps> = ({
               value={curr.code}
               className={`py-2 text-xs ${
                 isDark
-                  ? 'text-white hover:bg-slate-800 focus:bg-slate-800 focus:text-[#d1ff19]'
-                  : 'text-[#112220] hover:bg-slate-100'
+                  ? 'text-white hover:bg-slate-800 dark:hover:bg-ghost-dark-surface focus:bg-slate-800 dark:focus:bg-ghost-dark-surface focus:text-[#d1ff19]'
+                  : 'text-[#112220] dark:text-ghost-dark-ink hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
               }`}
             >
               <div className="flex items-center gap-1.5">
                 <span
                   className={`w-6 font-mono font-bold text-[11px] rounded px-1 text-center ${
-                    isDark ? 'bg-slate-800 text-white' : 'bg-slate-100 text-[#112220]'
+                    isDark ? 'bg-slate-800 text-white' : 'bg-slate-100 dark:bg-ghost-dark-surface-deep text-[#112220] dark:text-ghost-dark-ink-base'
                   }`}
                 >
                   {curr.symbol}
                 </span>
                 <span className="font-semibold">{curr.code}</span>
-                <span className={isDark ? 'text-slate-400 text-[11px]' : 'text-[#64748b] text-[11px]'}>
+                <span className={isDark ? 'text-slate-400 text-[11px]' : 'text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px]'}>
                   {curr.name}
                 </span>
               </div>

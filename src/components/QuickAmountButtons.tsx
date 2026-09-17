@@ -23,7 +23,7 @@ export const QuickAmountButtons: React.FC<QuickAmountButtonsProps> = ({ onAdd, o
           variant="outline"
           size="sm"
           onClick={() => onAdd(item.value)}
-          className="h-auto px-2 py-1 text-xs font-medium text-[#112220] dark:text-slate-200 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 active:scale-[0.98] rounded-md transition-colors border border-[#e5e7eb] dark:border-slate-700"
+          className="h-auto px-2 py-1 text-xs font-medium text-[#112220] dark:text-ghost-dark-ink-base bg-slate-50 dark:bg-ghost-dark-surface-deep hover:bg-slate-100 dark:hover:bg-ghost-dark-hover active:scale-[0.98] rounded-md transition-colors border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft"
         >
           {item.label}
         </Button>

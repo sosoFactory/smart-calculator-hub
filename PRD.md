@@ -198,6 +198,8 @@ src/
 │   │   └── tooltip.tsx              # 툴팁 안내
 │   ├── CalculatorForm.tsx           # 연복리 입력 폼 (표준 풀 와이드 인풋, 프리셋 4개화)
 │   ├── SummaryCards.tsx             # 연복리 요약 카드 (메인 결과 + 서브 지표)
+│   ├── DataTable.tsx                # 연복리 상세 테이블
+│   ├── ChartDashboard.tsx           # 연복리 자산 성장 차트
 │   ├── DualConverterCard.tsx        # 단위 변환기 From/To 듀얼 카드
 │   ├── DualExchangeCard.tsx         # 환율 계산기 From/To 듀얼 카드
 │   ├── GlobalHeader.tsx             # 상단 전역 헤더
@@ -241,6 +243,29 @@ src/
     - 테마 전환 조작 시 화면이 뚝뚝 끊기거나 눈부심 깜빡임이 발생하지 않도록 **모던 웹 표준 `View Transitions API` (`document.startViewTransition`)** 를 적용하여 화면 전체를 GPU 가속 기반으로 부드럽게 크로스페이드(300ms) 전환.
     - View Transitions API를 미지원하는 환경(구형 브라우저 등)을 위한 견고한 폴백(Fallback)으로 `html`, `body`, 주요 레이아웃(`header`, `aside`, `nav`, `main`, `footer`), 카드 박스, 입력 폼 패널, 테두리 전반에 `transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease` 전역 스무딩을 적용하여 0.3초 동안 유기적이고 일관된 페이드 전환 경험 제공.
     - 접근성 보장: 사용자가 OS에서 모션 감소(`prefers-reduced-motion: reduce`)를 설정한 경우 트랜지션을 즉시 비활성화하여 웹 접근성 표준 준수.
+  - **고스트(Ghost) 디자인 시스템 다크모드 통합 및 풀 뎁스(Full Depth) 규격**:
+    - 외부 임의 체계(`dark.*`)를 배제하고, 기존 **`ghost` 디자인 시스템의 고유 언어(`canvas`, `surface`, `ink`, `hairline`, `lime`)** 를 완벽하게 계승·확장하여 라이트와 다크가 1:1 대칭을 이루면서도 시각적 깊이감(Depth)을 극대화:
+      - **캔버스 & 서피스 계층**:
+        - `ghost.canvas` (`#ffffff` / 다크: `#090a0c` ➔ `dark:bg-ghost-dark-canvas`): 캔버스 바탕
+        - `ghost.surface` (`#ffffff` / 다크: `#131518` ➔ `dark:bg-ghost-dark-surface`): 1단계 카드 및 폼 패널
+        - `ghost.surface-deep` (`#f8fafc` / 다크: `#0e1013` ➔ `dark:bg-ghost-dark-surface-deep`): 음각 인풋, 칩, 가이드 박스
+        - `ghost.surface-elevated` (`#15171a` / 다크: `#1b1e23` ➔ `dark:bg-ghost-dark-surface-elevated`): 2단계 강조 결과 카드, 팝오버, 토스트
+        - `ghost.surface-drawer` (`#ffffff` / 다크: `#0c0e11` ➔ `dark:bg-ghost-dark-surface-drawer`): 사이드바 서랍
+      - **타이포그래피 잉크 계층 (순수 무채색 5단계 가독성)**:
+        - 푸르스름한 네이비(`slate`) 틴트를 전면 배제하고 눈부심 없는 고대비 무채색 그라데이션 적용:
+        - `ghost.ink` (`#112220` / 다크: `#f8fafc` ➔ `dark:text-ghost-dark-ink`): 핵심 수치, 메인 헤더 (100% 명암비)
+        - `ghost.ink-base` (`#15171a` / 다크: `#e2e5e9` ➔ `dark:text-ghost-dark-ink-base`): 버튼 텍스트, 카드 타이틀
+        - `ghost.ink-soft` (`#334155` / 다크: `#cbd5e1` ➔ `dark:text-ghost-dark-ink-soft`): 일반 본문, 보조 지표값
+        - `ghost.ink-mute` (`#64748b` / 다크: `#94a3b8` ➔ `dark:text-ghost-dark-ink-mute`): 서브 라벨, 설명글, 툴팁
+        - `ghost.ink-stone` (`#94a3b8` / 다크: `#64748b` ➔ `dark:text-ghost-dark-ink-stone`): 단위 심볼, 플레이스홀더, 비활성
+      - **헤어라인 테두리 계층 (3단계 정밀 경계)**:
+        - `ghost.hairline` (`#e5e7eb` / 다크: `#22252a` ➔ `dark:border-ghost-dark-hairline`): 기본 카드 외곽선, 테이블 구분선
+        - `ghost.hairline-soft` (`#cbd5e1` / 다크: `#2a2e36` ➔ `dark:border-ghost-dark-hairline-soft`): 인풋 및 조작 컨트롤 테두리선
+        - `ghost.hairline-dark` (`#22252a` / 다크: `#3f4450` ➔ `dark:border-ghost-dark-hairline-dark`): 고대비 활성 테두리
+      - **시그니처 포인트 & 호버**:
+        - `ghost.lime` (`#d1ff19`): 시그니처 형광 라임 100% 보존
+        - `ghost.hover` (`#f1f5f9` / 다크: `#1a1d22` ➔ `dark:hover:bg-ghost-dark-hover`): 호버 인터랙션
+    - **코드 품질 표준**: 외부 임의 네임스페이스나 헥스 코드를 배제하고 오직 `ghost` 디자인 시스템 토큰 클래스를 일관되게 호출하여 유지보수성과 심미적 일체감을 동시에 보장한다.
   - 야간 및 저조도 환경에서 눈부심을 방지하고 최적의 명암비(WCAG AA 기준)를 확보하여 장시간 사용 편의성 제공.
   - 차트(Recharts) 시각화 또한 다크 모드 전환 시 축 라벨과 그리드선, 툴팁이 가독성 높게 자동 전환.
 

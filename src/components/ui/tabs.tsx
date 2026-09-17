@@ -25,11 +25,11 @@ const tabsListVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-slate-100/80 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border border-slate-200/80 dark:border-slate-700/80',
+          'bg-slate-100/80 dark:bg-ghost-dark-surface-deep text-slate-500 dark:text-ghost-dark-ink-mute border border-slate-200/80 dark:border-ghost-dark-hairline',
         'dark-solid':
-          'bg-slate-100 dark:bg-slate-900 border border-[#e5e7eb] dark:border-slate-800 text-slate-600 dark:text-slate-400',
+          'bg-slate-100 dark:bg-ghost-dark-surface-deep border border-[#e5e7eb] dark:border-ghost-dark-hairline text-slate-600 dark:text-ghost-dark-ink-mute',
         'slate-solid':
-          'bg-slate-100 dark:bg-slate-900 border border-[#e5e7eb] dark:border-slate-800 text-[#64748b] dark:text-slate-400',
+          'bg-slate-100 dark:bg-ghost-dark-surface-deep border border-[#e5e7eb] dark:border-ghost-dark-hairline text-[#64748b] dark:text-ghost-dark-ink-mute',
       },
       size: {
         auto: 'h-auto',
@@ -71,11 +71,11 @@ const tabsTriggerVariants = cva(
     variants: {
       variant: {
         default:
-          'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 data-[state=active]:bg-white dark:data-[state=active]:bg-[#1e293b] data-[state=active]:text-[#112220] dark:data-[state=active]:text-slate-100 data-[state=active]:shadow-xs',
+          'text-slate-600 dark:text-ghost-dark-ink-mute hover:text-slate-900 dark:hover:text-ghost-dark-ink data-[state=active]:bg-white dark:data-[state=active]:bg-ghost-dark-surface-elevated data-[state=active]:text-[#112220] dark:data-[state=active]:text-slate-100 data-[state=active]:shadow-xs',
         'dark-solid':
-          'text-[#475569] dark:text-slate-400 hover:text-[#112220] dark:hover:text-white data-[state=active]:bg-[#15171a] dark:data-[state=active]:bg-white data-[state=active]:text-white dark:data-[state=active]:text-[#112220] data-[state=active]:shadow-sm',
+          'text-[#475569] dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white data-[state=active]:bg-[#15171a] dark:data-[state=active]:bg-white data-[state=active]:text-white dark:data-[state=active]:text-[#112220] data-[state=active]:shadow-sm',
         'slate-solid':
-          'text-[#64748b] dark:text-slate-400 hover:text-[#112220] dark:hover:text-white data-[state=active]:bg-[#15171a] dark:data-[state=active]:bg-slate-800 data-[state=active]:text-white dark:data-[state=active]:text-white data-[state=active]:shadow-2xs border border-transparent data-[state=active]:border-[#e5e7eb] dark:data-[state=active]:border-slate-700',
+          'text-[#64748b] dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white data-[state=active]:bg-[#15171a] dark:data-[state=active]:bg-ghost-dark-surface-elevated data-[state=active]:text-white dark:data-[state=active]:text-white data-[state=active]:shadow-2xs border border-transparent data-[state=active]:border-[#e5e7eb] dark:data-[state=active]:border-ghost-dark-hairline-soft',
       },
       size: {
         auto: 'px-3.5 py-2 text-xs gap-2',

@@ -64,15 +64,15 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
   const precisionOptions: DecimalPrecision[] = [0, 2, 4, 6];
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-4 transition-colors">
+    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-4 transition-colors">
       {/* 상단: 정밀도(소수점 자릿수) 선택 바 */}
-      <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#e5e7eb] dark:border-slate-800 flex-wrap">
-        <div className="flex items-center gap-1.5 text-xs text-[#64748b] dark:text-slate-400 font-medium">
+      <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline flex-wrap">
+        <div className="flex items-center gap-1.5 text-xs text-[#64748b] dark:text-ghost-dark-ink-mute font-medium">
           <span>실시간 양방향 변환</span>
           {ratioInfoText && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <HelpCircle className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer" />
+                <HelpCircle className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone hover:text-slate-600 dark:hover:text-ghost-dark-ink-soft cursor-pointer" />
               </TooltipTrigger>
               <TooltipContent side="right">
                 <p>{ratioInfoText}</p>
@@ -82,7 +82,7 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[11px] text-[#64748b] dark:text-slate-400 font-medium">소수점</span>
+          <span className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute font-medium">소수점</span>
           <SegmentedControl
             options={precisionOptions.map((p) => ({ id: p.toString(), label: `${p}자리` }))}
             value={precision.toString()}
@@ -97,14 +97,14 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
       {/* 듀얼 인터랙티브 변환 영역 (모바일: 1열 세로, 데스크톱: 3열 좌/중/우 동일 높이 대칭) */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 items-stretch">
         {/* 1. 출발(From) 단위 입력 박스 */}
-        <div className="flex flex-col justify-between h-full bg-slate-50/70 dark:bg-slate-900/60 border border-[#e5e7eb] dark:border-slate-700 rounded-2xl p-3.5 sm:p-4 focus-within:border-[#15171a] dark:focus-within:border-[#d1ff19] focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+        <div className="flex flex-col justify-between h-full bg-slate-50/70 dark:bg-ghost-dark-surface-deep border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft rounded-2xl p-3.5 sm:p-4 focus-within:border-[#15171a] dark:focus-within:border-[#d1ff19] focus-within:bg-white dark:focus-within:bg-ghost-dark-surface transition-all">
           <div className="flex items-center justify-between gap-2 mb-2 min-h-[32px]">
-            <label htmlFor="unit-convert-input" className="text-[11px] sm:text-xs font-bold text-[#64748b] dark:text-slate-400 uppercase tracking-wider whitespace-nowrap cursor-pointer">
+            <label htmlFor="unit-convert-input" className="text-[11px] sm:text-xs font-bold text-[#64748b] dark:text-ghost-dark-ink-mute uppercase tracking-wider whitespace-nowrap cursor-pointer">
               입력 (From)
             </label>
             <div className="w-28 sm:w-36 lg:w-44 shrink-0">
               <Select value={fromUnitId} onValueChange={onFromUnitChange}>
-                <SelectTrigger className="h-8 text-xs bg-white dark:bg-slate-800 border-[#e5e7eb] dark:border-slate-700 font-bold px-2 sm:px-3 truncate">
+                <SelectTrigger className="h-8 text-xs bg-white dark:bg-ghost-dark-surface-elevated border-[#e5e7eb] dark:border-ghost-dark-hairline-soft font-bold px-2 sm:px-3 truncate">
                   <SelectValue placeholder="단위 선택" />
                 </SelectTrigger>
                 <SelectContent>
@@ -134,15 +134,15 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
                 }
               }}
               placeholder="0"
-              className="h-auto w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 font-extrabold text-2xl sm:text-3xl text-[#112220] dark:text-slate-100 tracking-tight placeholder-slate-300 dark:placeholder-slate-600 tabular-nums"
+              className="h-auto w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 font-extrabold text-2xl sm:text-3xl text-[#112220] dark:text-ghost-dark-ink tracking-tight placeholder-slate-300 dark:placeholder-ghost-dark-ink-stone tabular-nums"
             />
-            <span className="text-sm sm:text-base font-bold text-slate-500 dark:text-slate-400 shrink-0">
+            <span className="text-sm sm:text-base font-bold text-slate-500 dark:text-ghost-dark-ink-mute shrink-0">
               {fromUnit?.symbol}
             </span>
           </div>
 
           <div className="min-h-[18px] mt-2">
-            <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
+            <p className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone truncate">
               {fromUnit?.description || `${fromUnit?.name} (${fromUnit?.symbol})`}
             </p>
           </div>
@@ -157,10 +157,10 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
                 variant="outline"
                 size="icon"
                 onClick={onSwapUnits}
-                className="w-10 h-10 rounded-full border border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 shadow-xs hover:border-[#15171a] dark:hover:border-[#d1ff19] transition-all shrink-0"
+                className="w-10 h-10 rounded-full border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft bg-white dark:bg-ghost-dark-surface-elevated hover:bg-slate-100 dark:hover:bg-ghost-dark-hover shadow-xs hover:border-[#15171a] dark:hover:border-[#d1ff19] transition-all shrink-0"
                 aria-label="단위 맞바꾸기"
               >
-                <ArrowLeftRight className="w-4 h-4 text-[#112220] dark:text-slate-100" />
+                <ArrowLeftRight className="w-4 h-4 text-[#112220] dark:text-ghost-dark-ink" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="top">단위 맞바꾸기 (Swap)</TooltipContent>
@@ -168,7 +168,7 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
         </div>
 
         {/* 3. 도착(To) 단위 결과 박스 */}
-        <div className="flex flex-col justify-between h-full bg-[#15171a] dark:bg-slate-950 text-white rounded-2xl p-3.5 sm:p-4 border border-[#15171a] dark:border-slate-800 shadow-xs">
+        <div className="flex flex-col justify-between h-full bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white rounded-2xl p-3.5 sm:p-4 border border-[#15171a] dark:border-ghost-dark-hairline-soft shadow-xs">
           <div className="flex items-center justify-between gap-2 mb-2 min-h-[32px]">
             <span className="text-[11px] sm:text-xs font-bold text-[#d1ff19] uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d1ff19] shrink-0" />
@@ -182,7 +182,7 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
                     variant="ghost"
                     size="icon"
                     onClick={handleCopyResult}
-                    className="h-7 w-7 text-slate-300 hover:text-white hover:bg-slate-800 rounded-md shrink-0"
+                    className="h-7 w-7 text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-ghost-dark-surface rounded-md shrink-0"
                     aria-label="결과값 복사"
                   >
                     {copied ? (
@@ -198,15 +198,15 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
               </Tooltip>
               <div className="w-28 sm:w-36 lg:w-44 shrink-0">
                 <Select value={toUnitId} onValueChange={onToUnitChange}>
-                  <SelectTrigger className="h-8 text-xs bg-[#24272c] text-white border-slate-700 font-bold hover:bg-[#2e3238] focus:ring-[#d1ff19] px-2 sm:px-3 truncate">
+                  <SelectTrigger className="h-8 text-xs bg-[#24272c] dark:bg-ghost-dark-surface text-white border-slate-700 dark:border-ghost-dark-hairline-soft font-bold hover:bg-[#2e3238] dark:hover:bg-ghost-dark-hover focus:ring-[#d1ff19] px-2 sm:px-3 truncate">
                     <SelectValue placeholder="단위 선택" />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#15171a] border-slate-800 text-white">
+                  <SelectContent className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated border-slate-800 dark:border-ghost-dark-hairline-soft text-white">
                     {units.map((u) => (
                       <SelectItem
                         key={u.id}
                         value={u.id}
-                        className="text-white hover:bg-slate-800 focus:bg-slate-800 focus:text-[#d1ff19]"
+                        className="text-white hover:bg-slate-800 dark:hover:bg-ghost-dark-surface focus:bg-slate-800 dark:focus:bg-ghost-dark-surface focus:text-[#d1ff19]"
                       >
                         {u.name} ({u.symbol})
                       </SelectItem>
@@ -236,9 +236,9 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
 
       {/* 환산 공식 / 배율 가이드 배너 */}
       {ratioInfoText && (
-        <div className="px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-[#e5e7eb] dark:border-slate-800 rounded-xl flex items-center justify-between text-xs text-[#475569] dark:text-slate-400 transition-colors">
+        <div className="px-3.5 py-2 bg-slate-50 dark:bg-ghost-dark-surface-deep border border-[#e5e7eb] dark:border-ghost-dark-hairline rounded-xl flex items-center justify-between text-xs text-[#475569] dark:text-ghost-dark-ink-mute transition-colors">
           <span className="font-medium">기준 공식</span>
-          <span className="font-bold text-[#112220] dark:text-slate-200">{ratioInfoText}</span>
+          <span className="font-bold text-[#112220] dark:text-ghost-dark-ink-base">{ratioInfoText}</span>
         </div>
       )}
     </div>

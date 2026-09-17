@@ -60,13 +60,13 @@ export const SalaryChartDashboard: React.FC<SalaryChartDashboardProps> = ({ resu
   ].filter((s) => s.value > 0);
 
   return (
-    <div className="@container bg-white dark:bg-[#1e293b] p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 shadow-sm transition-colors space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#e5e7eb] dark:border-slate-800">
+    <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
         <div>
-          <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100 tracking-tight whitespace-nowrap">
+          <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink tracking-tight whitespace-nowrap">
             급여 및 공제 항목 구성 비중
           </h3>
-          <p className="text-xs text-[#64748b] dark:text-slate-400 mt-0.5 break-keep">
+          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute mt-0.5 break-keep">
             세전 월 급여 중 실수령액과 각 공제 항목이 차지하는 비율입니다
           </p>
         </div>
@@ -77,10 +77,10 @@ export const SalaryChartDashboard: React.FC<SalaryChartDashboardProps> = ({ resu
         <div className="@xl:col-span-6 w-full h-56 relative flex items-center justify-center min-w-0">
           {/* 도넛 차트 중앙 텍스트 (z-0으로 배치하여 툴팁(z-50)에 가려지지 않도록 보장) */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center z-0">
-            <span className="text-[11px] font-bold text-[#64748b] dark:text-slate-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-[#64748b] dark:text-ghost-dark-ink-mute uppercase tracking-wider">
               실수령 비율
             </span>
-            <span className="text-xl sm:text-2xl font-extrabold text-[#112220] dark:text-slate-100 tabular-nums">
+            <span className="text-xl sm:text-2xl font-extrabold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
               {result.takeHomeRatio}%
             </span>
           </div>
@@ -110,7 +110,7 @@ export const SalaryChartDashboard: React.FC<SalaryChartDashboardProps> = ({ resu
                     if (active && payload && payload.length) {
                       const data = payload[0].payload as ChartSegment;
                       return (
-                        <div className="bg-[#15171a] dark:bg-slate-900 text-white text-xs p-2.5 rounded-lg shadow-xl border border-slate-700/60 pointer-events-none z-50">
+                        <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white text-xs p-2.5 rounded-lg shadow-xl border border-slate-700/60 dark:border-ghost-dark-hairline-soft pointer-events-none z-50">
                           <div className="font-semibold flex items-center gap-1.5 mb-1 whitespace-nowrap">
                             <span
                               className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
@@ -137,22 +137,22 @@ export const SalaryChartDashboard: React.FC<SalaryChartDashboardProps> = ({ resu
           {segments.map((item) => (
             <div
               key={item.name}
-              className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-[#e5e7eb] dark:border-slate-800 gap-2"
+              className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-ghost-dark-surface-deep border border-[#e5e7eb] dark:border-ghost-dark-hairline gap-2"
             >
               <div className="flex items-center gap-2 min-w-0 shrink-0">
                 <span
                   className="w-2.5 h-2.5 rounded-full shrink-0"
                   style={{ backgroundColor: item.color }}
                 />
-                <span className="font-semibold text-[#112220] dark:text-slate-200 whitespace-nowrap">
+                <span className="font-semibold text-[#112220] dark:text-ghost-dark-ink-base whitespace-nowrap">
                   {item.name}
                 </span>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <span className="text-slate-400 dark:text-slate-500 text-[11px] whitespace-nowrap">
+                <span className="text-slate-400 dark:text-ghost-dark-ink-stone text-[11px] whitespace-nowrap">
                   {item.percentage}%
                 </span>
-                <span className="font-bold text-[#112220] dark:text-slate-100 tabular-nums whitespace-nowrap">
+                <span className="font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums whitespace-nowrap">
                   {formatNumberWithWon(item.value)}
                 </span>
               </div>

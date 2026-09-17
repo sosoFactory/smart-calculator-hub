@@ -132,14 +132,14 @@ export const CompoundInterestApp: React.FC<CompoundInterestAppProps> = () => {
             className={`h-auto flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-md border transition-colors ${
               isComparisonMode
                 ? 'bg-[#15171a] hover:bg-[#2e3238] dark:bg-white dark:hover:bg-slate-100 text-white hover:text-white dark:text-[#112220] dark:hover:text-[#112220] border-[#15171a] dark:border-white'
-                : 'bg-white dark:bg-slate-900 text-[#334155] dark:text-slate-300 border-[#e5e7eb] dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
+                : 'bg-white dark:bg-ghost-dark-surface text-[#334155] dark:text-ghost-dark-ink-soft border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover'
             }`}
           >
             <GitCompare className="w-4 h-4" />
             <span>비교 모드 (A/B)</span>
             <span
               className={`ml-1 text-[10px] px-1.5 py-0.5 rounded-sm font-bold ${
-                isComparisonMode ? 'bg-[#d1ff19] text-[#112220]' : 'bg-slate-100 dark:bg-slate-800 text-[#64748b] dark:text-slate-400'
+                isComparisonMode ? 'bg-[#d1ff19] text-[#112220]' : 'bg-slate-100 dark:bg-ghost-dark-surface-elevated text-[#64748b] dark:text-ghost-dark-ink-mute'
               }`}
             >
               {isComparisonMode ? 'ON' : 'OFF'}

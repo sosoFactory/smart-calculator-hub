@@ -28,7 +28,7 @@ export function SegmentedControl<T extends string = string>({
   return (
     <div
       className={cn(
-        'grid gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl border border-[#e5e7eb] dark:border-slate-800',
+        'grid gap-1 p-1 bg-slate-100 dark:bg-ghost-dark-surface-deep rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline',
         className
       )}
       style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}
@@ -40,11 +40,11 @@ export function SegmentedControl<T extends string = string>({
           variant === 'dark-solid'
             ? 'bg-[#15171a] hover:bg-[#2e3238] dark:bg-white dark:hover:bg-slate-100 text-white hover:text-white dark:text-[#112220] dark:hover:text-[#112220] shadow-sm font-bold'
             : variant === 'light-card'
-            ? 'bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-[#112220] dark:text-white shadow-xs font-semibold'
-            : 'bg-[#15171a] hover:bg-[#2e3238] dark:bg-slate-800 dark:hover:bg-slate-700 text-white hover:text-white shadow-2xs border dark:border-slate-700 font-bold';
+            ? 'bg-white hover:bg-slate-50 dark:bg-ghost-dark-surface-elevated dark:hover:bg-dark-border text-[#112220] dark:text-white shadow-xs font-semibold'
+            : 'bg-[#15171a] hover:bg-[#2e3238] dark:bg-ghost-dark-surface-elevated dark:hover:bg-dark-border text-white hover:text-white shadow-2xs border dark:border-ghost-dark-hairline-soft font-bold';
 
         const inactiveStyles =
-          'text-[#64748b] dark:text-slate-400 hover:text-[#112220] dark:hover:text-white font-medium';
+          'text-[#64748b] dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white font-medium';
 
         return (
           <Button

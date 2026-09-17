@@ -29,19 +29,19 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
   };
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-5 shadow-2xs transition-colors">
+    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-5 shadow-2xs transition-colors">
       {/* 1. 상단 타이틀 & 표준 초기화 버튼 */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-slate-800 gap-2">
+      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline gap-2">
         <div className="space-y-0.5 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="meta" size="sm" className="shrink-0">
               건강 측정
             </Badge>
-            <h2 className="text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100 whitespace-nowrap">
+            <h2 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink whitespace-nowrap">
               신체 정보 입력
             </h2>
           </div>
-          <p className="text-xs text-[#64748b] dark:text-slate-400 break-keep">
+          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute break-keep">
             대한비만학회(KSSO) 한국인 표준 체질량지수 기준 자동 적용
           </p>
         </div>
@@ -51,7 +51,7 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
           variant="ghost"
           size="sm"
           onClick={onReset}
-          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
+          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>초기화</span>
@@ -60,7 +60,7 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
 
       {/* 2. 성별 선택 (독립 라디오 칩 그룹) */}
       <div>
-        <label className="block text-xs font-bold text-[#112220] dark:text-slate-200 mb-2">
+        <label className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base mb-2">
           성별
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -80,7 +80,7 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
       {/* 3. 신장 (단독 슬라이더 + 상단 수치 표기) */}
       <div>
         <div className="flex justify-between items-baseline mb-2">
-          <label htmlFor="bmi-height-slider" className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer">
+          <label htmlFor="bmi-height-slider" className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
             신장 (키)
           </label>
           <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
@@ -114,7 +114,7 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
       {/* 4. 체중 (단독 슬라이더 + 상단 수치 표기) */}
       <div>
         <div className="flex justify-between items-baseline mb-2">
-          <label htmlFor="bmi-weight-slider" className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-slate-200 cursor-pointer">
+          <label htmlFor="bmi-weight-slider" className="text-xs sm:text-sm font-semibold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
             체중 (몸무게)
           </label>
           <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">

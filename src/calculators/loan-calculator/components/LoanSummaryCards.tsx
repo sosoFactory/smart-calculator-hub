@@ -42,7 +42,7 @@ export const LoanSummaryCards: React.FC<LoanSummaryCardsProps> = ({ result, loan
     <div className="@container space-y-3">
       {/* 중도상환 순 혜택 하이라이트 배너 (활성화 시) */}
       {early && (
-        <div className="p-4 rounded-2xl bg-[#15171a] dark:bg-[#1e293b] border border-[#15171a] dark:border-slate-800 text-white shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-page-fade">
+        <div className="p-4 rounded-2xl bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-[#15171a] dark:border-ghost-dark-hairline-soft text-white shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-page-fade">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-[#d1ff19] text-[#112220] flex items-center justify-center shrink-0">
               <Sparkles className="w-4 h-4" />
@@ -78,7 +78,7 @@ export const LoanSummaryCards: React.FC<LoanSummaryCardsProps> = ({ result, loan
       )}
 
       {/* 1. 최상단 대형 메인 하이라이트 카드 (첫 달 상환액 / 월 상환액) */}
-      <div className="relative overflow-hidden rounded-2xl bg-[#15171a] dark:bg-[#1e293b] border border-[#15171a] dark:border-slate-800 text-white p-5 sm:p-6 shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-[#15171a] dark:border-ghost-dark-hairline-soft text-white p-5 sm:p-6 shadow-sm">
         {/* 우측 상단 배경 글로우 장식 */}
         <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none" />
 
@@ -128,7 +128,7 @@ export const LoanSummaryCards: React.FC<LoanSummaryCardsProps> = ({ result, loan
             variant="outline"
             size="sm"
             onClick={handleCopy}
-            className="self-start sm:self-auto h-8 px-3 text-xs bg-slate-800/80 hover:bg-slate-700 border-slate-700 text-white shrink-0"
+            className="self-start sm:self-auto h-8 px-3 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white shrink-0"
           >
             {copied ? (
               <>
@@ -148,31 +148,31 @@ export const LoanSummaryCards: React.FC<LoanSummaryCardsProps> = ({ result, loan
       {/* 2. 3대 핵심 서브 요약 카드 그리드 (총 상환금액, 총 대출이자, 대출 원금) */}
       <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
         {/* 1. 총 상환금액 */}
-        <div className="@container p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#1e293b] border border-[#e5e7eb] dark:border-slate-800 shadow-2xs min-w-0">
+        <div className="@container p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs min-w-0">
           <div className="flex flex-col @xs:flex-row @xs:items-center @xs:justify-between gap-1 @xs:gap-3">
             <div>
-              <div className="flex items-center gap-1.5 text-[#64748b] dark:text-slate-400">
+              <div className="flex items-center gap-1.5 text-[#64748b] dark:text-ghost-dark-ink-mute">
                 <Banknote className="w-3.5 h-3.5" />
                 <span className="text-[11px] font-bold uppercase tracking-wider">
                   총 상환금액
                 </span>
               </div>
-              <p className="text-[11px] font-bold text-[#64748b] dark:text-slate-400 mt-0.5">
+              <p className="text-[11px] font-bold text-[#64748b] dark:text-ghost-dark-ink-mute mt-0.5">
                 {formatKoreanLoanAmount(result.totalRepayment)}
               </p>
             </div>
-            <div className="text-base sm:text-lg xl:text-xl font-black text-[#112220] dark:text-slate-100 tracking-tight flex items-baseline gap-0.5 whitespace-nowrap @xs:text-right">
+            <div className="text-base sm:text-lg xl:text-xl font-black text-[#112220] dark:text-ghost-dark-ink tracking-tight flex items-baseline gap-0.5 whitespace-nowrap @xs:text-right">
               <span>{result.totalRepayment.toLocaleString('ko-KR')}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 shrink-0">원</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-ghost-dark-ink-mute shrink-0">원</span>
             </div>
           </div>
         </div>
 
         {/* 2. 총 대출이자 */}
-        <div className="@container p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#1e293b] border border-[#e5e7eb] dark:border-slate-800 shadow-2xs min-w-0">
+        <div className="@container p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs min-w-0">
           <div className="flex flex-col @xs:flex-row @xs:items-center @xs:justify-between gap-1 @xs:gap-3">
             <div>
-              <div className="flex items-center gap-1.5 text-[#64748b] dark:text-slate-400">
+              <div className="flex items-center gap-1.5 text-[#64748b] dark:text-ghost-dark-ink-mute">
                 <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
                 <span className="text-[11px] font-bold uppercase tracking-wider">
                   총 대출이자
@@ -187,28 +187,28 @@ export const LoanSummaryCards: React.FC<LoanSummaryCardsProps> = ({ result, loan
             </div>
             <div className="text-base sm:text-lg xl:text-xl font-black text-rose-600 dark:text-rose-400 tracking-tight flex items-baseline gap-0.5 whitespace-nowrap @xs:text-right">
               <span>{result.totalInterest.toLocaleString('ko-KR')}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 shrink-0">원</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-ghost-dark-ink-mute shrink-0">원</span>
             </div>
           </div>
         </div>
 
         {/* 3. 대출 원금 */}
-        <div className="@container p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#1e293b] border border-[#e5e7eb] dark:border-slate-800 shadow-2xs min-w-0">
+        <div className="@container p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs min-w-0">
           <div className="flex flex-col @xs:flex-row @xs:items-center @xs:justify-between gap-1 @xs:gap-3">
             <div>
-              <div className="flex items-center gap-1.5 text-[#64748b] dark:text-slate-400">
-                <CircleDollarSign className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+              <div className="flex items-center gap-1.5 text-[#64748b] dark:text-ghost-dark-ink-mute">
+                <CircleDollarSign className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
                 <span className="text-[11px] font-bold uppercase tracking-wider">
                   대출 원금
                 </span>
               </div>
-              <p className="text-[11px] font-bold text-[#64748b] dark:text-slate-400 mt-0.5">
+              <p className="text-[11px] font-bold text-[#64748b] dark:text-ghost-dark-ink-mute mt-0.5">
                 {formatKoreanLoanAmount(loanAmount)}
               </p>
             </div>
-            <div className="text-base sm:text-lg xl:text-xl font-black text-[#112220] dark:text-slate-100 tracking-tight flex items-baseline gap-0.5 whitespace-nowrap @xs:text-right">
+            <div className="text-base sm:text-lg xl:text-xl font-black text-[#112220] dark:text-ghost-dark-ink tracking-tight flex items-baseline gap-0.5 whitespace-nowrap @xs:text-right">
               <span>{loanAmount.toLocaleString('ko-KR')}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 shrink-0">원</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-ghost-dark-ink-mute shrink-0">원</span>
             </div>
           </div>
         </div>

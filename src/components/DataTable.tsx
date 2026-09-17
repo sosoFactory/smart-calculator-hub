@@ -66,9 +66,9 @@ export const DataTable: React.FC<DataTableProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 overflow-hidden transition-colors">
+    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline overflow-hidden transition-colors">
       {/* 아코디언 헤더 */}
-      <div className="px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors select-none">
+      <div className="px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-ghost-dark-hover transition-colors select-none">
         <Button
           type="button"
           variant="ghost"
@@ -78,11 +78,11 @@ export const DataTable: React.FC<DataTableProps> = ({
           className="flex-1 min-w-0 h-auto justify-start p-0 text-left font-normal hover:bg-transparent dark:hover:bg-transparent mr-2"
         >
           <span className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <TableIcon className="w-4 h-4 text-[#112220] dark:text-slate-100 shrink-0" />
-            <h3 className="text-xs sm:text-base font-bold text-[#112220] dark:text-slate-100 truncate">
+            <TableIcon className="w-4 h-4 text-[#112220] dark:text-ghost-dark-ink shrink-0" />
+            <h3 className="text-xs sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink truncate">
               연도별 상세 자산 흐름표
             </h3>
-            <span className="text-[11px] sm:text-xs text-[#94a3b8] dark:text-slate-400 font-medium shrink-0">
+            <span className="text-[11px] sm:text-xs text-[#94a3b8] dark:text-ghost-dark-ink-mute font-medium shrink-0">
               ({result.breakdown.length}개년)
             </span>
           </span>
@@ -98,7 +98,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                   size="sm"
                   onClick={downloadCSV}
                   aria-label="CSV 다운로드"
-                  className="h-8 w-8 sm:w-auto px-0 sm:px-2.5 gap-1.5 text-xs text-[#112220] dark:text-slate-100 border-[#e5e7eb] dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg shrink-0 flex items-center justify-center"
+                  className="h-8 w-8 sm:w-auto px-0 sm:px-2.5 gap-1.5 text-xs text-[#112220] dark:text-ghost-dark-ink border-[#e5e7eb] dark:border-ghost-dark-hairline-soft bg-white dark:bg-ghost-dark-surface-elevated hover:bg-slate-100 dark:hover:bg-dark-border rounded-lg shrink-0 flex items-center justify-center"
                 >
                   <Download className="w-3.5 h-3.5 shrink-0" />
                   <span className="hidden sm:inline">CSV 다운로드</span>
@@ -117,7 +117,7 @@ export const DataTable: React.FC<DataTableProps> = ({
                 onClick={() => setIsOpen(!isOpen)}
                 aria-expanded={isOpen}
                 aria-controls="data-table-content"
-                className="h-7 w-7 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-md transition-colors"
+                className="h-7 w-7 text-slate-400 hover:text-slate-600 dark:hover:text-ghost-dark-ink-base rounded-md transition-colors"
                 aria-label={isOpen ? '흐름표 접기' : '흐름표 펼치기'}
               >
                 {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -130,7 +130,7 @@ export const DataTable: React.FC<DataTableProps> = ({
 
       {/* shadcn Table 본체 */}
       {isOpen && (
-        <div id="data-table-content" className="border-t border-slate-100 dark:border-slate-800">
+        <div id="data-table-content" className="border-t border-slate-100 dark:border-ghost-dark-hairline">
           <Table>
             <TableHeader>
               <TableRow>
@@ -145,19 +145,19 @@ export const DataTable: React.FC<DataTableProps> = ({
             <TableBody>
               {result.breakdown.map((row) => (
                 <TableRow key={row.year}>
-                  <TableCell className="font-bold text-center text-slate-900 dark:text-slate-100 bg-slate-50/40 dark:bg-slate-900/40 whitespace-nowrap tabular-nums">
+                  <TableCell className="font-bold text-center text-slate-900 dark:text-ghost-dark-ink bg-slate-50/40 dark:bg-ghost-dark-surface-deep whitespace-nowrap tabular-nums">
                     {row.year}년
                   </TableCell>
-                  <TableCell className="text-right text-slate-600 dark:text-slate-300 whitespace-nowrap tabular-nums">
+                  <TableCell className="text-right text-slate-600 dark:text-ghost-dark-ink-soft whitespace-nowrap tabular-nums">
                     {formatCurrency(row.totalPrincipal)}
                   </TableCell>
-                  <TableCell className="text-right text-slate-500 dark:text-slate-400 whitespace-nowrap tabular-nums">
+                  <TableCell className="text-right text-slate-500 dark:text-ghost-dark-ink-mute whitespace-nowrap tabular-nums">
                     +{formatCurrency(row.grossInterestYear)}
                   </TableCell>
                   <TableCell className="text-right font-semibold text-emerald-600 dark:text-emerald-400 whitespace-nowrap tabular-nums">
                     +{formatCurrency(row.netInterestTotal)}
                   </TableCell>
-                  <TableCell className="text-right font-bold text-slate-900 dark:text-slate-100 whitespace-nowrap tabular-nums">
+                  <TableCell className="text-right font-bold text-slate-900 dark:text-ghost-dark-ink whitespace-nowrap tabular-nums">
                     {formatCurrency(row.futureValuePostTax)}
                   </TableCell>
                   <TableCell className="text-right font-semibold text-teal-700 dark:text-teal-400 whitespace-nowrap tabular-nums">

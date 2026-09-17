@@ -28,13 +28,13 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
   };
 
   return (
-    <div className='bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-4 shadow-2xs transition-colors w-full'>
-      <div className='flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-slate-800 gap-2'>
+    <div className='bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-4 shadow-2xs transition-colors w-full'>
+      <div className='flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline gap-2'>
         <div className='min-w-0 flex-1'>
-          <h3 className='text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100'>
+          <h3 className='text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink'>
             목표 자산 형성 궤적
           </h3>
-          <p className='text-xs text-[#64748b] dark:text-slate-400 mt-0.5 break-keep'>
+          <p className='text-xs text-[#64748b] dark:text-ghost-dark-ink-mute mt-0.5 break-keep'>
             초기 목돈과 매월 적립금, 복리 수익이 누적되어 목표에 도달하는 흐름
           </p>
         </div>
@@ -45,7 +45,7 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
         </div>
       </div>
 
-      <div className='flex flex-wrap items-center justify-start sm:justify-end gap-2.5 sm:gap-4 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400'>
+      <div className='flex flex-wrap items-center justify-start sm:justify-end gap-2.5 sm:gap-4 text-[11px] sm:text-xs text-slate-500 dark:text-ghost-dark-ink-mute'>
         <div className='flex items-center gap-1.5 shrink-0'>
           <span className='w-2.5 h-2.5 rounded-xs bg-sky-400 shrink-0' />
           <span>초기 자금</span>
@@ -95,8 +95,8 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
                 if (!active || !payload || payload.length === 0) return null;
                 const data = payload[0].payload;
                 return (
-                  <div className='bg-[#15171a] text-white p-3 rounded-xl shadow-xl border border-slate-700 text-xs space-y-1.5 min-w-[170px]'>
-                    <p className='font-bold text-slate-200 border-b border-slate-800 pb-1'>
+                  <div className='bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white p-3 rounded-xl shadow-xl border border-slate-700 dark:border-ghost-dark-hairline-soft text-xs space-y-1.5 min-w-[170px]'>
+                    <p className='font-bold text-slate-200 border-b border-slate-800 dark:border-ghost-dark-hairline pb-1'>
                       {label}차 말 자산 현황
                     </p>
                     <div className='flex justify-between gap-2'>

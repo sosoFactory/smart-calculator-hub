@@ -3,6 +3,21 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.33] - 2026-09-17
+
+### Ghost 디자인 시스템 완벽 통합 및 풀 뎁스 다크모드 전면 개편 (Ghost Dark Full Depth)
+- **Ghost 디자인 시스템 단일 네임스페이스 일원화**:
+  - 임의 외부 다크 네임스페이스를 완전히 제거하고, `ghost`의 고유 토큰(`canvas`, `surface`, `ink`, `hairline`, `lime`)을 그대로 계승하여 라이트/다크 1:1 대칭 체계 구축.
+- **다크 타이포그래피 5단계 깊이(Depth) 복원**:
+  - 흑연 배경과 색온도가 충돌하던 푸르스름한 `slate` 계열을 전면 배제하고 눈부심 없는 순수 무채색 흑연 오프화이트/회색 5단계(`ink`, `ink-base`, `ink-soft`, `ink-mute`, `ink-stone`) 위계 확립.
+- **순수 흑연 3단계 서피스 & 헤어라인 체계**:
+  - 캔버스(`canvas: #090a0c`), 1단계 카드(`surface: #131518`), 음각 인풋(`surface-deep: #0e1013`), 2단계 강조 결과 히어로 카드(`surface-elevated: #1b1e23`), 사이드바 서랍(`surface-drawer: #0c0e11`) 분리.
+  - 경계선 역시 `hairline: #22252a`, `hairline-soft: #2a2e36`, `hairline-dark: #3f4450`으로 정밀 분리.
+- **시그니처 형광 라임(`ghost.lime: #d1ff19`) 100% 보존**:
+  - 순수 흑연 서피스와의 고대비 조합으로 형광 번짐 없이 극대화된 가독성 및 세련된 미감 확보.
+- **전체 컴포넌트 하드코딩 헥스 코드 전면 제거 및 시맨틱 클래스 전환**:
+  - 전 계산기, 헤더, 사이드바, PWA, UI 공통 컴포넌트 라이브러리 전체의 다크 스타일을 `ghost.dark.*` 시맨틱 유틸리티 클래스로 일괄 전환.
+
 ## [1.9.32] - 2026-09-16
 
 ### 전 계산기 UI/UX 표준 규격 일원화 및 Ghost 일관성 개편 (Global UI/UX Standardization)

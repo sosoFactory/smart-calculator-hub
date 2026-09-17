@@ -11,10 +11,10 @@ const buttonVariants = cva(
         default: "bg-[#15171a] text-white hover:bg-[#1f2937] dark:bg-slate-100 dark:text-[#112220] dark:hover:bg-white",
         destructive: "bg-rose-600 text-white hover:bg-rose-700",
         outline:
-          "border border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#112220] dark:text-slate-100",
+          "border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft bg-white dark:bg-ghost-dark-surface-deep hover:bg-slate-50 dark:hover:bg-ghost-dark-hover text-[#112220] dark:text-ghost-dark-ink",
         secondary:
-          "bg-slate-100 dark:bg-slate-800 text-[#112220] dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700",
-        ghost: "hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[#112220] dark:hover:text-slate-100 text-[#334155] dark:text-slate-300",
+          "bg-slate-100 dark:bg-ghost-dark-surface-elevated text-[#112220] dark:text-ghost-dark-ink hover:bg-slate-200 dark:hover:bg-dark-border",
+        ghost: "hover:bg-slate-100 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-ghost-dark-ink text-[#334155] dark:text-ghost-dark-ink-soft",
         link: "text-[#15171a] dark:text-[#d1ff19] underline-offset-4 hover:underline",
         lime: "bg-[#d1ff19] text-[#112220] hover:bg-[#bef264] font-bold",
       },

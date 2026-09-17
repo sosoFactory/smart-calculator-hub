@@ -88,19 +88,19 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
     : MONTHLY_INCREMENT_PRESETS;
 
   return (
-    <div className="@container bg-white dark:bg-[#1e293b] p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 shadow-sm transition-colors space-y-5 sm:space-y-6">
+    <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-5 sm:space-y-6">
       {/* 1. 폼 상단 헤더 및 초기화 버튼 */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-slate-800 gap-2">
+      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline gap-2">
         <div className="space-y-0.5 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="meta" size="sm" className="shrink-0">
               급여 설계
             </Badge>
-            <h2 className="text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100 whitespace-nowrap">
+            <h2 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink whitespace-nowrap">
               급여 조건 입력
             </h2>
           </div>
-          <p className="text-xs text-[#64748b] dark:text-slate-400 break-keep">
+          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute break-keep">
             2026년 최신 4대 보험 및 간이세액표가 자동 적용됩니다
           </p>
         </div>
@@ -109,7 +109,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
           variant="ghost"
           size="sm"
           onClick={onReset}
-          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
+          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>초기화</span>
@@ -118,7 +118,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
 
       {/* 2. 급여 지급 기준 라디오 칩 그룹 */}
       <div>
-        <label className="block text-xs font-bold text-[#112220] dark:text-slate-200 mb-2">
+        <label className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base mb-2">
           급여 지급 형태
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -159,7 +159,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
         <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1">
           <label
             htmlFor="gross-amount-input"
-            className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200 cursor-pointer"
+            className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer"
           >
             {isAnnual ? '세전 연봉' : '세전 월급'}
           </label>
@@ -208,7 +208,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
               variant="outline"
               size="sm"
               onClick={() => handleAmountIncrement(inc.value)}
-              className="h-7 px-1 text-xs font-semibold bg-white dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 whitespace-nowrap"
+              className="h-7 px-1 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover whitespace-nowrap"
             >
               {inc.label}
             </Button>
@@ -226,8 +226,8 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
       </div>
 
       {/* 4. 퇴직금 지급 방식 라디오 칩 그룹 */}
-      <div className="pt-2 border-t border-[#e5e7eb] dark:border-slate-800">
-        <label className="block text-xs font-bold text-[#112220] dark:text-slate-200 mb-2">
+      <div className="pt-2 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline">
+        <label className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base mb-2">
           퇴직금 지급 방식
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -242,7 +242,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
             </SelectableChip>
           ))}
         </div>
-        <p className="text-[11px] text-[#64748b] dark:text-slate-400 mt-1.5">
+        <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute mt-1.5">
           {input.severanceType === 'included'
             ? '연봉을 13분할하여 1개월분을 퇴직충당금으로 공제합니다.'
             : '퇴직금은 별도 지급되며 연봉을 12개월로 균등 분할합니다.'}
@@ -250,15 +250,15 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
       </div>
 
       {/* 5. 비과세 급여액 설정 */}
-      <div className="pt-2 border-t border-[#e5e7eb] dark:border-slate-800">
+      <div className="pt-2 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline">
         <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1">
           <label
             htmlFor="non-taxable-input"
-            className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200 cursor-pointer flex items-center gap-1"
+            className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer flex items-center gap-1"
           >
             월 비과세 수당/식대
             <span
-              className="text-slate-400 dark:text-slate-500 cursor-help"
+              className="text-slate-400 dark:text-ghost-dark-ink-stone cursor-help"
               title="식대(월 20만 원 한도), 자가운전보조금 등 4대 보험 및 소득세가 과세되지 않는 급여 항목입니다."
             >
               <HelpCircle className="w-3.5 h-3.5 inline" />
@@ -294,24 +294,24 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
       </div>
 
       {/* 6. 부양가족 수 및 20세 이하 자녀 수 (인적공제) */}
-      <div className="pt-2 border-t border-[#e5e7eb] dark:border-slate-800 space-y-2.5">
-        <label className="block text-xs font-bold text-[#112220] dark:text-slate-200">
+      <div className="pt-2 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline space-y-2.5">
+        <label className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base">
           인적공제 (부양가족 및 자녀)
         </label>
 
         <div className="grid grid-cols-1 @md:grid-cols-2 gap-3">
           {/* 부양가족 수 */}
-          <div className="bg-slate-50 dark:bg-slate-900/40 rounded-xl p-3 border border-[#e5e7eb] dark:border-slate-800 space-y-2">
+          <div className="bg-slate-50 dark:bg-ghost-dark-surface-deep rounded-xl p-3 border border-[#e5e7eb] dark:border-ghost-dark-hairline space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-semibold text-[#112220] dark:text-slate-200 flex items-center gap-1.5 whitespace-nowrap shrink-0">
+              <span className="text-xs font-semibold text-[#112220] dark:text-ghost-dark-ink-base flex items-center gap-1.5 whitespace-nowrap shrink-0">
                 <Users className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                 부양가족 수
               </span>
-              <span className="font-bold text-xs text-[#112220] dark:text-slate-100 tabular-nums whitespace-nowrap shrink-0">
+              <span className="font-bold text-xs text-[#112220] dark:text-ghost-dark-ink tabular-nums whitespace-nowrap shrink-0">
                 {input.familyCount}명
               </span>
             </div>
-            <p className="text-[10px] text-[#64748b] dark:text-slate-400 leading-tight break-keep">
+            <p className="text-[10px] text-[#64748b] dark:text-ghost-dark-ink-mute leading-tight break-keep">
               본인 포함 (1인당 연 150만 원 공제)
             </p>
             <div className="flex items-center gap-1.5 pt-1">
@@ -319,7 +319,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
                 type="button"
                 variant="outline"
                 size="sm"
-                className="h-7 flex-1 text-xs font-semibold bg-white dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700"
+                className="h-7 flex-1 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-elevated border-[#e5e7eb] dark:border-ghost-dark-hairline-soft"
                 disabled={input.familyCount <= 1}
                 onClick={() =>
                   updateField('familyCount', Math.max(1, input.familyCount - 1))
@@ -331,7 +331,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
                 type="button"
                 variant="outline"
                 size="sm"
-                className="h-7 flex-1 text-xs font-semibold bg-white dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700"
+                className="h-7 flex-1 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-elevated border-[#e5e7eb] dark:border-ghost-dark-hairline-soft"
                 disabled={input.familyCount >= 11}
                 onClick={() =>
                   updateField('familyCount', Math.min(11, input.familyCount + 1))
@@ -343,17 +343,17 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
           </div>
 
           {/* 20세 이하 자녀 수 */}
-          <div className="bg-slate-50 dark:bg-slate-900/40 rounded-xl p-3 border border-[#e5e7eb] dark:border-slate-800 space-y-2">
+          <div className="bg-slate-50 dark:bg-ghost-dark-surface-deep rounded-xl p-3 border border-[#e5e7eb] dark:border-ghost-dark-hairline space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-semibold text-[#112220] dark:text-slate-200 flex items-center gap-1.5 whitespace-nowrap shrink-0">
+              <span className="text-xs font-semibold text-[#112220] dark:text-ghost-dark-ink-base flex items-center gap-1.5 whitespace-nowrap shrink-0">
                 <Baby className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                 20세 이하 자녀
               </span>
-              <span className="font-bold text-xs text-[#112220] dark:text-slate-100 tabular-nums whitespace-nowrap shrink-0">
+              <span className="font-bold text-xs text-[#112220] dark:text-ghost-dark-ink tabular-nums whitespace-nowrap shrink-0">
                 {input.childrenCount}명
               </span>
             </div>
-            <p className="text-[10px] text-[#64748b] dark:text-slate-400 leading-tight break-keep">
+            <p className="text-[10px] text-[#64748b] dark:text-ghost-dark-ink-mute leading-tight break-keep">
               자녀 세액공제 추가 적용
             </p>
             <div className="flex items-center gap-1.5 pt-1">
@@ -361,7 +361,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
                 type="button"
                 variant="outline"
                 size="sm"
-                className="h-7 flex-1 text-xs font-semibold bg-white dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700"
+                className="h-7 flex-1 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-elevated border-[#e5e7eb] dark:border-ghost-dark-hairline-soft"
                 disabled={input.childrenCount <= 0}
                 onClick={() =>
                   updateField('childrenCount', Math.max(0, input.childrenCount - 1))
@@ -373,7 +373,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
                 type="button"
                 variant="outline"
                 size="sm"
-                className="h-7 flex-1 text-xs font-semibold bg-white dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700"
+                className="h-7 flex-1 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-elevated border-[#e5e7eb] dark:border-ghost-dark-hairline-soft"
                 disabled={input.childrenCount >= 10}
                 onClick={() =>
                   updateField('childrenCount', Math.min(10, input.childrenCount + 1))

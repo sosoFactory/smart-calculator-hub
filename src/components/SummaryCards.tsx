@@ -76,7 +76,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
       )}
 
       {/* 최종 수령액 하이라이트 대형 카드 (Ghost Ink-Base 다크 서피스) */}
-      <div className="relative overflow-hidden bg-[#15171a] text-white rounded-[24px] p-5 sm:p-6 border border-[#1f2937]">
+      <div className="relative overflow-hidden bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white rounded-[24px] p-5 sm:p-6 border border-[#1f2937] dark:border-ghost-dark-hairline-soft">
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center gap-2 text-[#94a3b8] text-xs font-semibold">
             <Wallet className="w-4 h-4 text-[#d1ff19]" />
@@ -93,7 +93,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
               variant="outline"
               size="sm"
               onClick={handleCopy}
-              className="h-7 px-2.5 text-xs bg-slate-800/80 hover:bg-slate-700 border-slate-700 text-white shrink-0"
+              className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white shrink-0"
             >
               {copied ? (
                 <>
@@ -156,33 +156,33 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
       {/* 3단 서브 지표 그리드 (비교 모드에서는 좌우 분할 공간 협소 방지를 위해 1열 세로 배치, 단일 모드에서는 sm 3열) */}
       <div className={title ? "grid grid-cols-1 gap-2" : "grid grid-cols-1 sm:grid-cols-3 gap-2"}>
         {/* 총 투자 원금 */}
-        <div className="rounded-xl border border-[#e5e7eb] dark:border-slate-800 bg-white dark:bg-[#1e293b] p-3 shadow-2xs">
-          <div className={`flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1 ${
+        <div className="rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface p-3 shadow-2xs">
+          <div className={`flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-ghost-dark-ink-mute mb-1 ${
             title ? 'justify-between' : 'justify-between sm:justify-start'
           }`}>
             <div className="flex items-center gap-1">
-              <PiggyBank className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+              <PiggyBank className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
               <span>총 투자원금</span>
             </div>
-            <span className={`text-[11px] text-slate-400 dark:text-slate-500 font-medium ${
+            <span className={`text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone font-medium ${
               title ? 'block' : 'sm:hidden'
             }`}>
               {formatKoreanUnit(result.totalPrincipal)}
             </span>
           </div>
-          <div className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">
+          <div className="text-sm sm:text-base font-bold text-slate-800 dark:text-ghost-dark-ink">
             {formatCurrency(result.totalPrincipal)}
           </div>
           {!title && (
-            <div className="hidden sm:block text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">
+            <div className="hidden sm:block text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone font-medium mt-0.5">
               {formatKoreanUnit(result.totalPrincipal)}
             </div>
           )}
         </div>
 
         {/* 세후 총 이자 / 손익 */}
-        <div className="rounded-xl border border-[#e5e7eb] dark:border-slate-800 bg-white dark:bg-[#1e293b] p-3 shadow-2xs">
-          <div className={`flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1 ${
+        <div className="rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface p-3 shadow-2xs">
+          <div className={`flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-ghost-dark-ink-mute mb-1 ${
             title ? 'justify-between' : 'justify-between sm:justify-start'
           }`}>
             <div className="flex items-center gap-1">
@@ -206,15 +206,15 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
         </div>
 
         {/* 이자 소득세 */}
-        <div className="rounded-xl border border-[#e5e7eb] dark:border-slate-800 bg-white dark:bg-[#1e293b] p-3 shadow-2xs">
-          <div className={`flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1 ${
+        <div className="rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface p-3 shadow-2xs">
+          <div className={`flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-ghost-dark-ink-mute mb-1 ${
             title ? 'justify-between' : 'justify-between sm:justify-start'
           }`}>
             <div className="flex items-center gap-1">
               <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
               <span>이자 소득세</span>
             </div>
-            <span className={`text-[11px] text-slate-400 dark:text-slate-500 font-medium ${
+            <span className={`text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone font-medium ${
               title ? 'block' : 'sm:hidden'
             }`}>
               세전 {formatCurrency(result.grossInterest)}
@@ -224,7 +224,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
             {formatCurrency(result.taxAmount)}
           </div>
           {!title && (
-            <div className="hidden sm:block text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-0.5">
+            <div className="hidden sm:block text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone font-medium mt-0.5">
               세전 {formatCurrency(result.grossInterest)}
             </div>
           )}

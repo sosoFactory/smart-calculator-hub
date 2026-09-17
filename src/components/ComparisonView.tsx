@@ -19,7 +19,7 @@ export const ComparisonView: React.FC<ComparisonViewProps> = ({ comparison }) =>
   const isBBetter = diffPostTax >= 0;
 
   return (
-    <div className="bg-[#15171a] text-white rounded-[24px] p-5 sm:p-6 border border-[#1f2937]">
+    <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white rounded-[24px] p-5 sm:p-6 border border-[#1f2937] dark:border-ghost-dark-hairline-soft">
       <div className="flex items-center gap-2 mb-3">
         <div className="w-8 h-8 rounded-md bg-white/10 text-[#d1ff19] flex items-center justify-center">
           <Zap className="w-4 h-4" />

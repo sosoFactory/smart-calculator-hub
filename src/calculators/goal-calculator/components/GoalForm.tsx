@@ -67,15 +67,15 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
   };
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-5 shadow-2xs transition-colors w-full">
+    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-5 shadow-2xs transition-colors w-full">
       {/* 상단 타이틀 & 표준 초기화 버튼 */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-slate-800 gap-2">
+      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline gap-2">
         <div className="space-y-0.5 min-w-0 flex-1">
-          <h2 className="text-base sm:text-lg font-bold text-[#112220] dark:text-slate-100 flex items-center gap-2">
+          <h2 className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink flex items-center gap-2">
             <Target className="w-5 h-5 text-[#112220] dark:text-[#d1ff19] shrink-0" />
             <span className="truncate">목표 조건 설정</span>
           </h2>
-          <p className="text-xs text-[#64748b] dark:text-slate-400 break-keep">
+          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute break-keep">
             목표 자산과 기간, 예상 수익률을 입력하면 필요한 매월 적립액을 계산합니다
           </p>
         </div>
@@ -84,7 +84,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
           variant="ghost"
           size="sm"
           onClick={onReset}
-          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
+          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>초기화</span>
@@ -95,7 +95,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
         {/* 1. 목표 자산 (원) */}
         <div>
           <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1.5">
-            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base">
               목표 자산
             </label>
             <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
@@ -128,7 +128,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
         {/* 2. 달성 목표 기간 (년) */}
         <div>
           <div className="flex flex-wrap items-baseline justify-between gap-1 mb-2">
-            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base">
               목표 달성 기간
             </label>
             <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
@@ -161,7 +161,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
         {/* 3. 예상 연 수익률 (%) - step 0.5, min 0 */}
         <div>
           <div className="flex flex-wrap items-baseline justify-between gap-1 mb-2">
-            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base">
               예상 연 수익률
             </label>
             <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
@@ -194,7 +194,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
         {/* 4. 현재 보유 초기 자금 (원) */}
         <div>
           <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1.5">
-            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base">
               초기 보유 자금 (거치금)
             </label>
             <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
@@ -227,7 +227,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
         {/* 5. 이자소득 과세 방식 (반응형 텍스트 + 친절 안내 가이드) */}
         <div>
           <div className="flex items-center justify-between gap-1 mb-2">
-            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200 whitespace-nowrap">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base whitespace-nowrap">
               과세 방식
             </label>
             <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums whitespace-nowrap">
@@ -267,20 +267,20 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
           </div>
 
           {/* ISA 및 과세 방식 친절 안내 가이드 */}
-          <div className="mt-2 text-xs text-[#64748b] dark:text-slate-400 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800/80 leading-relaxed">
+          <div className="mt-2 text-xs text-[#64748b] dark:text-ghost-dark-ink-mute bg-slate-50 dark:bg-ghost-dark-surface-deep p-2.5 rounded-lg border border-slate-200/80 dark:border-ghost-dark-hairline leading-relaxed">
             {input.taxType === 'normal' && (
               <p>
-                <strong className="text-slate-800 dark:text-slate-200 font-semibold">일반과세 (15.4%):</strong> 금융상품 이자·배당 수익에 기본 부과되는 이자소득세(14%)와 지방소득세(1.4%)가 원천징수됩니다.
+                <strong className="text-slate-800 dark:text-ghost-dark-ink-base font-semibold">일반과세 (15.4%):</strong> 금융상품 이자·배당 수익에 기본 부과되는 이자소득세(14%)와 지방소득세(1.4%)가 원천징수됩니다.
               </p>
             )}
             {input.taxType === 'isa' && (
               <p>
-                <strong className="text-slate-800 dark:text-slate-200 font-semibold">ISA 절세 (9.9% 분리과세):</strong> 개인종합자산관리계좌(ISA)로 순이익 200만~400만원까지 비과세되며, 초과 수익은 종합과세 없이 9.9% 분리과세 혜택을 받습니다.
+                <strong className="text-slate-800 dark:text-ghost-dark-ink-base font-semibold">ISA 절세 (9.9% 분리과세):</strong> 개인종합자산관리계좌(ISA)로 순이익 200만~400만원까지 비과세되며, 초과 수익은 종합과세 없이 9.9% 분리과세 혜택을 받습니다.
               </p>
             )}
             {input.taxType === 'exempt' && (
               <p>
-                <strong className="text-slate-800 dark:text-slate-200 font-semibold">비과세 (0%):</strong> 청년도약계좌, 비과세종합저축 등 관련 법령에 따라 이자소득세가 전혀 발생하지 않는 절세 상품입니다.
+                <strong className="text-slate-800 dark:text-ghost-dark-ink-base font-semibold">비과세 (0%):</strong> 청년도약계좌, 비과세종합저축 등 관련 법령에 따라 이자소득세가 전혀 발생하지 않는 절세 상품입니다.
               </p>
             )}
           </div>

@@ -121,7 +121,7 @@ export const HomeApp: React.FC = () => {
                   className={`h-7 sm:h-8 px-2.5 sm:px-3 text-[11px] sm:text-xs rounded-full font-medium transition-all ${
                     isSelected
                       ? 'bg-[#15171a] dark:bg-[#d1ff19] text-white dark:text-[#112220] hover:bg-[#1e2329] dark:hover:bg-[#c2ed17] shadow-sm'
-                      : 'bg-white dark:bg-[#15171a] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      : 'bg-white dark:bg-ghost-dark-surface-deep border-slate-200 dark:border-ghost-dark-hairline-soft text-slate-600 dark:text-ghost-dark-ink-mute hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
                   }`}
                 >
                   {cat.label}
@@ -143,26 +143,26 @@ export const HomeApp: React.FC = () => {
                 onClick={() => navigate(`/${item.id}`)}
                 className={`group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200 cursor-pointer text-left ${
                   isComingSoon
-                    ? 'bg-slate-50/60 dark:bg-[#13171f]/40 border-slate-200/70 dark:border-slate-800/50 opacity-75 hover:opacity-100'
-                    : 'bg-white dark:bg-[#15171a] border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-[#d1ff19]/60 hover:shadow-sm dark:hover:shadow-[0_4px_16px_rgba(209,255,25,0.05)]'
+                    ? 'bg-slate-50/60 dark:bg-[#101215]/60 border-slate-200/70 dark:border-[#1d2025] opacity-75 hover:opacity-100'
+                    : 'bg-white dark:bg-ghost-dark-surface border-slate-200 dark:border-ghost-dark-hairline hover:border-slate-400 dark:hover:border-[#2f353f] hover:shadow-sm'
                 }`}
               >
                 <div className="space-y-2 sm:space-y-2.5">
                   {/* 상단: 아이콘 + 뱃지 */}
                   <div className="flex items-center justify-between">
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-ghost-dark-surface-elevated border border-slate-200/80 dark:border-ghost-dark-hairline-soft flex items-center justify-center shrink-0">
                       {renderIcon(item.id)}
                     </div>
 
                     {isComingSoon ? (
                       <Badge
                         variant="outline"
-                        className="text-[10px] sm:text-[11px] px-1.5 py-0 font-medium bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700"
+                        className="text-[10px] sm:text-[11px] px-1.5 py-0 font-medium bg-slate-100 dark:bg-ghost-dark-surface-elevated text-slate-400 dark:text-ghost-dark-ink-stone border-slate-200 dark:border-ghost-dark-hairline-soft"
                       >
                         출시예정
                       </Badge>
                     ) : (
-                      <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 truncate max-w-[80px] sm:max-w-none text-right">
+                      <span className="text-[10px] font-medium text-slate-400 dark:text-ghost-dark-ink-stone truncate max-w-[80px] sm:max-w-none text-right">
                         {CATEGORY_NAMES[item.category].split(' ')[0]}
                       </span>
                     )}
@@ -170,21 +170,21 @@ export const HomeApp: React.FC = () => {
 
                   {/* 중단: 타이틀 및 간결한 설명 */}
                   <div>
-                    <h3 className="text-[13px] sm:text-base font-bold text-[#112220] dark:text-slate-100 tracking-tight leading-snug group-hover:text-black dark:group-hover:text-white transition-colors line-clamp-1">
+                    <h3 className="text-[13px] sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink tracking-tight leading-snug group-hover:text-black dark:group-hover:text-white transition-colors line-clamp-1">
                       {item.shortName}
                     </h3>
-                    <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-tight sm:leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-slate-500 dark:text-ghost-dark-ink-mute mt-1 line-clamp-2 leading-tight sm:leading-relaxed">
                       {item.description}
                     </p>
                   </div>
                 </div>
 
                 {/* 하단: 미니 액션 라인 */}
-                <div className="pt-2.5 sm:pt-3 mt-1.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] sm:text-xs font-semibold">
+                <div className="pt-2.5 sm:pt-3 mt-1.5 border-t border-slate-100 dark:border-ghost-dark-hairline flex items-center justify-between text-[11px] sm:text-xs font-semibold">
                   <span
                     className={
                       isComingSoon
-                        ? 'text-slate-400 dark:text-slate-500'
+                        ? 'text-slate-400 dark:text-ghost-dark-ink-stone'
                         : 'text-[#112220] dark:text-[#d1ff19] group-hover:underline'
                     }
                   >
@@ -204,7 +204,7 @@ export const HomeApp: React.FC = () => {
 
       {/* 3. 모바일 접속 QR 코드 및 URL 복사 카드 (PRD 2.6 명세 준수) */}
       <section className="pt-2 sm:pt-4">
-        <div className="bg-white dark:bg-[#15171a] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-5 transition-colors shadow-sm">
+        <div className="bg-white dark:bg-ghost-dark-surface border border-slate-200 dark:border-ghost-dark-hairline rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center gap-4 sm:gap-5 transition-colors shadow-sm">
           {/* QR 코드 이미지 (고대비 화이트 라운드 패딩 백그라운드) */}
           <div className="shrink-0 p-2 bg-white rounded-xl border border-slate-200 shadow-xs flex items-center justify-center">
             <img
@@ -222,11 +222,11 @@ export const HomeApp: React.FC = () => {
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-1.5 mb-1">
                 <QrCode className="w-4 h-4 text-[#112220] dark:text-[#d1ff19]" />
-                <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100 tracking-tight">
+                <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink tracking-tight">
                   모바일로 바로 열기
                 </h3>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+              <p className="text-xs text-slate-500 dark:text-ghost-dark-ink-mute leading-relaxed max-w-xl">
                 스마트폰 카메라로 QR 코드를 스캔하여 바로 접속하거나, 홈 화면에 추가하여 앱처럼 사용해보세요.
               </p>
             </div>
@@ -238,7 +238,7 @@ export const HomeApp: React.FC = () => {
                 size="sm"
                 onClick={handleCopyUrl}
                 aria-label="사이트 주소 복사"
-                className="h-8 px-3 gap-1.5 text-xs font-semibold rounded-lg bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-[#112220] dark:text-slate-100 transition-colors"
+                className="h-8 px-3 gap-1.5 text-xs font-semibold rounded-lg bg-slate-50 dark:bg-ghost-dark-surface-elevated border-slate-200 dark:border-ghost-dark-hairline-soft hover:bg-slate-100 dark:hover:bg-dark-border text-[#112220] dark:text-ghost-dark-ink transition-colors"
               >
                 {copied ? (
                   <>

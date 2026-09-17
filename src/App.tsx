@@ -41,7 +41,7 @@ const GoalApp = lazy(() =>
 const CalculatorLoadingFallback = () => (
   <div className="w-full py-20 flex flex-col items-center justify-center space-y-3">
     <div className="w-7 h-7 rounded-full border-2 border-[#15171a] dark:border-slate-300 border-t-transparent animate-spin" />
-    <span className="text-xs text-[#64748b] dark:text-slate-400 font-medium">화면을 불러오는 중...</span>
+    <span className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute font-medium">화면을 불러오는 중...</span>
   </div>
 );
 
@@ -74,7 +74,7 @@ export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <TooltipProvider delayDuration={150}>
-        <div className="min-h-screen bg-white dark:bg-[#0f172a] text-[#112220] dark:text-slate-100 flex font-sans transition-colors duration-200">
+        <div className="min-h-screen bg-white dark:bg-ghost-dark-canvas text-[#112220] dark:text-ghost-dark-ink flex font-sans transition-colors duration-200">
       {/* 1. 좌측 사이드바 (데스크톱 고정 & 모바일 슬라이드 드로어) */}
       <SidebarDrawer
         activeId={currentCalculator.id}

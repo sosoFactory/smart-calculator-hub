@@ -101,17 +101,17 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
   });
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-5 shadow-2xs transition-colors">
+    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-5 shadow-2xs transition-colors">
       {/* 1. 상단 타이틀 & 초기화 버튼 */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-slate-800">
+      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
         <div className="space-y-0.5">
-          <h2 className="text-base sm:text-lg font-black text-[#112220] dark:text-slate-100 flex items-center gap-2 whitespace-nowrap">
+          <h2 className="text-base sm:text-lg font-black text-[#112220] dark:text-ghost-dark-ink flex items-center gap-2 whitespace-nowrap">
             대출 조건 입력
             <Badge variant="meta" size="sm">
               스마트 비교
             </Badge>
           </h2>
-          <p className="text-xs text-[#64748b] dark:text-slate-400">
+          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute">
             원하는 상환 방식과 금액을 입력하면 총이자와 상환 스케줄이 계산됩니다
           </p>
         </div>
@@ -120,7 +120,7 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
           variant="ghost"
           size="sm"
           onClick={onReset}
-          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
+          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>초기화</span>
@@ -129,7 +129,7 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
 
       {/* 2. 상환 방식 선택 (독립 라디오 칩 그룹) */}
       <div>
-        <label className="block text-xs font-bold text-[#112220] dark:text-slate-200 mb-2">
+        <label className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base mb-2">
           상환 방식
         </label>
         <div className="grid grid-cols-3 gap-2">
@@ -149,7 +149,7 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
       {/* 3. 대출 원금 */}
       <div>
         <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1">
-          <label htmlFor="loan-amount" className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200 cursor-pointer">
+          <label htmlFor="loan-amount" className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
             대출 원금
           </label>
           <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19]">
@@ -178,7 +178,7 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
               variant="outline"
               size="sm"
               onClick={() => updateField('loanAmount', (input.loanAmount || 0) + preset.value)}
-              className="h-7 px-2.5 text-xs font-semibold bg-white dark:bg-slate-900 border-[#e5e7eb] dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+              className="h-7 px-2.5 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover"
             >
               {preset.label}
             </Button>
@@ -198,10 +198,10 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
       {/* 4. 대출 금리 (% 연이율) */}
       <div>
         <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1">
-          <label htmlFor="loan-rate" className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200 cursor-pointer">
+          <label htmlFor="loan-rate" className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
             연 대출 금리
           </label>
-          <span className="text-xs font-bold text-[#112220] dark:text-slate-200">
+          <span className="text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base">
             연 {input.annualRate.toFixed(2)}%
           </span>
         </div>
@@ -235,7 +235,7 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
       {/* 5. 대출 기간 (만기) */}
       <div>
         <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1">
-          <label htmlFor="loan-term" className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200 cursor-pointer">
+          <label htmlFor="loan-term" className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
             대출 기간
           </label>
           <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19]">
@@ -267,10 +267,10 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
       {/* 6. 거치 기간 (이자만 납입) */}
       <div>
         <div className="flex flex-wrap items-baseline justify-between gap-1 mb-2">
-          <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
-            거치 기간 <span className="text-[11px] font-normal text-slate-500 dark:text-slate-400">(원금 상환 유예)</span>
+          <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base">
+            거치 기간 <span className="text-[11px] font-normal text-slate-500 dark:text-ghost-dark-ink-mute">(원금 상환 유예)</span>
           </label>
-          <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+          <span className="text-xs font-semibold text-slate-600 dark:text-ghost-dark-ink-soft">
             {input.gracePeriodMonths === 0
               ? '거치 없음'
               : `${Math.floor(input.gracePeriodMonths / 12)}년 (${input.gracePeriodMonths}개월)`}
@@ -291,13 +291,13 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
       </div>
 
       {/* 7. 중도상환 시뮬레이터 (선택 옵션) */}
-      <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 space-y-3">
+      <div className="pt-2 border-t border-slate-100 dark:border-ghost-dark-hairline space-y-3">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <span className="text-xs sm:text-sm font-bold text-[#112220] dark:text-slate-200">
+            <span className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base">
               중도상환 시뮬레이션
             </span>
-            <p className="text-[11px] text-[#64748b] dark:text-slate-400">
+            <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute">
               조기 상환 시 아낄 수 있는 이자와 수수료를 계산합니다
             </p>
           </div>
@@ -317,7 +317,7 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
             className={`rounded-full transition-colors cursor-pointer shrink-0 ${
               isEarlyEnabled
                 ? 'bg-[#15171a] hover:bg-[#25282c] dark:bg-[#d1ff19] dark:hover:bg-[#b8e610]'
-                : 'bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600'
+                : 'bg-slate-200 hover:bg-slate-300 dark:bg-ghost-dark-hairline dark:hover:bg-ghost-dark-hairline-soft'
             }`}
           >
             <span
@@ -329,12 +329,12 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
         </div>
 
         {isEarlyEnabled && (
-          <div className="bg-slate-50 dark:bg-slate-900/60 rounded-xl p-3.5 border border-[#e5e7eb] dark:border-slate-800 space-y-3">
+          <div className="bg-slate-50 dark:bg-ghost-dark-surface-deep rounded-xl p-3.5 border border-[#e5e7eb] dark:border-ghost-dark-hairline space-y-3">
             {/* 상환 시점 */}
             <div>
               <div className="flex justify-between items-baseline mb-1">
-                <span className="font-bold text-[#112220] dark:text-slate-200">중도상환 시점</span>
-                <span className="font-semibold text-slate-500 dark:text-slate-400">
+                <span className="font-bold text-[#112220] dark:text-ghost-dark-ink-base">중도상환 시점</span>
+                <span className="font-semibold text-slate-500 dark:text-ghost-dark-ink-mute">
                   대출 실행 후 {input.earlyRepayment?.afterMonths}개월 뒤
                 </span>
               </div>
@@ -360,7 +360,7 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
             {/* 상환 금액 */}
             <div>
               <div className="flex justify-between items-baseline mb-1">
-                <span className="font-bold text-[#112220] dark:text-slate-200">중도상환 금액</span>
+                <span className="font-bold text-[#112220] dark:text-ghost-dark-ink-base">중도상환 금액</span>
                 <span className="font-bold text-[#112220] dark:text-[#d1ff19]">
                   {formatKoreanLoanAmount(input.earlyRepayment?.amount || 0)}
                 </span>
@@ -392,7 +392,7 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
                       }));
                     }
                   }}
-                  className="w-full text-right font-bold pl-3 pr-10 py-1.5 h-9 text-sm border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900"
+                  className="w-full text-right font-bold pl-3 pr-10 py-1.5 h-9 text-sm border-[#e5e7eb] dark:border-ghost-dark-hairline-soft bg-white dark:bg-ghost-dark-surface-deep"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">
                   원
@@ -401,8 +401,8 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
             </div>
 
             {/* 수수료율 */}
-            <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-slate-800">
-              <span className="text-slate-600 dark:text-slate-400">
+            <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-ghost-dark-hairline">
+              <span className="text-slate-600 dark:text-ghost-dark-ink-mute">
                 수수료율 (3년 경과 시 0원 면제)
               </span>
               <div className="flex items-center gap-1">
@@ -417,7 +417,7 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
                   placeholder="1.2"
                   onChange={feeRateInput.onChange}
                   onBlur={feeRateInput.onBlur}
-                  className="w-16 h-7 text-right text-xs font-bold border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900"
+                  className="w-16 h-7 text-right text-xs font-bold border-[#e5e7eb] dark:border-ghost-dark-hairline-soft bg-white dark:bg-ghost-dark-surface-deep"
                 />
                 <span className="text-slate-500 font-bold">%</span>
               </div>

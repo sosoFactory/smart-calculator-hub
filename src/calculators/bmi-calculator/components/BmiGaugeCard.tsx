@@ -46,16 +46,16 @@ export const BmiGaugeCard: React.FC<BmiGaugeCardProps> = ({ result }) => {
   const markerPercent = getMarkerPosition(result.bmi);
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 shadow-sm transition-colors space-y-4">
+    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 shadow-sm transition-colors space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-slate-100 flex items-center gap-2">
+          <h3 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink flex items-center gap-2">
             <span>비만도 스펙트럼 게이지</span>
             <Badge variant="outline" size="sm" className="text-[10px] sm:text-xs">
               KSSO 한국인 기준
             </Badge>
           </h3>
-          <p className="text-xs text-[#64748b] dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute mt-0.5">
             전체 비만도 6단계 스펙트럼 상 나의 위치
           </p>
         </div>
@@ -100,12 +100,12 @@ export const BmiGaugeCard: React.FC<BmiGaugeCardProps> = ({ result }) => {
                   className={`text-[11px] sm:text-xs truncate transition-colors ${
                     isCurrent
                       ? 'font-bold text-[#112220] dark:text-[#d1ff19]'
-                      : 'text-slate-500 dark:text-slate-400 font-medium'
+                      : 'text-slate-500 dark:text-ghost-dark-ink-mute font-medium'
                   }`}
                 >
                   {sec.label}
                 </div>
-                <div className="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 tabular-nums">
+                <div className="text-[9px] sm:text-[10px] text-slate-400 dark:text-ghost-dark-ink-stone tabular-nums">
                   {sec.range}
                 </div>
               </div>

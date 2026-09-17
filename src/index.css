@@ -9,13 +9,30 @@
     letter-spacing: -0.015em;
   }
 
+  :root {
+    --ghost-dark-canvas: #090a0c;
+    --ghost-dark-surface: #131518;
+    --ghost-dark-surface-deep: #0e1013;
+    --ghost-dark-surface-elevated: #1b1e23;
+    --ghost-dark-surface-drawer: #0c0e11;
+    --ghost-dark-ink: #f8fafc;
+    --ghost-dark-ink-base: #e2e5e9;
+    --ghost-dark-ink-soft: #cbd5e1;
+    --ghost-dark-ink-mute: #94a3b8;
+    --ghost-dark-ink-stone: #64748b;
+    --ghost-dark-hairline: #22252a;
+    --ghost-dark-hairline-soft: #2a2e36;
+    --ghost-dark-hairline-dark: #3f4450;
+    --ghost-dark-hover: #1a1d22;
+  }
+
   body {
     background-color: #ffffff;
     color: #112220;
   }
 
   .dark body {
-    background-color: #0f172a;
+    background-color: var(--ghost-dark-canvas);
     color: #f8fafc;
   }
 
@@ -84,13 +101,13 @@ input[type=number] {
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: var(--ghost-dark-surface-deep);
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: var(--ghost-dark-hairline-soft);
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: var(--ghost-dark-hairline-dark);
 }
 
 /* 모바일 사이드바 드로어 하드웨어 가속 슬라이드 애니메이션 */

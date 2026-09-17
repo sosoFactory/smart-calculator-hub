@@ -80,9 +80,9 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
   const discountOptions: SpreadDiscount[] = [90, 80, 50, 0];
 
   return (
-    <div className="bg-white dark:bg-[#1e293b] rounded-[24px] border border-[#e5e7eb] dark:border-slate-800 p-4 sm:p-6 space-y-4 shadow-2xs transition-colors min-w-0">
+    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-4 shadow-2xs transition-colors min-w-0">
       {/* 1. 상단 환전 방식 탭 및 기준일자 배지 */}
-      <div className="space-y-2.5 pb-3 border-b border-[#e5e7eb] dark:border-slate-800">
+      <div className="space-y-2.5 pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           {/* 환전 방식 탭 (모바일: 3등분 꽉 채움) */}
           <Tabs
@@ -109,9 +109,9 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
           </Tabs>
 
           {/* 기준일 및 환율 안내 (모바일: 1행 가로 양끝 정렬 또는 유동 줄바꿈) */}
-          <div className="flex items-center justify-between sm:justify-end gap-2 text-xs text-[#64748b] dark:text-slate-300 font-medium pt-[0.5px] min-w-0 flex-wrap">
-            <div className="flex items-center gap-1 text-[11px] bg-slate-50 dark:bg-slate-800/80 px-2 py-1 rounded-md border border-[#e5e7eb] dark:border-slate-700 shrink-0">
-              <Calendar className="w-3.5 h-3.5 text-[#64748b] dark:text-slate-400" />
+          <div className="flex items-center justify-between sm:justify-end gap-2 text-xs text-[#64748b] dark:text-ghost-dark-ink-soft font-medium pt-[0.5px] min-w-0 flex-wrap">
+            <div className="flex items-center gap-1 text-[11px] bg-slate-50 dark:bg-ghost-dark-surface-deep px-2 py-1 rounded-md border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft shrink-0">
+              <Calendar className="w-3.5 h-3.5 text-[#64748b] dark:text-ghost-dark-ink-mute" />
               <span className="whitespace-nowrap">고시: {snapshot.baseDate}</span>
               {snapshot.isLive && (
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 ml-0.5 shrink-0" title="최신 실시간 환율 연동" />
@@ -127,9 +127,9 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
 
       {/* 2. 은행 환전 우대율 (스프레드 할인율) - 현찰 살 때/팔 때 활성화 */}
       {exchangeType !== 'base' && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-[#e5e7eb] dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 dark:bg-ghost-dark-surface-deep border border-[#e5e7eb] dark:border-ghost-dark-hairline">
           <div className="flex items-center justify-between sm:justify-start gap-2">
-            <span className="text-xs font-bold text-[#112220] dark:text-slate-200 whitespace-nowrap">은행 우대율</span>
+            <span className="text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base whitespace-nowrap">은행 우대율</span>
             {discountSavedKRW > 0 && (
               <Badge variant="eyebrow" className="text-[10px] px-1.5 py-0 h-5 whitespace-nowrap">
                 약 {formatCurrencyAmount(discountSavedKRW, 'KRW')}원 절약
@@ -155,9 +155,9 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
       {/* 3. 메인 인터랙티브 듀얼 변환 영역 (모바일: 1열 세로, 데스크톱: 3열 좌/중/우) */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 items-center">
         {/* 1. 출발(From) 단위 입력 박스 */}
-        <div className="bg-slate-50/70 dark:bg-slate-900/60 border border-[#e5e7eb] dark:border-slate-700 rounded-2xl p-3.5 sm:p-4 focus-within:border-[#15171a] dark:focus-within:border-[#d1ff19] focus-within:bg-white dark:focus-within:bg-slate-900 transition-all">
+        <div className="bg-slate-50/70 dark:bg-ghost-dark-surface-deep border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft rounded-2xl p-3.5 sm:p-4 focus-within:border-[#15171a] dark:focus-within:border-[#d1ff19] focus-within:bg-white dark:focus-within:bg-ghost-dark-surface transition-all">
           <div className="flex items-center justify-between gap-2 mb-2">
-            <label htmlFor="from-amount" className="text-[11px] sm:text-xs font-bold text-[#64748b] dark:text-slate-400 uppercase tracking-wider whitespace-nowrap cursor-pointer">
+            <label htmlFor="from-amount" className="text-[11px] sm:text-xs font-bold text-[#64748b] dark:text-ghost-dark-ink-mute uppercase tracking-wider whitespace-nowrap cursor-pointer">
               입력 (From)
             </label>
             <div className="w-28 sm:w-36 lg:w-44 shrink-0">
@@ -188,14 +188,14 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
                 }
               }}
               placeholder="0"
-              className="h-auto w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 font-extrabold text-2xl sm:text-3xl text-[#112220] dark:text-slate-100 tracking-tight placeholder-slate-300 dark:placeholder-slate-600 tabular-nums"
+              className="h-auto w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 font-extrabold text-2xl sm:text-3xl text-[#112220] dark:text-ghost-dark-ink tracking-tight placeholder-slate-300 dark:placeholder-ghost-dark-ink-stone tabular-nums"
             />
-            <span className="text-sm sm:text-base font-bold text-slate-500 dark:text-slate-400 shrink-0">
+            <span className="text-sm sm:text-base font-bold text-slate-500 dark:text-ghost-dark-ink-mute shrink-0">
               {fromCurr.symbol}
             </span>
           </div>
 
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-2 truncate">
+          <p className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone mt-2 truncate">
             {fromCurr.name} ({fromCode})
           </p>
         </div>
@@ -209,7 +209,7 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
                 variant="outline"
                 size="icon"
                 onClick={onSwap}
-                className="w-10 h-10 rounded-full border border-[#e5e7eb] dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 shadow-xs hover:border-[#15171a] dark:hover:border-[#d1ff19] transition-all text-[#112220] dark:text-white shrink-0"
+                className="w-10 h-10 rounded-full border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft bg-white dark:bg-ghost-dark-surface-elevated hover:bg-slate-100 dark:hover:bg-ghost-dark-hover shadow-xs hover:border-[#15171a] dark:hover:border-[#d1ff19] transition-all text-[#112220] dark:text-white shrink-0"
                 aria-label="통화 맞바꾸기"
               >
                 <ArrowLeftRight className="w-4 h-4" />
@@ -220,7 +220,7 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
         </div>
 
         {/* 3. 도착(To) 단위 결과 박스 */}
-        <div className="bg-[#15171a] dark:bg-slate-950 text-white rounded-2xl p-3.5 sm:p-4 border border-[#15171a] dark:border-slate-800 shadow-xs">
+        <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white rounded-2xl p-3.5 sm:p-4 border border-[#15171a] dark:border-ghost-dark-hairline-soft shadow-xs">
           <div className="flex items-center justify-between gap-2 mb-2">
             <span className="text-[11px] sm:text-xs font-bold text-[#d1ff19] uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d1ff19] shrink-0" />
@@ -234,7 +234,7 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
                     variant="ghost"
                     size="icon"
                     onClick={handleCopyResult}
-                    className="h-7 w-7 text-slate-300 hover:text-white hover:bg-slate-800 rounded-md shrink-0"
+                    className="h-7 w-7 text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-ghost-dark-surface rounded-md shrink-0"
                     aria-label="결과값 복사"
                   >
                     {copied ? (
