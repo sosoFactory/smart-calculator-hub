@@ -61,5 +61,30 @@ describe('PWAUpdateToast', () => {
     expect(updateServiceWorkerMock).toHaveBeenCalledWith(true);
     expect(setNeedRefreshMock).toHaveBeenCalledWith(false);
   });
+
+  it('checks for existing waiting service worker on mount and triggers needRefresh', async () => {
+    const setNeedRefreshMock = vi.fn();
+    vi.mocked(useRegisterSW).mockReturnValue({
+      needRefresh: [false, setNeedRefreshMock],
+      offlineReady: [false, vi.fn()],
+      updateServiceWorker: vi.fn(),
+    });
+
+    const mockRegistration = {
+      waiting: {} as ServiceWorker,
+    };
+    Object.defineProperty(navigator, 'serviceWorker', {
+      value: {
+        getRegistration: vi.fn().mockResolvedValue(mockRegistration),
+      },
+      configurable: true,
+    });
+
+    render(<PWAUpdateToast />);
+
+    await vi.waitFor(() => {
+      expect(setNeedRefreshMock).toHaveBeenCalledWith(true);
+    });
+  });
 });
 

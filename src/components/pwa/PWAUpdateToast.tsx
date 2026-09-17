@@ -12,10 +12,13 @@ export const PWAUpdateToast: React.FC = () => {
   } = useRegisterSW({
     onRegistered(r) {
       if (r) {
-        // 1시간마다 서비스 워커 업데이트 주기적 점검
+        // 앱 시작 즉시 최신 배포 여부 점검
+        r.update();
+
+        // 30분마다 서비스 워커 업데이트 주기적 점검
         setInterval(() => {
           r.update();
-        }, 60 * 60 * 1000);
+        }, 30 * 60 * 1000);
 
         // 사용자가 백그라운드 탭에서 복귀 시 최신 배포 여부 점검
         document.addEventListener('visibilitychange', () => {
@@ -29,6 +32,17 @@ export const PWAUpdateToast: React.FC = () => {
       console.error('SW registration error:', error);
     },
   });
+
+  // 컴포넌트 마운트 시 이미 대기(waiting) 중인 서비스 워커가 있는지 즉시 검사
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration().then((reg) => {
+        if (reg?.waiting) {
+          setNeedRefresh(true);
+        }
+      });
+    }
+  }, [setNeedRefresh]);
 
   useEffect(() => {
     if (needRefresh) {

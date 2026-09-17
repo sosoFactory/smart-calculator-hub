@@ -3,6 +3,15 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.34] - 2026-09-17
+
+### PWA 서비스 워커 대기 상태 즉시 감지 및 업데이트 신뢰성 강화 (PWA Update Detection Fix)
+- **앱 마운트 시 대기(Waiting) 서비스 워커 즉시 검사**:
+  - `navigator.serviceWorker.getRegistration()`을 통해 백그라운드에 이미 다운로드되어 대기 중이던 새 버전이 있을 경우, 즉시 `needRefresh = true`로 감지하여 새로고침 토스트가 누락되는 문제 원천 해결.
+- **앱 실행 즉시 최신 배포 쿼리 트리거**:
+  - `onRegistered` 이벤트 발생 즉시 `r.update()`를 호출하여 첫 진입 시에도 최신 배포 여부를 즉각 확인하도록 개선.
+  - 주기적 점검 주기를 30분으로 최적화하여 앱 체류 중 업데이트 감지 신속성 확보.
+
 ## [1.9.33] - 2026-09-17
 
 ### Ghost 디자인 시스템 완벽 통합 및 풀 뎁스 다크모드 전면 개편 (Ghost Dark Full Depth)
