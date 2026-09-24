@@ -8,11 +8,14 @@ import {
   decodeSalaryQuery,
   encodeGoalQuery,
   decodeGoalQuery,
+  encodePartTimeQuery,
+  decodePartTimeQuery,
 } from './deepLink';
 import { LoanInput } from '../types/loan';
 import { ScenarioInput } from '../types/calculator';
 import { SalaryInput } from '../types/salary';
 import { GoalInput } from '../types/goal';
+import { PartTimeInput } from '../types/partTime';
 
 describe('Deep Link Utilities', () => {
   describe('Loan Calculator Deep Linking', () => {
@@ -159,6 +162,49 @@ describe('Deep Link Utilities', () => {
 
     it('returns null for empty query', () => {
       expect(decodeGoalQuery('')).toBeNull();
+    });
+  });
+
+  describe('PartTime Calculator Deep Linking', () => {
+    const samplePartTime: PartTimeInput = {
+      hourlyWage: 10320,
+      scheduleMode: 'weekly_total',
+      weeklyTotalHours: 25,
+      dailyHours: 5,
+      workingDaysPerWeek: 5,
+      hasAttendance: true,
+      taxType: 'freelancer',
+      isOver5Employees: true,
+      weeklyOvertimeHours: 2,
+      weeklyNightHours: 1,
+      weeklyHolidayWorkHours: 4,
+    };
+
+    it('correctly encodes and decodes part-time input without data loss', () => {
+      const query = encodePartTimeQuery(samplePartTime);
+      expect(query).toContain('wage=10320');
+      expect(query).toContain('mode=weekly_total');
+      expect(query).toContain('wHours=25');
+      expect(query).toContain('tax=freelancer');
+      expect(query).toContain('over5=true');
+      expect(query).toContain('overtime=2');
+      expect(query).toContain('night=1');
+      expect(query).toContain('hWork=4');
+
+      const decoded = decodePartTimeQuery(`?${query}`);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.hourlyWage).toBe(10320);
+      expect(decoded?.scheduleMode).toBe('weekly_total');
+      expect(decoded?.weeklyTotalHours).toBe(25);
+      expect(decoded?.taxType).toBe('freelancer');
+      expect(decoded?.isOver5Employees).toBe(true);
+      expect(decoded?.weeklyOvertimeHours).toBe(2);
+      expect(decoded?.weeklyNightHours).toBe(1);
+      expect(decoded?.weeklyHolidayWorkHours).toBe(4);
+    });
+
+    it('returns null for empty query', () => {
+      expect(decodePartTimeQuery('')).toBeNull();
     });
   });
 });

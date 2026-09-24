@@ -6,6 +6,7 @@ export type CalculatorId =
   | 'exchange'
   | 'loan'
   | 'salary'
+  | 'part-time'
   | 'dividend'
   | 'goal';
 
@@ -91,6 +92,16 @@ export const CALCULATORS_LIST: CalculatorItem[] = [
     category: 'finance',
     status: 'active',
     keywords: ['연봉', '월급', '실수령액', '4대보험', '국민연금', '건강보험', '고용보험', '소득세', '식대', '비과세', '급여', '세금'],
+  },
+  {
+    id: 'part-time',
+    name: '알바 급여 & 주휴수당 계산기',
+    shortName: '알바·주휴수당 계산기',
+    description: '2026년 최저시급(10,320원) 반영, 주휴수당 자동 비례 산정 & 세후 실수령액',
+    category: 'finance',
+    status: 'active',
+    badge: '2026년 최저시급',
+    keywords: ['알바', '아르바이트', '시급', '주휴수당', '최저시급', '주휴', '급여', '알바비', '주급', '월급', '초단시간', '가산수당', '4대보험', '프리랜서', '3.3%'],
   },
   {
     id: 'dividend',

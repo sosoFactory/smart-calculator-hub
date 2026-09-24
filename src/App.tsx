@@ -31,6 +31,9 @@ const LoanApp = lazy(() =>
 const SalaryApp = lazy(() =>
   import('./calculators/salary-calculator/SalaryApp').then((m) => ({ default: m.SalaryApp }))
 );
+const PartTimeApp = lazy(() =>
+  import('./calculators/part-time-calculator/PartTimeApp').then((m) => ({ default: m.PartTimeApp }))
+);
 const BmiApp = lazy(() =>
   import('./calculators/bmi-calculator/BmiApp').then((m) => ({ default: m.BmiApp }))
 );
@@ -104,6 +107,7 @@ export const App: React.FC = () => {
                 <Route path="/exchange" element={<ExchangeApp />} />
                 <Route path="/loan" element={<LoanApp />} />
                 <Route path="/salary" element={<SalaryApp />} />
+                <Route path="/part-time" element={<PartTimeApp />} />
                 <Route
                   path="/dividend"
                   element={

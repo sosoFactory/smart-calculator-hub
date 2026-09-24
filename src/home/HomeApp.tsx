@@ -19,6 +19,7 @@ import {
   Copy,
   Check,
   QrCode,
+  Coins,
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
@@ -69,6 +70,8 @@ export const HomeApp: React.FC = () => {
         return <Landmark className={`${iconCls} text-sky-500 dark:text-sky-400`} />;
       case 'salary':
         return <Wallet className={`${iconCls} text-indigo-500 dark:text-indigo-400`} />;
+      case 'part-time':
+        return <Coins className={`${iconCls} text-lime-500 dark:text-[#d1ff19]`} />;
       case 'unit':
         return <Ruler className={`${iconCls} text-amber-500 dark:text-amber-400`} />;
       case 'bmi':

@@ -16,6 +16,7 @@ import {
   Wallet,
   LayoutDashboard,
   Activity,
+  Coins,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTitle } from '../ui/sheet';
 import { Button } from '../ui/button';
@@ -52,6 +53,8 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
         return <Landmark className={cls} />;
       case 'salary':
         return <Wallet className={cls} />;
+      case 'part-time':
+        return <Coins className={cls} />;
       case 'dividend':
         return <Calendar className={cls} />;
       case 'goal':

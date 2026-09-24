@@ -2,6 +2,7 @@ import { LoanInput, RepaymentMethod } from '../types/loan';
 import { ScenarioInput, TaxType, ContributionFrequency, CompoundingFrequency } from '../types/calculator';
 import { SalaryInput, SalaryPaymentType, SeveranceType } from '../types/salary';
 import { GoalInput, GoalTaxType } from '../types/goal';
+import { PartTimeInput, PartTimeTaxType, WorkScheduleMode } from '../types/partTime';
 
 /**
  * 브라우저 히스토리 스택을 오염시키지 않고 주소창 URL 쿼리를 실시간 갱신
@@ -280,3 +281,101 @@ export const decodeGoalQuery = (search: string): Partial<GoalInput> | null => {
 
   return Object.keys(result).length > 0 ? result : null;
 };
+
+// ==========================================
+// 6. 알바 급여 & 주휴수당 계산기 (/part-time)
+// ==========================================
+
+export const encodePartTimeQuery = (input: PartTimeInput): string => {
+  const params = new URLSearchParams();
+
+  if (input.hourlyWage > 0) params.set('wage', String(input.hourlyWage));
+  if (input.scheduleMode) params.set('mode', input.scheduleMode);
+  if (input.scheduleMode === 'weekly_total' && input.weeklyTotalHours > 0) {
+    params.set('wHours', String(input.weeklyTotalHours));
+  } else if (input.scheduleMode === 'daily_hours') {
+    if (input.dailyHours) params.set('dHours', String(input.dailyHours));
+    if (input.workingDaysPerWeek) params.set('days', String(input.workingDaysPerWeek));
+  }
+  if (!input.hasAttendance) params.set('attend', 'false');
+  if (input.taxType && input.taxType !== 'none') params.set('tax', input.taxType);
+  if (input.isOver5Employees) {
+    params.set('over5', 'true');
+    if (input.weeklyOvertimeHours) params.set('overtime', String(input.weeklyOvertimeHours));
+    if (input.weeklyNightHours) params.set('night', String(input.weeklyNightHours));
+    if (input.weeklyHolidayWorkHours) params.set('hWork', String(input.weeklyHolidayWorkHours));
+  }
+
+  return params.toString();
+};
+
+export const decodePartTimeQuery = (search: string): Partial<PartTimeInput> | null => {
+  if (!search) return null;
+  const params = new URLSearchParams(search);
+
+  const wageStr = params.get('wage');
+  const modeStr = params.get('mode') as WorkScheduleMode | null;
+  const wHoursStr = params.get('wHours');
+  const dHoursStr = params.get('dHours');
+  const daysStr = params.get('days');
+  const attendStr = params.get('attend');
+  const taxStr = params.get('tax') as PartTimeTaxType | null;
+  const over5Str = params.get('over5');
+  const overtimeStr = params.get('overtime');
+  const nightStr = params.get('night');
+  const hWorkStr = params.get('hWork');
+
+  if (!wageStr && !modeStr && !wHoursStr && !dHoursStr && !daysStr && !taxStr) {
+    return null;
+  }
+
+  const result: Partial<PartTimeInput> = {};
+
+  if (wageStr) {
+    const parsed = Number(wageStr);
+    if (!isNaN(parsed) && parsed > 0) result.hourlyWage = parsed;
+  }
+  if (modeStr && ['weekly_total', 'daily_hours'].includes(modeStr)) {
+    result.scheduleMode = modeStr;
+  }
+  if (wHoursStr) {
+    const parsed = Number(wHoursStr);
+    if (!isNaN(parsed) && parsed >= 0) result.weeklyTotalHours = parsed;
+  }
+  if (dHoursStr) {
+    const parsed = Number(dHoursStr);
+    if (!isNaN(parsed) && parsed >= 0) result.dailyHours = parsed;
+  }
+  if (daysStr) {
+    const parsed = Number(daysStr);
+    if (!isNaN(parsed) && parsed >= 0) result.workingDaysPerWeek = parsed;
+  }
+  if (attendStr === 'false') {
+    result.hasAttendance = false;
+  } else if (attendStr === 'true') {
+    result.hasAttendance = true;
+  }
+  if (taxStr && ['none', 'freelancer', 'four_insurances'].includes(taxStr)) {
+    result.taxType = taxStr;
+  }
+  if (over5Str === 'true') {
+    result.isOver5Employees = true;
+  } else if (over5Str === 'false') {
+    result.isOver5Employees = false;
+  }
+  if (overtimeStr) {
+    const parsed = Number(overtimeStr);
+    if (!isNaN(parsed) && parsed >= 0) result.weeklyOvertimeHours = parsed;
+  }
+  if (nightStr) {
+    const parsed = Number(nightStr);
+    if (!isNaN(parsed) && parsed >= 0) result.weeklyNightHours = parsed;
+  }
+  if (hWorkStr) {
+    const parsed = Number(hWorkStr);
+    if (!isNaN(parsed) && parsed >= 0) result.weeklyHolidayWorkHours = parsed;
+  }
+
+  return Object.keys(result).length > 0 ? result : null;
+};
+
