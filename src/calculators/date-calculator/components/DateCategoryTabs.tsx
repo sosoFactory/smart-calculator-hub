@@ -1,6 +1,6 @@
 import React from 'react';
 import { DateTabType } from '../../../types/date';
-import { CalendarHeart, CalendarRange, CalendarPlus, UserCheck } from 'lucide-react';
+import { CalendarHeart, CalendarRange, UserCheck } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 
 export interface DateCategoryTabItem {
@@ -9,9 +9,8 @@ export interface DateCategoryTabItem {
 }
 
 export const DATE_TABS: DateCategoryTabItem[] = [
-  { id: 'dday', label: '디데이·기념일' },
+  { id: 'dday', label: '디데이·날짜 연산' },
   { id: 'diff', label: '날짜 간격' },
-  { id: 'calc', label: '날짜 계산' },
   { id: 'age', label: '만 나이' },
 ];
 
@@ -35,8 +34,6 @@ export const DateCategoryTabs: React.FC<DateCategoryTabsProps> = ({
         return <CalendarHeart className={cls} />;
       case 'diff':
         return <CalendarRange className={cls} />;
-      case 'calc':
-        return <CalendarPlus className={cls} />;
       case 'age':
         return <UserCheck className={cls} />;
       default:

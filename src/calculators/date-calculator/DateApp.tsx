@@ -3,7 +3,6 @@ import { DateTabType } from '../../types/date';
 import { DateCategoryTabs } from './components/DateCategoryTabs';
 import { DDayTab } from './components/DDayTab';
 import { DateDiffTab } from './components/DateDiffTab';
-import { DateCalcTab } from './components/DateCalcTab';
 import { AgeTab } from './components/AgeTab';
 import { DateInfoCard } from './components/DateInfoCard';
 import { siteConfig } from '../../config/site';
@@ -14,7 +13,7 @@ export const DateApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<DateTabType>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved && ['dday', 'diff', 'calc', 'age'].includes(saved)) {
+      if (saved && ['dday', 'diff', 'age'].includes(saved)) {
         return saved as DateTabType;
       }
     } catch {
@@ -40,11 +39,10 @@ export const DateApp: React.FC = () => {
       {/* 1. 카테고리 탭 (단위 변환기 표준과 100% 동일한 가로 스크롤 모바일 퍼스트 탭) */}
       <DateCategoryTabs activeTab={activeTab} onSelectTab={setActiveTab} />
 
-      {/* 2. 활성 탭 콘텐츠 */}
+      {/* 2. 활성 탭 콘텐츠 (3대 통합 탭) */}
       <div className="w-full">
         {activeTab === 'dday' && <DDayTab />}
         {activeTab === 'diff' && <DateDiffTab />}
-        {activeTab === 'calc' && <DateCalcTab />}
         {activeTab === 'age' && <AgeTab />}
       </div>
 
@@ -55,4 +53,5 @@ export const DateApp: React.FC = () => {
 };
 
 export default DateApp;
+
 

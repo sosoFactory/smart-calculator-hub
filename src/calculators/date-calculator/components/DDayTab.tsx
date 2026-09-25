@@ -1,35 +1,75 @@
 import React, { useState, useMemo } from 'react';
-import { calculateDDay, formatLocalDate, getTodayString } from '../../../utils/dateCalculator';
+import {
+  calculateDDay,
+  calculateDateMath,
+  getTodayString,
+} from '../../../utils/dateCalculator';
+import { DateCalcOp, DateCalcUnit } from '../../../types/date';
 import { FormHeader } from '../../../components/common/FormHeader';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
+import { SegmentedControl } from '../../../components/ui/segmented-control';
+import { NumericInput } from '../../../components/ui/numeric-input';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
-import { Calendar, Copy, Check, Clock, CalendarDays, Milestone } from 'lucide-react';
+import {
+  Calendar,
+  CalendarHeart,
+  Copy,
+  Check,
+  Clock,
+  ArrowRight,
+  Sparkles,
+} from 'lucide-react';
+
+const UNIT_OPTIONS = [
+  { id: 'days' as DateCalcUnit, label: '일' },
+  { id: 'weeks' as DateCalcUnit, label: '주' },
+  { id: 'months' as DateCalcUnit, label: '개월' },
+  { id: 'years' as DateCalcUnit, label: '년' },
+];
+
+const OP_OPTIONS = [
+  { id: 'add' as DateCalcOp, label: 'N일 뒤 (+)' },
+  { id: 'subtract' as DateCalcOp, label: 'N일 전 (-)' },
+];
+
+const unitLabels: Record<DateCalcUnit, string> = {
+  days: '일',
+  weeks: '주',
+  months: '개월',
+  years: '년',
+};
 
 export const DDayTab: React.FC = () => {
   const today = getTodayString();
-  const getDefaultDate = () => {
-    const d = new Date();
-    d.setDate(d.getDate() + 30);
-    return formatLocalDate(d);
-  };
-
-  const [targetDate, setTargetDate] = useState<string>(getDefaultDate);
+  const [targetDate, setTargetDate] = useState<string>(today);
+  const [amount, setAmount] = useState<number | ''>(100);
+  const [unit, setUnit] = useState<DateCalcUnit>('days');
+  const [operation, setOperation] = useState<DateCalcOp>('add');
   const [copied, setCopied] = useState(false);
 
-  const result = useMemo(() => calculateDDay(targetDate, today), [targetDate, today]);
+  const numericAmount = typeof amount === 'number' ? amount : 0;
+
+  // 1. 기준일 기준 실시간 D-day 및 기념일 목록
+  const ddayResult = useMemo(() => calculateDDay(targetDate), [targetDate]);
+
+  // 2. 기준일 기준 날짜 연산 (+N일/개월/년)
+  const calcResult = useMemo(
+    () => calculateDateMath(targetDate, numericAmount, unit, operation),
+    [targetDate, numericAmount, unit, operation]
+  );
 
   const handleCopy = async () => {
-    const statusText =
-      result.diffDays > 0
-        ? `${result.diffDays}일 남음`
-        : result.diffDays === 0
-        ? '오늘'
-        : `${Math.abs(result.diffDays)}일 지남`;
-    const text = `[스마트 계산기] 디데이 계산 결과
-- 목표일: ${result.targetDate}
-- 현재 상태: ${result.label} (${statusText})
-- 기준일: ${result.baseDate}`;
+    const ddayText = ddayResult.isToday
+      ? '오늘'
+      : ddayResult.isPast
+      ? `D+${Math.abs(ddayResult.diffDays)}일째`
+      : `D-${ddayResult.diffDays}`;
+
+    const text = `[스마트 계산기] 디데이 및 날짜 연산 결과
+- 기준일: ${targetDate} (${ddayText})
+- 계산 결과: ${calcResult.resultDate} (${calcResult.dayOfWeek})
+- 연산 수식: 기준일로부터 ${operation === 'add' ? '+' : '-'}${numericAmount}${unitLabels[unit]} ${operation === 'add' ? '뒤' : '전'}`;
 
     try {
       await navigator.clipboard.writeText(text);
@@ -47,42 +87,52 @@ export const DDayTab: React.FC = () => {
     }
   };
 
-  const setPreset = (daysFromToday: number) => {
-    const d = new Date();
-    d.setDate(d.getDate() + daysFromToday);
-    setTargetDate(formatLocalDate(d));
+  const handleReset = () => {
+    setTargetDate(today);
+    setAmount(100);
+    setUnit('days');
+    setOperation('add');
   };
 
-  const setYearEnd = () => {
-    const currentYear = new Date().getFullYear();
-    setTargetDate(`${currentYear}-12-31`);
+  const setPresetDays = (days: number) => {
+    setOperation('add');
+    setUnit('days');
+    setAmount(days);
   };
 
-  const setNextYear = () => {
-    const nextYear = new Date().getFullYear() + 1;
-    setTargetDate(`${nextYear}-01-01`);
+  const setPresetMonths = (months: number) => {
+    setOperation('add');
+    setUnit('months');
+    setAmount(months);
+  };
+
+  const setPresetYears = (years: number) => {
+    setOperation('add');
+    setUnit('years');
+    setAmount(years);
   };
 
   return (
     <div className="space-y-4 sm:space-y-6 w-full">
-      {/* 1. 입력 폼 영역 (표준 FormHeader + SelectableChip) */}
+      {/* 1. 입력 폼 영역 (표준 FormHeader + 공통 컴포넌트) */}
       <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-5 sm:space-y-6 w-full">
         <FormHeader
-          badge="디데이 설정"
+          badge="디데이·연산"
           title="목표일 또는 기념일 선택"
-          description="시험, 약속, 커플 기념일 등 목표 날짜를 지정하면 실시간 디데이와 주요 기념일 캘린더를 계산합니다"
-          onReset={() => setTargetDate(getDefaultDate())}
+          description="사귄 날, 입대일, 시험일 등 기준 날짜를 지정하면 실시간 디데이와 원하는 기간(N일/개월/년 뒤) 도달 날짜를 원스톱 계산합니다"
+          onReset={handleReset}
         />
 
-        <div className="space-y-4">
+        <div className="space-y-4 sm:space-y-5">
+          {/* 기준 날짜 선택 */}
           <div>
             <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1.5">
               <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base flex items-center gap-1.5">
                 <Calendar className="w-4 h-4 text-[#112220] dark:text-[#d1ff19]" />
-                <span>목표 날짜</span>
+                <span>기준 날짜 (시작일 / 목표일)</span>
               </label>
               <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
-                {targetDate}
+                {targetDate} ({ddayResult.label})
               </span>
             </div>
 
@@ -92,53 +142,119 @@ export const DDayTab: React.FC = () => {
               onChange={(e) => setTargetDate(e.target.value)}
               className="w-full h-11 px-3.5 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-slate-50/50 dark:bg-slate-900/60 text-sm font-bold text-[#112220] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#15171a] dark:focus:ring-[#d1ff19] transition-all"
             />
+          </div>
 
-            {/* 표준 프리셋 칩 (SelectableChip) */}
-            <div className="flex flex-wrap gap-1.5 pt-2">
+          {/* 연산 조건 설정 (방향, 단위, 수량) */}
+          <div className="pt-2 border-t border-slate-100 dark:border-ghost-dark-hairline space-y-3.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#64748b] dark:text-ghost-dark-ink-mute uppercase tracking-wider">
+                기간 더하기 / 빼기 설정
+              </span>
+              <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone">
+                원하는 N일·개월 자유 입력
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* 연산 방향 (+/-) */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-ghost-dark-ink-soft mb-1.5">
+                  계산 방향
+                </label>
+                <SegmentedControl
+                  value={operation}
+                  onChange={(val) => setOperation(val as DateCalcOp)}
+                  options={OP_OPTIONS}
+                />
+              </div>
+
+              {/* 연산 단위 (일/주/개월/년) */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 dark:text-ghost-dark-ink-soft mb-1.5">
+                  기간 단위
+                </label>
+                <SegmentedControl
+                  value={unit}
+                  onChange={(val) => setUnit(val as DateCalcUnit)}
+                  options={UNIT_OPTIONS}
+                />
+              </div>
+            </div>
+
+            {/* 수량 입력 */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 dark:text-ghost-dark-ink-soft mb-1.5">
+                기간 수량 입력
+              </label>
+              <NumericInput
+                value={amount}
+                onNumberChange={(val) => setAmount(val)}
+                min={0}
+                max={99999}
+                suffix={unitLabels[unit]}
+                placeholder="기간 수량 입력 (예: 100)"
+              />
+            </div>
+          </div>
+
+          {/* 생활 밀착형 빠른 프리셋 칩 */}
+          <div className="pt-1 space-y-1.5">
+            <span className="text-xs font-bold text-[#64748b] dark:text-ghost-dark-ink-mute uppercase tracking-wider block">
+              자주 찾는 기념일 & 생활 프리셋
+            </span>
+            <div className="flex flex-wrap gap-1.5">
               <SelectableChip
-                isSelected={result.diffDays === 0}
-                onClick={() => setPreset(0)}
+                isSelected={operation === 'add' && unit === 'days' && amount === 100}
+                onClick={() => setPresetDays(100)}
+              >
+                +100일 (백일)
+              </SelectableChip>
+              <SelectableChip
+                isSelected={operation === 'add' && unit === 'days' && amount === 200}
+                onClick={() => setPresetDays(200)}
+              >
+                +200일
+              </SelectableChip>
+              <SelectableChip
+                isSelected={operation === 'add' && unit === 'years' && amount === 1}
+                onClick={() => setPresetYears(1)}
+              >
+                +1주년 (1년 뒤)
+              </SelectableChip>
+              <SelectableChip
+                isSelected={operation === 'add' && unit === 'months' && amount === 18}
+                onClick={() => setPresetMonths(18)}
+              >
+                +18개월 (육군 전역)
+              </SelectableChip>
+              <SelectableChip
+                isSelected={operation === 'add' && unit === 'months' && amount === 21}
+                onClick={() => setPresetMonths(21)}
+              >
+                +21개월 (공군 전역)
+              </SelectableChip>
+              <SelectableChip
+                isSelected={operation === 'add' && unit === 'days' && amount === 30}
+                onClick={() => setPresetDays(30)}
+              >
+                +30일 (1개월)
+              </SelectableChip>
+              <SelectableChip
+                isSelected={targetDate === today && amount === 0}
+                onClick={() => {
+                  setTargetDate(today);
+                  setAmount(0);
+                }}
               >
                 오늘 (D-DAY)
-              </SelectableChip>
-              <SelectableChip
-                isSelected={result.diffDays === 7}
-                onClick={() => setPreset(7)}
-              >
-                +7일 (1주 뒤)
-              </SelectableChip>
-              <SelectableChip
-                isSelected={result.diffDays === 30}
-                onClick={() => setPreset(30)}
-              >
-                +30일
-              </SelectableChip>
-              <SelectableChip
-                isSelected={result.diffDays === 100}
-                onClick={() => setPreset(100)}
-              >
-                +100일
-              </SelectableChip>
-              <SelectableChip
-                isSelected={targetDate.endsWith('12-31')}
-                onClick={setYearEnd}
-              >
-                올해 말 (12/31)
-              </SelectableChip>
-              <SelectableChip
-                isSelected={targetDate.endsWith('01-01') && targetDate > today}
-                onClick={setNextYear}
-              >
-                새해 (1/1)
               </SelectableChip>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. 메인 결과 대시보드 (PRD 11.12 단일 디자인 규격 준수) */}
+      {/* 2. 메인 결과 대시보드 (Ghost 다크 메인 서피스 규격) */}
       <div className="space-y-3.5 sm:space-y-4 w-full">
-        {/* 메인 다크 서피스 카드 */}
         <div className="relative overflow-hidden rounded-2xl bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-[#15171a] dark:border-ghost-dark-hairline-soft p-5 sm:p-6 text-white shadow-sm">
           <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none" />
 
@@ -146,11 +262,11 @@ export const DDayTab: React.FC = () => {
             <div className="flex items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-2 min-w-0">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30">
-                  <CalendarDays className="w-3.5 h-3.5" />
-                  디데이 카운트다운
+                  <CalendarHeart className="w-3.5 h-3.5" />
+                  계산 도달 날짜
                 </span>
                 <span className="text-xs text-[#d1ff19] font-bold px-2 py-0.5 rounded-full bg-[#d1ff19]/10 border border-[#d1ff19]/20 shrink-0">
-                  {result.isToday ? '오늘 당일' : result.isPast ? '과거 기준일' : '미래 목표일'}
+                  기준일: {ddayResult.label}
                 </span>
               </div>
 
@@ -178,61 +294,63 @@ export const DDayTab: React.FC = () => {
             <div>
               <div className="flex items-baseline gap-2.5 flex-wrap pt-0.5">
                 <span className="text-3xl sm:text-4xl font-extrabold text-[#d1ff19] tracking-tight tabular-nums break-keep">
-                  {result.label}
+                  {calcResult.resultDate}
                 </span>
                 <span className="text-xs sm:text-sm text-slate-300 font-semibold break-keep">
-                  {result.isToday
-                    ? '오늘이 바로 지정하신 날입니다'
-                    : result.isPast
-                    ? `${Math.abs(result.diffDays)}일 지났습니다`
-                    : `${result.diffDays}일 남았습니다`}
+                  ({calcResult.dayOfWeek})
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-1">
-                기준일({result.baseDate}) ➔ 목표일({result.targetDate})
+                기준일({targetDate})로부터 {operation === 'add' ? '+' : '-'}{numericAmount}
+                {unitLabels[unit]} {operation === 'add' ? '뒤' : '전'} 시점
               </p>
             </div>
           </div>
         </div>
 
-        {/* 3단 서브 요약 지표 카드 (PRD 11.12 단일 규격) */}
+        {/* 3단 서브 요약 지표 카드 (Ghost 표준 모노크롬 규격) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
           <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
             <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>오늘 기준일</span>
+              <span>오늘 기준 디데이</span>
               <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
             </div>
             <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-              {result.baseDate}
+              {ddayResult.isToday
+                ? 'D-DAY 오늘'
+                : ddayResult.isPast
+                ? `D+${Math.abs(ddayResult.diffDays)}일째`
+                : `D-${ddayResult.diffDays}`}
             </div>
             <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-              연산 기준 시점
+              {ddayResult.isPast ? '기준일 이후 경과일' : '도달까지 남은 기간'}
             </p>
           </div>
 
           <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
             <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>목표/기념일</span>
-              <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-              {result.targetDate}
-            </div>
-            <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-              설정된 타겟 날짜
-            </p>
-          </div>
-
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>현재 상태</span>
-              <Milestone className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
+              <span>적용된 연산 수식</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
             </div>
             <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink truncate">
-              {result.isToday ? 'D-DAY 당일' : result.isPast ? `D+${Math.abs(result.diffDays)} 경과` : `D-${result.diffDays} 진행 중`}
+              {operation === 'add' ? `+${numericAmount}` : `-${numericAmount}`}
+              {unitLabels[unit]} {operation === 'add' ? '뒤' : '전'}
             </div>
             <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-              {result.isPast ? '기준일 이후 경과 일수' : '도달까지 남은 기간'}
+              기준일 대비 적용 범위
+            </p>
+          </div>
+
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
+            <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
+              <span>도달 요일</span>
+              <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
+            </div>
+            <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink">
+              {calcResult.dayOfWeek}
+            </div>
+            <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
+              해당 날짜의 요일
             </p>
           </div>
         </div>
@@ -249,41 +367,47 @@ export const DDayTab: React.FC = () => {
               주요 기념일 및 마일스톤 날짜
             </h3>
           </div>
-          <span className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute">시작일 = 1일차</span>
+          <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone hidden sm:inline">
+            기준일 첫날 1일 기산 기준
+          </span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-[#e5e7eb] dark:border-ghost-dark-hairline text-[#64748b] dark:text-ghost-dark-ink-mute">
-                <th className="py-2.5 px-3 font-bold">기념일</th>
-                <th className="py-2.5 px-3 font-bold">도달 날짜</th>
-                <th className="py-2.5 px-3 font-bold">요일</th>
-                <th className="py-2.5 px-3 font-bold text-right">상태</th>
+        <div className="overflow-x-auto rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline">
+          <table className="w-full text-left text-xs sm:text-sm">
+            <thead className="bg-slate-50 dark:bg-ghost-dark-surface-elevated text-slate-500 dark:text-ghost-dark-ink-mute font-semibold border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
+              <tr>
+                <th className="py-2.5 px-3 sm:px-4">기념일</th>
+                <th className="py-2.5 px-3 sm:px-4">해당 날짜</th>
+                <th className="py-2.5 px-3 sm:px-4">요일</th>
+                <th className="py-2.5 px-3 sm:px-4 text-right">상태</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#e5e7eb] dark:divide-ghost-dark-hairline">
-              {result.milestones.map((m) => (
-                <tr key={m.days} className="hover:bg-slate-50/50 dark:hover:bg-ghost-dark-hover transition-colors">
-                  <td className="py-3 px-3 font-bold text-[#112220] dark:text-ghost-dark-ink">
-                    {m.label}
+            <tbody className="divide-y divide-[#e5e7eb] dark:divide-ghost-dark-hairline font-medium">
+              {ddayResult.milestones.map((item) => (
+                <tr
+                  key={item.label}
+                  className="hover:bg-slate-50/70 dark:hover:bg-ghost-dark-hover transition-colors"
+                >
+                  <td className="py-2.5 px-3 sm:px-4 font-bold text-[#112220] dark:text-ghost-dark-ink flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
+                    <span>{item.label}</span>
                   </td>
-                  <td className="py-3 px-3 text-slate-600 dark:text-ghost-dark-ink-soft tabular-nums font-semibold">
-                    {m.date}
+                  <td className="py-2.5 px-3 sm:px-4 tabular-nums text-slate-700 dark:text-ghost-dark-ink-base">
+                    {item.date}
                   </td>
-                  <td className="py-3 px-3 text-[#64748b] dark:text-ghost-dark-ink-mute font-medium">
-                    {m.dayOfWeek}
+                  <td className="py-2.5 px-3 sm:px-4 text-slate-500 dark:text-ghost-dark-ink-soft">
+                    {item.dayOfWeek}
                   </td>
-                  <td className="py-3 px-3 text-right">
-                    <span
-                      className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        m.isPast
-                          ? 'bg-slate-100 text-slate-400 dark:bg-ghost-dark-surface-elevated dark:text-ghost-dark-ink-stone'
-                          : 'bg-[#d1ff19]/20 text-[#112220] dark:text-[#d1ff19] border border-[#d1ff19]/30'
-                      }`}
-                    >
-                      {m.isPast ? '지남' : '예정'}
-                    </span>
+                  <td className="py-2.5 px-3 sm:px-4 text-right">
+                    {item.isPast ? (
+                      <span className="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 dark:bg-ghost-dark-surface-elevated text-slate-500 dark:text-ghost-dark-ink-mute">
+                        지남
+                      </span>
+                    ) : (
+                      <span className="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-[#d1ff19]/20 text-[#112220] dark:text-[#d1ff19] border border-[#d1ff19]/30">
+                        예정
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}

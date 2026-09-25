@@ -1,4 +1,4 @@
-export type DateTabType = 'dday' | 'diff' | 'calc' | 'age';
+export type DateTabType = 'dday' | 'diff' | 'age';
 
 // 1. 디데이 & 기념일
 export interface MilestoneItem {
