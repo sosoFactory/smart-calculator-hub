@@ -3,6 +3,23 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.42] - 2026-09-25
+
+### 날짜 & 디데이 계산기 공통 컴포넌트 표준화 및 Ghost 단일 디자인 문법 완전 통일
+- **단위 변환기 표준 탭 규격 반영 (`DateCategoryTabs.tsx`)**:
+  - `UnitCategoryTabs`와 100% 동일한 모바일 가로 스크롤(`min-w-max`, `overflow-x-auto`), `variant="slate-solid"`, 4대 탭 Lucide 아이콘(`CalendarHeart`, `CalendarRange`, `CalendarPlus`, `UserCheck`), 라임 활성 핀 도트 적용.
+  - `DateApp` 내 `localStorage` 탭 지속성 연동.
+- **입력 폼 표준 공통 컴포넌트 전면 교체**:
+  - 4개 서브 탭 모두 `FormHeader` 적용 및 초기화 버튼 연동.
+  - 임의의 버튼 칩을 표준 `SelectableChip`으로 전면 교체.
+  - 날짜 연산 단위 및 방향 선택에 `SegmentedControl`, 기간 수량 입력에 `NumericInput` 적용.
+- **Ghost 디자인 시스템 단일 결과 문법 및 무지개 색상 완전 배제**:
+  - 서브 카드의 임의 무지개색(emerald, amber, violet, indigo, rose)을 전면 제거하고 단일 Ghost 잉크스톤(`text-slate-400 dark:text-ghost-dark-ink-stone`)으로 통일.
+  - 메인 다크 서피스(`bg-[#15171a] dark:bg-ghost-dark-surface-elevated`) + 일렉트릭 라임 수치 + 원클릭 복사 버튼 + 3단 서브 요약 카드 표준화.
+- **문서 및 프로토콜 정돈**:
+  - `PRD.md`에 혼재된 인라인 Tailwind 클래스 및 Hex 코드를 전면 제거하고 순수 아키텍처/컴포넌트 규격으로 정돈.
+  - `GEMINI.md`에 PRD/Ghost 디자인 시스템 참조 및 공통 컴포넌트 의무 재사용 최상위 규칙 명시.
+
 ## [1.9.39] - 2026-09-25
 
 ### 목표 자산 차트 3단 누적 스택 중복 합산 버그 수정 (Goal Chart Stacked Bug Fix)

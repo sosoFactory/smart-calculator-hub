@@ -561,23 +561,17 @@ src/
 
 ### 3.9 [생활 & 일정] 날짜 & 디데이 계산기 (`DateApp` - 구현 신설)
 - **기능 요약**: 일상 생활, 업무, 기념일 관리를 위해 디데이 카운트다운, 두 날짜 사이 간격 및 영업일(근무일수), 날짜 더하기/빼기, 대한민국 만 나이 및 살아온 날수를 원스톱으로 산출하는 멀티 탭 날짜 도구.
-- **4대 서브 탭 인터페이스 구성 (방향 A)**:
-  1. **디데이 & 기념일 (`dday`)**:
-     - 목표일 또는 과거 기준일 선택 (시험, 결혼, 전역, 커플 기념일 등).
-     - `D-DAY`, `D-35`, `D+100` 배지 및 남은 일수/경과 일수 대형 타이포 표시.
-     - 주요 기념일 자동 계산: 50일, 100일, 200일, 300일, 1주년, 2주년, 1,000일 날짜 캘린더 리스트 제공.
-     - 빠른 프리셋: "오늘", "+7일(1주 뒤)", "+30일", "+100일", "올해 말(12/31)".
-  2. **날짜 간격 & 영업일 (`diff`)**:
-     - 시작일과 종료일 선택 시 총 일수, 총 주(Weeks), `X개월 Y일` 정밀 산출.
-     - **주말(토/일) 제외 실제 근무일(영업일) 수** 자동 필터링 옵션 토글 지원 (프로젝트 일정 산정 및 연차/근무일 계산).
-  3. **날짜 계산 (더하기/빼기, `calc`)**:
-     - 특정 기준일로부터 "+N일/주/개월/년 뒤" 또는 "-N일/주/개월/년 전"의 정확한 날짜 즉시 계산.
-     - 빠른 증감 버튼(±1일, ±7일, ±30일, ±100일) 제공.
-  4. **만 나이 & 생애 지표 (`age`)**:
-     - 생년월일 입력 시 2023년 개정 행정기본법 기준 **공식 만 나이**, 연 나이, 띠(12간지), 별자리(12성좌).
-     - 태어난 지 며칠째인지(D+N일) 및 다음 생일까지 남은 D-day 표시.
-- **결과 대시보드 및 시각화 표준**:
-  - Ghost 디자인 시스템의 메인 하이라이트 카드 + 일렉트릭 라임 뱃지 + 원클릭 결과 복사.
+- **4대 서브 탭 인터페이스 규격 (`DateCategoryTabs.tsx` - `UnitCategoryTabs` 공통 UX 일치)**:
+  - **모바일 퍼스트 가로 스크롤 레이아웃**: 가용 폭에 따라 수평 스크롤을 지원하여 좁은 화면에서도 탭 라벨과 아이콘이 찌그러지지 않고 자연스럽게 적응.
+  - **표준 Ghost 탭 스타일**: `Tabs` 및 `TabsList` 표준 컴포넌트(`variant="slate-solid"`, `size="auto"`)를 적용하여 사이트 전역 탭과 일관성 유지.
+  - **기능별 고유 Lucide 아이콘 & 활성 인디케이터**:
+    1. **디데이·기념일 (`dday`)**: `CalendarHeart` 아이콘 + 목표일/기념일 실시간 D-day 및 100일/200일/1주년 캘린더.
+    2. **날짜 간격 (`diff`)**: `CalendarRange` 아이콘 + 두 날짜 간 총 일수 및 주말 제외 평일 근무일(영업일) 산출.
+    3. **날짜 계산 (`calc`)**: `CalendarPlus` 아이콘 + 기준일로부터 N일/주/개월/년 더하기 및 빼기.
+    4. **만 나이 (`age`)**: `UserCheck` 아이콘 + 대한민국 2023년 만 나이 통일법 기준 공식 만 나이, 연 나이, 살아온 날수, 띠/별자리 산출.
+  - **활성 탭 시각 피드백**: 활성 탭에 Ghost 다크 서피스 및 일렉트릭 라임 아이콘/도트 인디케이터 적용.
+- **결과 대시보드 및 시각화 표준 (공통 컴포넌트 규격 준수)**:
+  - Ghost 디자인 시스템의 메인 하이라이트 카드 + 일렉트릭 라임 뱃지 + 우상단 표준 원클릭 결과 복사.
   - 3단 서브 요약 지표 카드 및 주요 기념일/상세 정보 테이블.
   - 날짜 상식 안내 카드 (`DateInfoCard`): 양력/음력과 윤달의 원리, 만 나이 통일법(2023), 주말 제외 영업일과 근로일수 상식.
 
@@ -1328,6 +1322,7 @@ export interface AgeResult {
   - `TabsContent`: 탭 패널 컨테이너
 - **적용 대상**:
   - 단위 변환기 5대 카테고리 탭 (`UnitCategoryTabs.tsx`)
+  - 날짜 & 디데이 계산기 4대 기능 탭 (`DateCategoryTabs.tsx`)
   - 환율 계산기 환전 방식 3분할 탭 (`DualExchangeCard.tsx`)
   - 대출 시각화 차트 뷰 전환 탭 (`LoanChartDashboard.tsx`)
 
@@ -1395,30 +1390,29 @@ export interface AgeResult {
 
 ### 11.12 공통 폼 헤더(`FormHeader`) 및 결과 대시보드(`SummaryCards`) 단일 디자인 규격 표준화
 - **도입 목적**:
-  - 계산기별로 제각각이던 폼 헤더(태그, 뱃지 위치, 아이콘 유무, 폰트 규격)와 결과 요약 대시보드(복사 버튼 위치, 메인 금액 강조 컬러, 서브 카드 라운딩 및 패딩)를 단 1px의 오차도 없는 단일 시각 문법으로 100% 통일.
+  - 계산기별로 제각각이던 폼 헤더와 결과 요약 대시보드의 계층 구조를 공통 컴포넌트 기반으로 100% 통일.
 - **1. 공통 폼 헤더 표준 (`src/components/common/FormHeader.tsx`)**:
-  - **카테고리 뱃지**: 모든 계산기 제목 '앞' 고정 (`Badge variant="meta" size="sm"`).
-  - **폼 제목**: 시맨틱 `h2`, `text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink` 단일 통일.
-  - **제목 내 장식 배제**: 텍스트 가독성을 저해하는 제목 내 Lucide 아이콘 제거.
+  - **카테고리 뱃지**: 모든 계산기 제목 앞에 위치하는 표준 메타 뱃지 (`Badge variant="meta"`).
+  - **폼 제목**: 시맨틱 `h2` 태그 적용 및 단일 볼드 타이포그래피.
+  - **제목 내 장식 배제**: 텍스트 가독성을 저해하는 제목 내 아이콘 제거.
   - **우측 액션 슬롯**: 초기화 버튼 등 도구 버튼을 배치하는 표준 `children` 슬롯.
 - **2. 결과 요약 메인 카드 단일 규격**:
-  - **컨테이너**: `relative overflow-hidden rounded-2xl bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-[#15171a] dark:border-ghost-dark-hairline-soft text-white p-5 sm:p-6 shadow-sm`.
-  - **배경 장식**: 우하단 은은한 라임 글로우 (`absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none`).
+  - **컨테이너**: Ghost 다크 서피스 기반 메인 카드 컨테이너 (`SummaryCards` 표준).
+  - **배경 장식**: 우하단 은은한 라임 글로우 블러 효과.
   - **1열 (헤더 & 복사)**:
-    - 좌측: 라임 시그니처 캡슐 뱃지 (`px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30`).
-    - 우측: 표준 원클릭 결과 복사 버튼 고정 (`h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 text-white rounded-lg shrink-0 flex items-center gap-1`).
+    - 좌측: 일렉트릭 라임 시그니처 캡슐 뱃지.
+    - 우측: 표준 원클릭 결과 복사 버튼.
   - **2열 (핵심 지표 & 한글 독음)**:
-    - 대형 수치: `text-2xl sm:text-3xl font-extrabold tracking-tight text-[#d1ff19] tabular-nums whitespace-nowrap`.
-    - 한글 독음: 인라인 `text-xs sm:text-sm font-medium text-slate-400 whitespace-nowrap (N억 N만 원)`.
+    - 대형 수치: 일렉트릭 라임 볼드 타이포그래피.
+    - 한글 독음: 인라인 텍스트 표기 (예: N억 N만 원).
   - **하단 인포 바**:
-    - `mt-4 pt-3 border-t border-slate-800 dark:border-ghost-dark-hairline text-xs text-slate-400`.
-    - 컬러 이모지(`💡`)를 완전 배제하고 단정한 라임 텍스트 헤더(`건강 가이드:`, `안내:`)로 일치.
+    - 컬러 이모지를 완전 배제하고 단정한 라임 텍스트 헤더(`건강 가이드:`, `안내:`)로 일치.
 - **3. 3단 서브 요약 카드 단일 규격**:
-  - **그리드**: `grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3` (또는 유동 컨테이너 `grid-cols-[repeat(auto-fit,minmax(200px,1fr))]`).
-  - **개별 카드**: `p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1`.
-  - **상단 1행**: `flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider`.
-  - **본문 2행**: `text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums`.
-  - **하단 3행**: `text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate`.
+  - **그리드**: 반응형 유동 3단 카드 그리드 레이아웃.
+  - **개별 카드**: 표준 라운드 및 경계선이 적용된 Ghost 서피스 카드.
+  - **상단 1행**: 소제목 및 메타 지표 (대문자 트래킹).
+  - **본문 2행**: 볼드 수치 및 단위.
+  - **하단 3행**: 부가 설명 텍스트.
 
 ---
 

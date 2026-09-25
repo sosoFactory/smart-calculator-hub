@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { calculateDateMath, getTodayString } from '../../../utils/dateCalculator';
 import { DateCalcOp, DateCalcUnit } from '../../../types/date';
-import { Card } from '../../../components/ui/card';
-import { Badge } from '../../../components/ui/badge';
+import { FormHeader } from '../../../components/common/FormHeader';
+import { SegmentedControl } from '../../../components/ui/segmented-control';
+import { SelectableChip } from '../../../components/ui/selectable-chip';
+import { NumericInput } from '../../../components/ui/numeric-input';
 import { Button } from '../../../components/ui/button';
-import { Calendar, Copy, Check, Plus, Minus, ArrowRight, Clock } from 'lucide-react';
-import { useToast } from '../../../hooks/use-toast';
+import { Calendar, Copy, Check, Clock, CalendarDays, ArrowRight } from 'lucide-react';
 
 export const DateCalcTab: React.FC = () => {
   const today = getTodayString();
@@ -14,7 +15,6 @@ export const DateCalcTab: React.FC = () => {
   const [unit, setUnit] = useState<DateCalcUnit>('days');
   const [operation, setOperation] = useState<DateCalcOp>('add');
   const [copied, setCopied] = useState(false);
-  const { toast } = useToast();
 
   const result = useMemo(
     () => calculateDateMath(baseDate, amount, unit, operation),
@@ -29,23 +29,24 @@ export const DateCalcTab: React.FC = () => {
   };
 
   const handleCopy = async () => {
-    const text = `[날짜 계산 결과]\n기준일: ${result.baseDate}\n계산: ${amount}${unitLabels[unit]} ${operation === 'add' ? '뒤' : '전'}\n결과 날짜: ${result.resultDate} (${result.dayOfWeek})`;
+    const text = `[스마트 계산기] 날짜 계산 결과
+- 기준일: ${result.baseDate}
+- 계산 수식: ${amount}${unitLabels[unit]} ${operation === 'add' ? '뒤' : '전'}
+- 최종 날짜: ${result.resultDate} (${result.dayOfWeek})`;
+
     try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text);
-      }
+      await navigator.clipboard.writeText(text);
       setCopied(true);
-      toast({
-        title: '날짜 계산 결과가 복사되었습니다',
-        description: '원하는 곳에 붙여넣어 공유해보세요.',
-      });
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast({
-        title: '복사 실패',
-        description: '직접 텍스트를 선택하여 복사해주세요.',
-        variant: 'destructive',
-      });
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -55,227 +56,235 @@ export const DateCalcTab: React.FC = () => {
     setOperation(op);
   };
 
+  const handleReset = () => {
+    setBaseDate(today);
+    setAmount(100);
+    setUnit('days');
+    setOperation('add');
+  };
+
   return (
-    <div className="space-y-4 sm:space-y-6">
-      {/* 1. 입력 폼 영역 */}
-      <Card className="p-4 sm:p-5 bg-white dark:bg-ghost-dark-surface border-[#e5e7eb] dark:border-ghost-dark-hairline rounded-2xl shadow-2xs space-y-4">
-        {/* 기준일 선택 */}
-        <div>
-          <label className="block text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink mb-1.5 flex items-center gap-1.5">
-            <Calendar className="w-4 h-4 text-[#112220] dark:text-[#d1ff19]" />
-            <span>기준일 선택</span>
-          </label>
-          <input
-            type="date"
-            value={baseDate}
-            onChange={(e) => setBaseDate(e.target.value)}
-            className="w-full h-11 px-3.5 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-slate-50 dark:bg-ghost-dark-surface-elevated text-sm font-semibold text-[#112220] dark:text-ghost-dark-ink focus:outline-none focus:ring-2 focus:ring-[#112220] dark:focus:ring-[#d1ff19]"
-          />
-        </div>
+    <div className="space-y-4 sm:space-y-6 w-full">
+      {/* 1. 입력 폼 영역 (표준 FormHeader + SegmentedControl + NumericInput + SelectableChip) */}
+      <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-5 sm:space-y-6 w-full">
+        <FormHeader
+          badge="날짜 연산"
+          title="날짜 더하기 및 빼기"
+          description="특정 기준일로부터 N일, N주, N개월, N년 후 또는 전의 정확한 날짜를 산출합니다"
+          onReset={handleReset}
+        />
 
-        {/* 연산(더하기/빼기) 및 수량, 단위 선택 */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {/* 더하기 / 빼기 토글 */}
+        <div className="space-y-4">
+          {/* 기준일 선택 */}
           <div>
-            <label className="block text-xs font-bold text-slate-500 dark:text-ghost-dark-ink-mute mb-1.5">
-              계산 방향
-            </label>
-            <div className="grid grid-cols-2 p-1 rounded-xl bg-slate-100 dark:bg-ghost-dark-surface-elevated border border-slate-200/80 dark:border-ghost-dark-hairline">
-              <button
-                type="button"
-                onClick={() => setOperation('add')}
-                className={`flex items-center justify-center gap-1 h-9 rounded-lg text-xs font-bold transition-all ${
-                  operation === 'add'
-                    ? 'bg-white dark:bg-ghost-dark-surface text-[#112220] dark:text-[#d1ff19] shadow-xs'
-                    : 'text-slate-500 dark:text-ghost-dark-ink-stone hover:text-slate-900'
-                }`}
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>N일 뒤 (+)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setOperation('subtract')}
-                className={`flex items-center justify-center gap-1 h-9 rounded-lg text-xs font-bold transition-all ${
-                  operation === 'subtract'
-                    ? 'bg-white dark:bg-ghost-dark-surface text-[#112220] dark:text-[#d1ff19] shadow-xs'
-                    : 'text-slate-500 dark:text-ghost-dark-ink-stone hover:text-slate-900'
-                }`}
-              >
-                <Minus className="w-3.5 h-3.5" />
-                <span>N일 전 (-)</span>
-              </button>
+            <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1.5">
+              <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base flex items-center gap-1.5">
+                <Calendar className="w-4 h-4 text-[#112220] dark:text-[#d1ff19]" />
+                <span>기준일</span>
+              </label>
+              <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
+                {baseDate}
+              </span>
             </div>
-          </div>
-
-          {/* 수량 입력 */}
-          <div>
-            <label className="block text-xs font-bold text-slate-500 dark:text-ghost-dark-ink-mute mb-1.5">
-              수량 (기간 값)
-            </label>
             <input
-              type="number"
-              min={1}
-              max={10000}
-              value={amount || ''}
-              onChange={(e) => setAmount(Math.max(1, parseInt(e.target.value, 10) || 1))}
-              className="w-full h-11 px-3.5 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-slate-50 dark:bg-ghost-dark-surface-elevated text-sm font-semibold text-[#112220] dark:text-ghost-dark-ink focus:outline-none focus:ring-2 focus:ring-[#112220] dark:focus:ring-[#d1ff19] tabular-nums"
+              type="date"
+              value={baseDate}
+              onChange={(e) => setBaseDate(e.target.value)}
+              className="w-full h-11 px-3.5 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-slate-50/50 dark:bg-slate-900/60 text-sm font-bold text-[#112220] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#15171a] dark:focus:ring-[#d1ff19] transition-all"
             />
           </div>
 
-          {/* 단위 선택 */}
-          <div>
-            <label className="block text-xs font-bold text-slate-500 dark:text-ghost-dark-ink-mute mb-1.5">
-              단위 선택
-            </label>
-            <div className="grid grid-cols-4 p-1 rounded-xl bg-slate-100 dark:bg-ghost-dark-surface-elevated border border-slate-200/80 dark:border-ghost-dark-hairline">
-              {(['days', 'weeks', 'months', 'years'] as DateCalcUnit[]).map((u) => (
-                <button
-                  key={u}
-                  type="button"
-                  onClick={() => setUnit(u)}
-                  className={`h-9 rounded-lg text-xs font-bold transition-all ${
-                    unit === u
-                      ? 'bg-white dark:bg-ghost-dark-surface text-[#112220] dark:text-[#d1ff19] shadow-xs'
-                      : 'text-slate-500 dark:text-ghost-dark-ink-stone hover:text-slate-900'
-                  }`}
-                >
-                  {unitLabels[u]}
-                </button>
-              ))}
+          {/* 계산 방향 및 단위 선택 (SegmentedControl) + 수량 (NumericInput) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            {/* 계산 방향 */}
+            <div>
+              <label className="block text-xs font-bold text-slate-500 dark:text-ghost-dark-ink-mute mb-1.5">
+                계산 방향
+              </label>
+              <SegmentedControl<DateCalcOp>
+                options={[
+                  { id: 'add', label: 'N일 뒤 (+)' },
+                  { id: 'subtract', label: 'N일 전 (-)' },
+                ]}
+                value={operation}
+                onChange={setOperation}
+                variant="slate-solid"
+              />
+            </div>
+
+            {/* 수량 입력 */}
+            <div>
+              <label className="block text-xs font-bold text-slate-500 dark:text-ghost-dark-ink-mute mb-1.5">
+                기간 값
+              </label>
+              <NumericInput
+                value={amount}
+                onNumberChange={(val) => setAmount(Math.max(1, Math.min(10000, val || 1)))}
+                suffix={unitLabels[unit]}
+                thousandSeparator={true}
+                placeholder="100"
+              />
+            </div>
+
+            {/* 단위 선택 */}
+            <div>
+              <label className="block text-xs font-bold text-slate-500 dark:text-ghost-dark-ink-mute mb-1.5">
+                단위 선택
+              </label>
+              <SegmentedControl<DateCalcUnit>
+                options={[
+                  { id: 'days', label: '일' },
+                  { id: 'weeks', label: '주' },
+                  { id: 'months', label: '개월' },
+                  { id: 'years', label: '년' },
+                ]}
+                value={unit}
+                onChange={setUnit}
+                variant="slate-solid"
+              />
+            </div>
+          </div>
+
+          {/* 빠른 프리셋 칩 (SelectableChip) */}
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            <SelectableChip
+              isSelected={amount === 7 && unit === 'days' && operation === 'add'}
+              onClick={() => setPreset(7, 'days', 'add')}
+            >
+              +7일 (1주 뒤)
+            </SelectableChip>
+            <SelectableChip
+              isSelected={amount === 30 && unit === 'days' && operation === 'add'}
+              onClick={() => setPreset(30, 'days', 'add')}
+            >
+              +30일 뒤
+            </SelectableChip>
+            <SelectableChip
+              isSelected={amount === 100 && unit === 'days' && operation === 'add'}
+              onClick={() => setPreset(100, 'days', 'add')}
+            >
+              +100일 뒤
+            </SelectableChip>
+            <SelectableChip
+              isSelected={amount === 1 && unit === 'years' && operation === 'add'}
+              onClick={() => setPreset(1, 'years', 'add')}
+            >
+              +1년 뒤
+            </SelectableChip>
+            <SelectableChip
+              isSelected={amount === 30 && unit === 'days' && operation === 'subtract'}
+              onClick={() => setPreset(30, 'days', 'subtract')}
+            >
+              -30일 전
+            </SelectableChip>
+            <SelectableChip
+              isSelected={amount === 100 && unit === 'days' && operation === 'subtract'}
+              onClick={() => setPreset(100, 'days', 'subtract')}
+            >
+              -100일 전
+            </SelectableChip>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. 메인 결과 대시보드 (PRD 11.12 단일 디자인 규격 준수) */}
+      <div className="space-y-3.5 sm:space-y-4 w-full">
+        {/* 메인 다크 서피스 카드 */}
+        <div className="relative overflow-hidden rounded-2xl bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-[#15171a] dark:border-ghost-dark-hairline-soft p-5 sm:p-6 text-white shadow-sm">
+          <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none" />
+
+          <div className="relative z-10 space-y-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex flex-wrap items-center gap-2 min-w-0">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30">
+                  <CalendarDays className="w-3.5 h-3.5" />
+                  날짜 계산 결과
+                </span>
+                <span className="text-xs text-[#d1ff19] font-bold px-2 py-0.5 rounded-full bg-[#d1ff19]/10 border border-[#d1ff19]/20 shrink-0">
+                  {result.dayOfWeek}
+                </span>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleCopy}
+                className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white rounded-lg shrink-0 flex items-center gap-1"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3 h-3 text-[#d1ff19]" />
+                    <span>복사 완료</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3 text-slate-300" />
+                    <span>결과 복사</span>
+                  </>
+                )}
+              </Button>
+            </div>
+
+            <div>
+              <div className="flex items-baseline gap-2.5 flex-wrap pt-0.5">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#d1ff19] tracking-tight tabular-nums break-keep">
+                  {result.resultDate}
+                </span>
+                <span className="text-xs sm:text-sm text-slate-300 font-semibold break-keep">
+                  ({result.dayOfWeek})
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 mt-1">
+                기준일({result.baseDate})로부터 {amount}
+                {unitLabels[unit]} {operation === 'add' ? '뒤' : '전'} 날짜
+              </p>
             </div>
           </div>
         </div>
 
-        {/* 빠른 프리셋 버튼 칩 */}
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setPreset(7, 'days', 'add')}
-            className="text-xs h-7 px-2.5 rounded-lg border-slate-200 dark:border-ghost-dark-hairline hover:bg-slate-100 dark:hover:bg-ghost-dark-hover"
-          >
-            +7일 (1주 뒤)
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setPreset(30, 'days', 'add')}
-            className="text-xs h-7 px-2.5 rounded-lg border-slate-200 dark:border-ghost-dark-hairline hover:bg-slate-100 dark:hover:bg-ghost-dark-hover"
-          >
-            +30일 뒤
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setPreset(100, 'days', 'add')}
-            className="text-xs h-7 px-2.5 rounded-lg border-slate-200 dark:border-ghost-dark-hairline hover:bg-slate-100 dark:hover:bg-ghost-dark-hover"
-          >
-            +100일 뒤
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setPreset(1, 'years', 'add')}
-            className="text-xs h-7 px-2.5 rounded-lg border-slate-200 dark:border-ghost-dark-hairline hover:bg-slate-100 dark:hover:bg-ghost-dark-hover"
-          >
-            +1년 뒤
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setPreset(30, 'days', 'subtract')}
-            className="text-xs h-7 px-2.5 rounded-lg border-slate-200 dark:border-ghost-dark-hairline hover:bg-slate-100 dark:hover:bg-ghost-dark-hover"
-          >
-            -30일 전
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => setPreset(100, 'days', 'subtract')}
-            className="text-xs h-7 px-2.5 rounded-lg border-slate-200 dark:border-ghost-dark-hairline hover:bg-slate-100 dark:hover:bg-ghost-dark-hover"
-          >
-            -100일 전
-          </Button>
-        </div>
-      </Card>
-
-      {/* 2. 메인 결과 하이라이트 카드 */}
-      <Card className="p-4 sm:p-6 bg-white dark:bg-ghost-dark-surface border-[#e5e7eb] dark:border-ghost-dark-hairline rounded-2xl shadow-2xs space-y-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <span className="text-[11px] sm:text-xs font-bold text-slate-500 dark:text-ghost-dark-ink-mute uppercase tracking-wider block mb-1">
-              날짜 계산 결과
-            </span>
-            <div className="flex items-baseline gap-2.5 flex-wrap">
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#112220] dark:text-white tracking-tight tabular-nums">
-                {result.resultDate}
-              </h2>
-              <Badge
-                variant="outline"
-                className="text-xs px-2.5 py-0.5 font-bold bg-[#d1ff19] text-[#112220] border-[#d1ff19]"
-              >
-                {result.dayOfWeek}
-              </Badge>
+        {/* 3단 서브 요약 지표 카드 (PRD 11.12 단일 규격) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
+            <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
+              <span>기준일</span>
+              <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
             </div>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-ghost-dark-ink-soft mt-1.5 font-medium">
-              기준일({result.baseDate})로부터 {amount}
-              {unitLabels[unit]} {operation === 'add' ? '뒤' : '전'} 날짜
+            <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
+              {result.baseDate}
+            </div>
+            <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
+              연산 시작 날짜
             </p>
           </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleCopy}
-            className="h-8 px-2.5 gap-1.5 text-xs border-slate-200 dark:border-ghost-dark-hairline text-slate-600 dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover"
-          >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>복사</span>
-          </Button>
-        </div>
-
-        {/* 3단 서브 요약 지표 카드 */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-slate-100 dark:border-ghost-dark-hairline">
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-ghost-dark-surface-elevated border border-slate-100 dark:border-ghost-dark-hairline-soft">
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-ghost-dark-ink-mute mb-1 font-medium">
-              <Clock className="w-3 h-3 text-slate-400" />
-              <span>기준일</span>
-            </div>
-            <div className="text-sm font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-              {result.baseDate}
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-ghost-dark-surface-elevated border border-slate-100 dark:border-ghost-dark-hairline-soft">
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-ghost-dark-ink-mute mb-1 font-medium">
-              <ArrowRight className="w-3 h-3 text-indigo-500" />
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
+            <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
               <span>계산 수식</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
             </div>
-            <div className="text-sm font-bold text-[#112220] dark:text-ghost-dark-ink">
-              {operation === 'add' ? `+${amount}` : `-${amount}`}
-              {unitLabels[unit]} {operation === 'add' ? '뒤' : '전'}
+            <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink">
+              {operation === 'add' ? `+${amount}` : `-${amount}`}{unitLabels[unit]} {operation === 'add' ? '뒤' : '전'}
             </div>
+            <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
+              적용된 증감 범위
+            </p>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-ghost-dark-surface-elevated border border-slate-100 dark:border-ghost-dark-hairline-soft">
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-ghost-dark-ink-mute mb-1 font-medium">
-              <Calendar className="w-3 h-3 text-emerald-500" />
+          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
+            <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
               <span>해당 요일</span>
+              <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
             </div>
-            <div className="text-sm font-bold text-[#112220] dark:text-ghost-dark-ink">
+            <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink">
               {result.dayOfWeek}
             </div>
+            <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
+              도달 일자의 요일
+            </p>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };
