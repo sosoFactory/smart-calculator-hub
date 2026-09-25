@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { calculateGoalTarget } from './goalCalculator';
 import { DEFAULT_GOAL_INPUT, GoalInput } from '../types/goal';
 
@@ -18,9 +18,15 @@ describe('calculateGoalTarget Tests', () => {
     expect(result.totalPrincipal + result.totalInterest).toBe(result.targetAmount);
     expect(result.interestRatio).toBeGreaterThan(20);
 
-    // 10개년 breakdown 데이터 검증
+    // 10개년 breakdown 데이터 검증 및 3단 스택 무결성 검증
     expect(result.breakdown).toHaveLength(10);
     expect(result.breakdown[9].totalAsset).toBe(500_000_000);
+    result.breakdown.forEach((item) => {
+      expect(item.initialValue).toBe(DEFAULT_GOAL_INPUT.initialAmount);
+      expect(item.initialValue + item.accumulatedContribution + item.accumulatedInterest).toBe(
+        item.totalAsset
+      );
+    });
   });
 
   it('수익률이 0%인 경우 단순 나눗셈으로 월 적립금이 산출되어야 한다', () => {

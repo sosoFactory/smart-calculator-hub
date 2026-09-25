@@ -99,16 +99,18 @@ export function calculateGoalTarget(input: GoalInput): GoalCalculationResult {
         netMonthlyRate;
     }
 
-    const totalAsset = Math.round(initialVal + contribFV);
+    const calculatedTotalAsset = Math.round(initialVal + contribFV);
+    // 마지막 연차는 반올림 오차 없이 최종 목표액(targetAmount)과 완전 일치하도록 보정
+    const totalAsset = year === targetYears ? targetAmount : calculatedTotalAsset;
     const accumPrincipal = initialAmount + accumContrib;
     const accumInterest = Math.max(0, totalAsset - accumPrincipal);
 
     breakdown.push({
       year,
-      initialValue: Math.round(initialVal),
+      initialValue: Math.round(initialAmount),
       accumulatedContribution: Math.round(accumContrib),
       accumulatedInterest: Math.round(accumInterest),
-      totalAsset: year === targetYears ? targetAmount : totalAsset,
+      totalAsset,
     });
   }
 
