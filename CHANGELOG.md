@@ -3,6 +3,21 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.37] - 2026-09-25
+
+### 전 계산기 폼 헤더 및 결과 카드 디자인 문법 완전 통일 (Global UI/UX Design System Alignment)
+- **공통 폼 헤더(`FormHeader`) 컴포넌트 신설 및 전 계산기 적용**:
+  - `src/components/common/FormHeader.tsx` 컴포넌트 구축.
+  - 카테고리 뱃지 위치를 항상 제목 '앞'(`Badge variant="meta" size="sm"`)으로 고정 (`알바 설계`, `급여 설계`, `대출 설계`, `목표 설계`, `투자 설계`, `건강 측정`).
+  - 폼 제목 태그 및 폰트를 `h2`, `text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink`로 일원화 (div/h2 혼용 및 과도한 font-black 배제).
+  - 초기화 버튼 규격을 `Button variant="ghost" size="sm" h-8 px-2.5`로 통일.
+  - `PartTimeForm`, `SalaryForm`, `LoanForm`, `GoalForm`, `BmiForm`, `CalculatorForm` 6개 폼 전수 적용.
+- **결과 대시보드 메인 카드 디자인 표준화**:
+  - 결과 복사 버튼의 위치와 크기(`h-7 px-2.5 text-xs`)를 메인 카드 상단 우측으로 전 계산기 통일 (연봉/알바/목표/대출).
+  - 지표명 아이브로우를 표준 라임 캡슐 뱃지(`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19]`)로 통일.
+- **3단 서브 요약 카드 규격 일치**:
+  - 모든 계산기 서브 카드의 보더(`border-[#e5e7eb] dark:border-ghost-dark-hairline`), 라운딩(`rounded-xl`), 패딩(`p-3.5 sm:p-4`), 그림자(`shadow-2xs`), 라벨 색상(`text-[#64748b]`) 통일.
+
 ## [1.9.36] - 2026-09-25
 
 ### 알바 계산기 UI/UX 표준 규격 일원화 및 폼 간소화 (Part-Time UI/UX Standardization)

@@ -49,9 +49,9 @@ export const SalarySummaryCards: React.FC<SalarySummaryCardsProps> = ({ result }
         {/* 우측 상단 배경 장식 효과 */}
         <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none" />
 
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 relative z-10">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
+        <div className="relative z-10 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2 min-w-0">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30">
                 <Sparkles className="w-3 h-3" />
                 월 예상 실수령액
@@ -66,7 +66,29 @@ export const SalarySummaryCards: React.FC<SalarySummaryCardsProps> = ({ result }
               )}
             </div>
 
-            <div className="flex flex-wrap items-baseline gap-2 pt-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCopy}
+              className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white rounded-lg shrink-0 flex items-center gap-1"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3 h-3 text-[#d1ff19]" />
+                  <span>복사 완료</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3 text-slate-300" />
+                  <span>결과 복사</span>
+                </>
+              )}
+            </Button>
+          </div>
+
+          <div>
+            <div className="flex flex-wrap items-baseline gap-2 pt-0.5">
               <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#d1ff19] tabular-nums whitespace-nowrap">
                 {result.netMonthlySalary.toLocaleString('ko-KR')}
                 <span className="text-lg sm:text-xl font-medium text-slate-200 ml-1">
@@ -78,7 +100,7 @@ export const SalarySummaryCards: React.FC<SalarySummaryCardsProps> = ({ result }
               </span>
             </div>
 
-            <div className="text-xs text-slate-400 pt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <div className="text-xs text-slate-400 pt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
               <span className="break-keep">
                 연간 총 환산 수령액:{' '}
                 <strong className="text-white font-medium tabular-nums whitespace-nowrap">
@@ -90,26 +112,6 @@ export const SalarySummaryCards: React.FC<SalarySummaryCardsProps> = ({ result }
               </span>
             </div>
           </div>
-
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleCopy}
-            className="self-start sm:self-auto h-8 px-3 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white shrink-0"
-          >
-            {copied ? (
-              <>
-                <Check className="w-3.5 h-3.5 mr-1 text-[#d1ff19]" />
-                복사 완료
-              </>
-            ) : (
-              <>
-                <Copy className="w-3.5 h-3.5 mr-1 text-slate-300" />
-                결과 복사
-              </>
-            )}
-          </Button>
         </div>
       </div>
 

@@ -3,9 +3,8 @@ import { GoalInput, GoalTaxType } from '../../../types/goal';
 import { formatKoreanCurrency } from '../../../utils/formatters';
 import { NumericInput } from '../../../components/ui/numeric-input';
 import { Slider } from '../../../components/ui/slider';
-import { Button } from '../../../components/ui/button';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { RotateCcw, Target } from 'lucide-react';
+import { FormHeader } from '../../../components/common/FormHeader';
 
 interface GoalFormProps {
   input: GoalInput;
@@ -67,29 +66,14 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
   };
 
   return (
-    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-5 shadow-2xs transition-colors w-full">
-      {/* 상단 타이틀 & 표준 초기화 버튼 */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline gap-2">
-        <div className="space-y-0.5 min-w-0 flex-1">
-          <h2 className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink flex items-center gap-2">
-            <Target className="w-5 h-5 text-[#112220] dark:text-[#d1ff19] shrink-0" />
-            <span className="truncate">목표 조건 설정</span>
-          </h2>
-          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute break-keep">
-            목표 자산과 기간, 예상 수익률을 입력하면 필요한 매월 적립액을 계산합니다
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={onReset}
-          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>초기화</span>
-        </Button>
-      </div>
+    <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-5 sm:space-y-6 w-full">
+      {/* 1. 상단 타이틀 & 표준 초기화 버튼 */}
+      <FormHeader
+        badge="목표 설계"
+        title="목표 조건 설정"
+        description="목표 자산과 기간, 예상 수익률을 입력하면 필요한 매월 적립액을 계산합니다"
+        onReset={onReset}
+      />
 
       <div className="space-y-5">
         {/* 1. 목표 자산 (원) */}

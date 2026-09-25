@@ -7,10 +7,10 @@ import {
 } from '../../../types/partTime';
 import { NumericInput } from '../../../components/ui/numeric-input';
 import { Slider } from '../../../components/ui/slider';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { RotateCcw, Clock, ChevronDown, ChevronUp, Building2 } from 'lucide-react';
+import { Badge } from '../../../components/ui/badge';
+import { FormHeader } from '../../../components/common/FormHeader';
+import { Clock, ChevronDown, ChevronUp, Building2 } from 'lucide-react';
 import { formatNumberWithWon } from '../../../utils/formatters';
 
 interface PartTimeFormProps {
@@ -46,31 +46,14 @@ export const PartTimeForm: React.FC<PartTimeFormProps> = ({ input, onChange, onR
   const weeklyHours = input.weeklyWorkHours;
 
   return (
-    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-5 sm:p-6 shadow-xs space-y-6 transition-colors">
-      {/* 폼 헤더 */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
-        <div className="space-y-0.5">
-          <h2 className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tracking-tight flex items-center gap-2">
-            <span>알바 근무 조건 입력</span>
-            <Badge variant="lime" className="text-[10px] px-1.5 py-0 h-4">
-              2026년 기준
-            </Badge>
-          </h2>
-          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute">
-            시급과 근무 시간을 입력하면 주휴수당과 실수령액이 즉시 계산됩니다.
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={onReset}
-          className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-ghost-dark-ink gap-1 px-2.5 h-8 shrink-0"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>초기화</span>
-        </Button>
-      </div>
+    <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-5 sm:space-y-6">
+      {/* 1. 폼 상단 헤더 및 초기화 버튼 */}
+      <FormHeader
+        badge="알바 설계"
+        title="알바 근무 조건 입력"
+        description="시급과 근무 시간을 입력하면 주휴수당과 실수령액이 즉시 계산됩니다"
+        onReset={onReset}
+      />
 
       {/* 1. 시급 입력 */}
       <div className="space-y-2.5">

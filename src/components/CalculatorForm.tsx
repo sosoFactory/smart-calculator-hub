@@ -7,10 +7,10 @@ import {
 } from '../types/calculator';
 import { formatKoreanUnit } from '../utils/formatters';
 import { QuickAmountButtons } from './QuickAmountButtons';
-import { Copy, RotateCcw } from 'lucide-react';
-import { Badge } from './ui/badge';
+import { Copy } from 'lucide-react';
 import { Button } from './ui/button';
 import { SelectableChip } from './ui/selectable-chip';
+import { FormHeader } from './common/FormHeader';
 import { NumericInput } from './ui/numeric-input';
 import { Slider } from './ui/slider';
 import {
@@ -76,23 +76,18 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
 
   return (
     <div
-      className={`bg-white dark:bg-ghost-dark-surface rounded-[24px] p-5 sm:p-6 border border-[#e5e7eb] dark:border-ghost-dark-hairline transition-colors ${
+      className={`bg-white dark:bg-ghost-dark-surface rounded-[24px] p-5 sm:p-6 border border-[#e5e7eb] dark:border-ghost-dark-hairline transition-colors space-y-5 sm:space-y-6 ${
         isIndigo ? 'ring-1 ring-slate-900/5' : ''
       }`}
     >
       {/* 상단 뱃지 및 타이틀 & 액션 버튼 */}
-      <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100 dark:border-ghost-dark-hairline gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <Badge variant={isIndigo ? 'indigo' : 'teal'} className="font-bold uppercase tracking-wider shrink-0">
-            {badgeTitle || scenario.name}
-          </Badge>
-          <h2 className="text-sm sm:text-base font-bold text-slate-800 dark:text-ghost-dark-ink whitespace-nowrap">
-            투자 조건 설정
-          </h2>
-        </div>
-
-        <div className="flex items-center gap-1.5 shrink-0">
-          {onCopyFromOther && (
+      <FormHeader
+        badge={badgeTitle || scenario.name}
+        title="투자 조건 설정"
+        description="초기 원금과 매월 적립액, 예상 수익률을 입력하면 복리 자산 성장을 계산합니다"
+        onReset={onReset}
+        extraActions={
+          onCopyFromOther && (
             <Button
               type="button"
               variant="outline"
@@ -103,22 +98,9 @@ export const CalculatorForm: React.FC<CalculatorFormProps> = ({
               <Copy className="w-3.5 h-3.5" />
               <span>{copyButtonLabel || '복사'}</span>
             </Button>
-          )}
-
-          {onReset && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={onReset}
-              className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>초기화</span>
-            </Button>
-          )}
-        </div>
-      </div>
+          )
+        }
+      />
 
       <div className="space-y-4 sm:space-y-5">
         {/* 1. 초기 원금 */}

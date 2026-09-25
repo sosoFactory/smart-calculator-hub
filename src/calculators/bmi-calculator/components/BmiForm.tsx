@@ -1,10 +1,8 @@
 import React from 'react';
 import { BmiInput, Gender } from '../../../types/bmi';
 import { Slider } from '../../../components/ui/slider';
-import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { RotateCcw } from 'lucide-react';
+import { FormHeader } from '../../../components/common/FormHeader';
 
 interface BmiFormProps {
   input: BmiInput;
@@ -29,34 +27,14 @@ export const BmiForm: React.FC<BmiFormProps> = ({ input, onChange, onReset }) =>
   };
 
   return (
-    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-5 shadow-2xs transition-colors">
+    <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-5 sm:space-y-6">
       {/* 1. 상단 타이틀 & 표준 초기화 버튼 */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline gap-2">
-        <div className="space-y-0.5 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="meta" size="sm" className="shrink-0">
-              건강 측정
-            </Badge>
-            <h2 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink whitespace-nowrap">
-              신체 정보 입력
-            </h2>
-          </div>
-          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute break-keep">
-            대한비만학회(KSSO) 한국인 표준 체질량지수 기준 자동 적용
-          </p>
-        </div>
-
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={onReset}
-          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>초기화</span>
-        </Button>
-      </div>
+      <FormHeader
+        badge="건강 측정"
+        title="신체 정보 입력"
+        description="대한비만학회(KSSO) 한국인 표준 체질량지수 기준 자동 적용"
+        onReset={onReset}
+      />
 
       {/* 2. 성별 선택 (독립 라디오 칩 그룹) */}
       <div>

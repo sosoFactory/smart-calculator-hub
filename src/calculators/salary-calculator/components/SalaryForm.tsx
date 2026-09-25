@@ -2,9 +2,9 @@ import React from 'react';
 import { SalaryInput, SalaryPaymentType, SeveranceType } from '../../../types/salary';
 import { NumericInput } from '../../../components/ui/numeric-input';
 import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { RotateCcw, Users, Baby, HelpCircle } from 'lucide-react';
+import { FormHeader } from '../../../components/common/FormHeader';
+import { Users, Baby, HelpCircle } from 'lucide-react';
 import { formatKoreanUnit, formatNumberWithWon } from '../../../utils/formatters';
 
 interface SalaryFormProps {
@@ -90,31 +90,12 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
   return (
     <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-5 sm:space-y-6">
       {/* 1. 폼 상단 헤더 및 초기화 버튼 */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline gap-2">
-        <div className="space-y-0.5 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="meta" size="sm" className="shrink-0">
-              급여 설계
-            </Badge>
-            <h2 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink whitespace-nowrap">
-              급여 조건 입력
-            </h2>
-          </div>
-          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute break-keep">
-            2026년 최신 4대 보험 및 간이세액표가 자동 적용됩니다
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={onReset}
-          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>초기화</span>
-        </Button>
-      </div>
+      <FormHeader
+        badge="급여 설계"
+        title="급여 조건 입력"
+        description="2026년 최신 4대 보험 및 간이세액표가 자동 적용됩니다"
+        onReset={onReset}
+      />
 
       {/* 2. 급여 지급 기준 라디오 칩 그룹 */}
       <div>

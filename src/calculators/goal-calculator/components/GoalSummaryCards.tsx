@@ -54,47 +54,46 @@ export const GoalSummaryCards: React.FC<GoalSummaryCardsProps> = ({ result }) =>
   return (
     <div className="space-y-3.5 sm:space-y-4 w-full">
       {/* 1. 메인 핵심 카드: 필요 월 적립액 (Ghost Ink-Base 다크 서피스) */}
-      <div className="relative overflow-hidden rounded-[24px] bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-slate-800 dark:border-ghost-dark-hairline-soft p-4 sm:p-7 text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-[#15171a] dark:border-ghost-dark-hairline-soft p-5 sm:p-6 text-white shadow-sm">
+        <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none" />
+
         <div className="relative z-10 space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="p-1.5 rounded-lg bg-[#d1ff19]/10 text-[#d1ff19] shrink-0">
-                <Target className="w-4 h-4" />
-              </div>
-              <span className="text-xs sm:text-sm font-semibold text-slate-300 truncate">
+            <div className="flex flex-wrap items-center gap-2 min-w-0">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30">
+                <Target className="w-3.5 h-3.5" />
                 목표 달성 필요 월 적립액
               </span>
-            </div>
-            <div className="flex items-center gap-2">
               <span className="text-xs text-[#d1ff19] font-bold px-2 py-0.5 rounded-full bg-[#d1ff19]/10 border border-[#d1ff19]/20 shrink-0">
                 {targetYears}년 목표
               </span>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleCopy}
-                className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white shrink-0"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-3 h-3 mr-1 text-[#d1ff19]" />
-                    복사 완료
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3 h-3 mr-1 text-slate-300" />
-                    결과 복사
-                  </>
-                )}
-              </Button>
             </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCopy}
+              className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white rounded-lg shrink-0 flex items-center gap-1"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3 h-3 text-[#d1ff19]" />
+                  <span>복사 완료</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3 text-slate-300" />
+                  <span>결과 복사</span>
+                </>
+              )}
+            </Button>
           </div>
 
           <div>
-            <div className="flex items-baseline gap-2 flex-wrap">
+            <div className="flex items-baseline gap-2 flex-wrap pt-0.5">
               <span className="text-xs text-slate-400 font-medium shrink-0">매월</span>
-              <span className="text-2xl sm:text-4xl font-extrabold text-[#d1ff19] tracking-tight tabular-nums break-keep">
+              <span className="text-2xl sm:text-3xl font-extrabold text-[#d1ff19] tracking-tight tabular-nums break-keep">
                 {formatCurrency(monthlyContribution)}
               </span>
               <span className="text-xs sm:text-sm text-slate-300 font-semibold break-keep">
@@ -106,15 +105,12 @@ export const GoalSummaryCards: React.FC<GoalSummaryCardsProps> = ({ result }) =>
             </p>
           </div>
         </div>
-
-        {/* 배경 은은한 그라데이션 글로우 */}
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-[#d1ff19]/5 blur-3xl pointer-events-none" />
       </div>
 
       {/* 2. 3단 서브 요약 카드 (PRD 3.7: 총 투입 원금, 예상 복리 수익, 이자/수익 기여도) */}
       <div className="grid grid-cols-[repeat(auto-fit,minmax(185px,1fr))] gap-2.5 sm:gap-3">
         {/* 1) 총 투입 원금 */}
-        <div className="bg-white dark:bg-ghost-dark-surface rounded-2xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-3.5 sm:p-4 space-y-1.5 shadow-2xs">
+        <div className="bg-white dark:bg-ghost-dark-surface rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-3.5 sm:p-4 space-y-1 shadow-2xs">
           <div className="flex items-center justify-between sm:justify-start gap-1.5 text-slate-500 dark:text-ghost-dark-ink-mute">
             <div className="flex items-center gap-1.5">
               <Coins className="w-3.5 h-3.5 text-sky-500 shrink-0" />
@@ -133,7 +129,7 @@ export const GoalSummaryCards: React.FC<GoalSummaryCardsProps> = ({ result }) =>
         </div>
 
         {/* 2) 예상 복리 수익 */}
-        <div className="bg-white dark:bg-ghost-dark-surface rounded-2xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-3.5 sm:p-4 space-y-1.5 shadow-2xs">
+        <div className="bg-white dark:bg-ghost-dark-surface rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-3.5 sm:p-4 space-y-1 shadow-2xs">
           <div className="flex items-center justify-between sm:justify-start gap-1.5 text-slate-500 dark:text-ghost-dark-ink-mute">
             <div className="flex items-center gap-1.5">
               <TrendingUp className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
@@ -152,7 +148,7 @@ export const GoalSummaryCards: React.FC<GoalSummaryCardsProps> = ({ result }) =>
         </div>
 
         {/* 3) 이자/수익 기여도 (PRD 3.7) */}
-        <div className="bg-white dark:bg-ghost-dark-surface rounded-2xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-3.5 sm:p-4 space-y-1.5 shadow-2xs">
+        <div className="bg-white dark:bg-ghost-dark-surface rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-3.5 sm:p-4 space-y-1 shadow-2xs">
           <div className="flex items-center justify-between sm:justify-start gap-1.5 text-slate-500 dark:text-ghost-dark-ink-mute">
             <div className="flex items-center gap-1.5">
               <Percent className="w-3.5 h-3.5 text-indigo-500 shrink-0" />

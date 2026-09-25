@@ -5,9 +5,8 @@ import { Input } from '../../../components/ui/input';
 import { NumericInput } from '../../../components/ui/numeric-input';
 import { Slider } from '../../../components/ui/slider';
 import { Button } from '../../../components/ui/button';
-import { Badge } from '../../../components/ui/badge';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { RotateCcw } from 'lucide-react';
+import { FormHeader } from '../../../components/common/FormHeader';
 import { useClampedNumberInput } from '../../../hooks/useClampedNumberInput';
 
 interface LoanFormProps {
@@ -101,31 +100,14 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
   });
 
   return (
-    <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-5 shadow-2xs transition-colors">
+    <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-5 sm:space-y-6">
       {/* 1. 상단 타이틀 & 초기화 버튼 */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
-        <div className="space-y-0.5">
-          <h2 className="text-base sm:text-lg font-black text-[#112220] dark:text-ghost-dark-ink flex items-center gap-2 whitespace-nowrap">
-            대출 조건 입력
-            <Badge variant="meta" size="sm">
-              스마트 비교
-            </Badge>
-          </h2>
-          <p className="text-xs text-[#64748b] dark:text-ghost-dark-ink-mute">
-            원하는 상환 방식과 금액을 입력하면 총이자와 상환 스케줄이 계산됩니다
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={onReset}
-          className="h-8 px-2.5 gap-1.5 text-xs text-slate-500 dark:text-ghost-dark-ink-mute hover:text-[#112220] dark:hover:text-white rounded-lg shrink-0"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>초기화</span>
-        </Button>
-      </div>
+      <FormHeader
+        badge="대출 설계"
+        title="대출 조건 입력"
+        description="원하는 상환 방식과 금액을 입력하면 총이자와 상환 스케줄이 계산됩니다"
+        onReset={onReset}
+      />
 
       {/* 2. 상환 방식 선택 (독립 라디오 칩 그룹) */}
       <div>
