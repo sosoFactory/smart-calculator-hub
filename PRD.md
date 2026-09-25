@@ -27,7 +27,8 @@
    - 3.5 [금융/급여] 연봉 실수령액 계산기 (`SalaryApp` - 구현 완료)
    - 3.6 [생활/건강] BMI & 비만도 계산기 (`BmiApp` - 구현 완료)
    - 3.7 [금융/투자] 목표 자산 역산 계산기 (`GoalApp` - 구현 완료)
-   - 3.8 향후 확장 예정 모듈 (Roadmap)
+   - 3.8 [금융/급여] 알바 급여 & 주휴수당 계산기 (`PartTimeApp` - 구현 완료)
+   - 3.9 향후 확장 예정 모듈 (Roadmap)
 4. [데이터 모델 (Data Models)](#4-데이터-모델-data-models)
    - 4.0 사이트 전역 설정 모델 (`src/config/site.ts`)
    - 4.1 글로벌 네비게이션 모델 (`src/types/navigation.ts`)
@@ -38,6 +39,7 @@
    - 4.6 연봉 및 급여 계산 데이터 모델 (`src/types/salary.ts`)
    - 4.7 BMI 및 신체 계측 데이터 모델 (`src/types/bmi.ts`)
    - 4.8 목표 자산 역산 데이터 모델 (`src/types/goal.ts`)
+   - 4.9 알바 급여 & 주휴수당 데이터 모델 (`src/types/partTime.ts`)
 5. [기술 스택 및 아키텍처](#5-기술-스택-및-아키텍처)
 6. [비기능적 요구사항 및 품질 검증 기준](#6-비기능적-요구사항-및-품질-검증-기준)
 7. [검색엔진 최적화 (SEO) 전략 및 웹 분석 명세](#7-검색엔진-최적화-seo-전략-및-웹-분석-명세)
@@ -50,6 +52,18 @@
 9. [품질 안정화 및 신뢰성 규격 (Quality & Reliability)](#9-품질-안정화-및-신뢰성-규격-quality--reliability)
 10. [웹 표준 및 웹 접근성(A11y) 규격](#10-웹-표준-및-웹-접근성a11y-규격)
 11. [공통 폼 및 인터랙션 컴포넌트 표준 규격](#11-공통-폼-및-인터랙션-컴포넌트-표준-규격)
+    - 11.1 Radix Slider
+    - 11.2 SegmentedControl
+    - 11.3 전역 표준 데이터 테이블 (`Table`)
+    - 11.4 Radix Tabs
+    - 11.5 Badge
+    - 11.6 Select
+    - 11.7 SelectableChip
+    - 11.8 NumericInput
+    - 11.9 Toast
+    - 11.10 ResetButton
+    - 11.11 DataExportButton
+    - 11.12 FormHeader 및 SummaryCards 단일 디자인 규격
 12. [모바일 퍼스트 및 반응형 리플로우 전역 규격](#12-모바일-퍼스트-및-반응형-리플로우-전역-규격)
 13. [금융 및 생활 상식 안내 카드 규격 (`InfoCard`)](#13-금융-및-생활-상식-안내-카드-규격-infocard)
 14. [AI 에이전트 실행 프로토콜 및 작업 규칙](#14-ai-에이전트-실행-프로토콜-및-작업-규칙)
@@ -582,11 +596,14 @@ export interface SiteConfig {
 ### 4.1 글로벌 네비게이션 모델 (`src/types/navigation.ts`)
 ```typescript
 export type CalculatorId =
+  | 'home'
   | 'compound'
   | 'unit'
+  | 'bmi'
   | 'exchange'
   | 'loan'
   | 'salary'
+  | 'part-time'
   | 'dividend'
   | 'goal';
 
@@ -600,6 +617,7 @@ export interface CalculatorItem {
   category: CalculatorCategory;
   badge?: string;
   status: 'active' | 'coming-soon';
+  keywords?: string[];
 }
 ```
 
@@ -883,7 +901,7 @@ export interface GoalInput {
 
 export interface GoalYearlyBreakdown {
   year: number;                // 경과 연차
-  initialValue: number;        // 초기 자금 미래 가치
+  initialValue: number;        // 초기 자금 원금
   accumulatedContribution: number; // 누적 월 적립 원금
   accumulatedInterest: number; // 누적 복리 수익
   totalAsset: number;          // 총 평가 자산
@@ -910,6 +928,64 @@ export interface GoalCalculationResult {
   interestRatio: number;       // 전체 목표 중 복리 수익 비중 (%)
   breakdown: GoalYearlyBreakdown[]; // 연도별 자산 형성 흐름표
   rateComparisons: RateComparisonItem[]; // 대표 수익률 시나리오 대조 (3.5%, 7%, 10%)
+}
+```
+
+### 4.9 알바 급여 & 주휴수당 데이터 모델 (`src/types/partTime.ts`)
+```typescript
+export type PartTimeTaxType = 'none' | 'freelancer' | 'four_insurances';
+
+export interface PartTimeInput {
+  hourlyWage: number;          // 시급 (원, 기본 10,320원)
+  weeklyWorkHours: number;     // 1주 총 근로시간 (1 ~ 52시간)
+  taxType: PartTimeTaxType;    // 공제 방식: 'none' | 'freelancer' | 'four_insurances'
+  isOver5Employees: boolean;   // 5인 이상 사업장 여부 (가산수당 적용용)
+  weeklyOvertimeHours: number; // 주간 연장근로 시간
+  weeklyNightHours: number;    // 주간 야간근로 시간 (22시~06시)
+  weeklyHolidayWorkHours: number; // 주간 휴일근로 시간
+}
+
+export interface PartTimeWeeklyResult {
+  workHours: number;           // 주간 실근로시간
+  holidayAllowanceHours: number; // 주간 주휴시간
+  totalPaidHours: number;      // 주간 총 유급시간 (근로시간 + 주휴시간)
+  baseWage: number;            // 주간 기본급
+  holidayAllowance: number;    // 주간 주휴수당
+  overtimePay: number;         // 주간 연장근로수당
+  nightPay: number;            // 주간 야간근로수당
+  holidayWorkPay: number;      // 주간 휴일근로수당
+  additionalPayTotal: number;  // 주간 가산수당 총액
+  grossWage: number;           // 주간 세전 총급여
+  taxAmount: number;           // 주간 공제 세금
+  netWage: number;             // 주간 세후 실수령액
+}
+
+export interface PartTimeMonthlyResult {
+  workHours: number;           // 월 환산 실근로시간
+  holidayAllowanceHours: number; // 월 환산 주휴시간
+  totalPaidHours: number;      // 월 총 유급시간
+  baseWage: number;            // 월 기본급
+  holidayAllowance: number;    // 월 주휴수당
+  overtimePay: number;         // 월 연장근로수당
+  nightPay: number;            // 월 야간근로수당
+  holidayWorkPay: number;      // 월 휴일근로수당
+  additionalPayTotal: number;  // 월 가산수당 총액
+  grossWage: number;           // 월 세전 총급여
+  taxAmount: number;           // 월 공제 세금
+  nationalPension: number;     // 국민연금 (4대보험 시)
+  healthInsurance: number;     // 건강보험 (4대보험 시)
+  longTermCare: number;        // 장기요양보험 (4대보험 시)
+  employmentInsurance: number; // 고용보험 (4대보험 시)
+  netWage: number;             // 월 세후 실수령액
+}
+
+export interface PartTimeCalculationResult {
+  isHolidayAllowanceEligible: boolean; // 주휴수당 대상 여부 (주 15시간 이상)
+  ineligibilityReason?: string; // 주휴수당 미발생 사유
+  effectiveHourlyRate: number; // 실질 체감 시급 (주휴 포함)
+  effectiveRateIncreasePercent: number; // 실질 시급 인상 효과 (%)
+  weekly: PartTimeWeeklyResult;
+  monthly: PartTimeMonthlyResult;
 }
 ```
 
