@@ -1453,21 +1453,29 @@ export interface AgeResult {
   - **본문 2행**: 볼드 수치 및 단위.
   - **하단 3행**: 부가 설명 텍스트.
 
-### 11.13 shadcn/ui 기반 공통 캘린더 및 데이트피커 컴포넌트 표준 규격 (`Calendar`, `Popover`, `DatePicker`)
+### 11.13 shadcn/ui 기반 하이브리드 공통 캘린더 및 데이트피커 컴포넌트 표준 규격 (`Calendar`, `Popover`, `DatePicker`)
 - **도입 목적**:
-  - 기존 브라우저/OS별로 상이하고 투박했던 네이티브 `<input type="date">`를 대체하고, Ghost 디자인 시스템(Dark surface, Electric Lime selection, 일관된 모노크롬 토큰)과 100% 일체화된 프리미엄 날짜 선택 인터페이스 제공.
+  - 브라우저/OS별로 파편화된 네이티브 날짜 입력을 대체하고, 모바일 및 데스크톱 환경 모두에서 최적화된 하이브리드 입력 경험(초고속 숫자 타이핑 + Ghost 테마 캘린더 시각 선택)을 일원화된 인터페이스로 제공.
 - **아키텍처 구성 및 역할 분담**:
-  - `Calendar` (`src/components/ui/calendar.tsx`): `react-day-picker`를 기반으로 한 커스텀 캘린더 뷰. 한국어 로케일(`ko`) 지원, 월 이동 내비게이션, 오늘 날짜 및 선택일 스타일링.
+  - `Calendar` (`src/components/ui/calendar.tsx`): `react-day-picker` 기반 커스텀 캘린더 뷰. 한국어 로케일 지원, 연/월 드롭다운 내비게이션, 오늘 날짜 및 선택일 하이라이트 스타일링.
   - `Popover` (`src/components/ui/popover.tsx`): `@radix-ui/react-popover` 기반의 접근성(WAI-ARIA) 준수 플로팅 오버레이 팝업.
-  - `DatePicker` (`src/components/ui/date-picker.tsx`): 상기 `Calendar`와 `Popover`를 결합하여 트리거 버튼(날짜 포맷 텍스트 + 캘린더 아이콘)과 달력 팝오버를 일원화한 공통 컴포넌트.
-- **주요 UI/UX 사양**:
-  - **트리거 버튼**: 모바일 터치 친화적 높이(h-11), 부드러운 라운드, 선택된 날짜(`YYYY-MM-DD (요일)`) 표기 및 캘린더 아이콘 배치.
-  - **달력 오버레이**: Ghost 다크 서피스 배경, 선택된 날짜에 일렉트릭 라임 시그니처 하이라이트(`bg-[#d1ff19] text-[#112220]`), 오늘 날짜 핀 표시.
-  - **접근성 및 반응형**: 키보드 내비게이션 및 ESC 닫기, 모바일 터치 시 화면 벗어남 방지 플로팅 정렬(Align="start").
+  - `DatePicker` (`src/components/ui/date-picker.tsx`): 상기 `Calendar`와 `Popover`를 텍스트 인풋 필드와 결합한 하이브리드 날짜 입력 공통 컴포넌트.
+- **주요 UI/UX 및 기능 사양**:
+  - **하이브리드 입력 필드 (`inputMode="numeric"`, `type="text"`)**:
+    - **모바일 UX**: 본문 텍스트 영역 터치 시 스마트폰 가상 키보드가 숫자 전용 키패드로 즉시 열리며, 팝오버 간섭 없이 8자리 숫자(예: 19950515)를 2초 만에 초고속 타이핑 가능. 하이픈 자동 포맷팅 및 날짜 유효성 검증 제공.
+    - **데스크톱 UX**: 키보드로 `YYYY-MM-DD` 직접 수정 및 복사/붙여넣기 자유 지원.
+  - **캘린더 아이콘 트리거**:
+    - 인풋 우측의 캘린더 아이콘 버튼 클릭/터치 시 가상 키보드를 닫고 부드럽게 Ghost 캘린더 팝오버를 오픈하여 달력을 보고 원하는 날짜를 직관적으로 선택 가능.
+  - **`showTodayButton` 맞춤형 액션 제어**:
+    - `showTodayButton={true}` (기본값): 디데이(`DDayTab`) 및 날짜 간격(`DateDiffTab`)에서 달력 팝오버 내 명확한 '오늘 날짜로 선택' 원클릭 액션 버튼 제공.
+    - `showTodayButton={false}`: 만 나이 계산기(`AgeTab`) 생년월일 입력 화면에서는 불필요한 '오늘' 버튼을 완전히 숨겨 과거 출생일 선택에 집중하도록 UX 정돈.
+  - **접근성 및 반응형**:
+    - 모바일 화면 벗어남 방지 플로팅 정렬, WAI-ARIA 팝업 다이얼로그 속성, 키보드 ESC 닫기 및 포커스 링 표준 준수.
 - **적용 대상**:
-  - `DDayTab.tsx`: 기준 날짜 선택
-  - `DateDiffTab.tsx`: 시작 날짜 및 종료 날짜 선택
-  - `AgeTab.tsx`: 출생일 및 기준일 선택
+  - `DDayTab.tsx`: 기준 날짜 선택 (오늘 버튼 활성화)
+  - `DateDiffTab.tsx`: 시작 날짜 및 종료 날짜 선택 (오늘 버튼 활성화)
+  - `AgeTab.tsx`: 출생일 선택 (`showTodayButton={false}` 적용으로 생년월일 전용 집중)
+
 
 ---
 

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker, getDefaultClassNames } from "react-day-picker"
 import { ko } from "date-fns/locale"
 import "react-day-picker/style.css"
@@ -28,7 +28,7 @@ function Calendar({
         months: "flex flex-col sm:flex-row gap-4",
         month: "space-y-4",
         month_caption: "flex justify-center pt-1 relative items-center h-8",
-        caption_label: "text-sm font-bold text-[#112220] dark:text-ghost-dark-ink tracking-tight",
+        caption_label: "inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink tracking-tight pointer-events-none",
         nav: "flex items-center gap-1",
         button_previous: cn(
           buttonVariants({ variant: "outline" }),
@@ -57,12 +57,13 @@ function Calendar({
           "text-slate-300 dark:text-ghost-dark-ink-mute/50 opacity-50 aria-selected:opacity-30",
         disabled: "text-slate-300 dark:text-ghost-dark-ink-mute/30 opacity-40 cursor-not-allowed",
         hidden: "invisible",
-        dropdowns: "flex items-center gap-1.5 justify-center z-10",
-        dropdown_root: "relative inline-flex items-center",
+        dropdowns: "flex items-center gap-2 justify-center z-10",
+        dropdown_root:
+          "relative inline-flex items-center justify-between rounded-lg bg-slate-100 hover:bg-slate-200/80 dark:bg-ghost-dark-surface-deep dark:hover:bg-ghost-dark-hover border border-slate-200 dark:border-ghost-dark-hairline px-2.5 py-1 transition-colors cursor-pointer text-xs font-bold text-[#112220] dark:text-ghost-dark-ink shadow-xs",
         dropdown:
-          "appearance-none bg-slate-100/90 dark:bg-ghost-dark-surface-deep border border-slate-200 dark:border-ghost-dark-hairline rounded-lg text-xs font-bold py-1 px-2.5 text-[#112220] dark:text-ghost-dark-ink cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#15171a] dark:focus:ring-[#d1ff19]",
-        months_dropdown: "mr-1",
-        years_dropdown: "ml-1",
+          "absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10 appearance-none m-0 p-0 border-0 bg-transparent",
+        months_dropdown: "",
+        years_dropdown: "",
         ...classNames,
       }}
       components={{
@@ -75,6 +76,14 @@ function Calendar({
               />
             )
           }
+          if (orientation === "down") {
+            return (
+              <ChevronDown
+                className={cn("h-3.5 w-3.5 text-slate-500 dark:text-ghost-dark-ink-stone ml-1", chevronClassName)}
+                {...chevronProps}
+              />
+            )
+          }
           return (
             <ChevronRight
               className={cn("h-4 w-4", chevronClassName)}
@@ -83,6 +92,7 @@ function Calendar({
           )
         },
       }}
+
       {...props}
     />
   )

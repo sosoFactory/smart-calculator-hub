@@ -68,10 +68,12 @@ export const AgeTab: React.FC = () => {
             <DatePicker
               value={birthDate}
               onChange={setBirthDate}
-              placeholder="생년월일을 선택하세요"
+              placeholder="생년월일 (YYYY-MM-DD)"
               startYear={1920}
               endYear={new Date().getFullYear()}
+              showTodayButton={false}
             />
+
         </div>
 
         {/* 빠른 출생연도 프리셋 칩 (SelectableChip) */}
@@ -174,8 +176,9 @@ export const AgeTab: React.FC = () => {
               <Sparkles className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
             </div>
             <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink">
-              {result.zodiac}띠 • {result.horoscope}
+              {result.zodiac} • {result.horoscope}
             </div>
+
             <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
               12간지 및 서양 12성좌
             </p>
