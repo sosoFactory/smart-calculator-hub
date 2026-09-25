@@ -2,7 +2,7 @@ import { LoanInput, RepaymentMethod } from '../types/loan';
 import { ScenarioInput, TaxType, ContributionFrequency, CompoundingFrequency } from '../types/calculator';
 import { SalaryInput, SalaryPaymentType, SeveranceType } from '../types/salary';
 import { GoalInput, GoalTaxType } from '../types/goal';
-import { PartTimeInput, PartTimeTaxType, WorkScheduleMode } from '../types/partTime';
+import { PartTimeInput, PartTimeTaxType } from '../types/partTime';
 
 /**
  * 브라우저 히스토리 스택을 오염시키지 않고 주소창 URL 쿼리를 실시간 갱신
@@ -290,14 +290,7 @@ export const encodePartTimeQuery = (input: PartTimeInput): string => {
   const params = new URLSearchParams();
 
   if (input.hourlyWage > 0) params.set('wage', String(input.hourlyWage));
-  if (input.scheduleMode) params.set('mode', input.scheduleMode);
-  if (input.scheduleMode === 'weekly_total' && input.weeklyTotalHours > 0) {
-    params.set('wHours', String(input.weeklyTotalHours));
-  } else if (input.scheduleMode === 'daily_hours') {
-    if (input.dailyHours) params.set('dHours', String(input.dailyHours));
-    if (input.workingDaysPerWeek) params.set('days', String(input.workingDaysPerWeek));
-  }
-  if (!input.hasAttendance) params.set('attend', 'false');
+  if (input.weeklyWorkHours > 0) params.set('hours', String(input.weeklyWorkHours));
   if (input.taxType && input.taxType !== 'none') params.set('tax', input.taxType);
   if (input.isOver5Employees) {
     params.set('over5', 'true');
@@ -314,18 +307,14 @@ export const decodePartTimeQuery = (search: string): Partial<PartTimeInput> | nu
   const params = new URLSearchParams(search);
 
   const wageStr = params.get('wage');
-  const modeStr = params.get('mode') as WorkScheduleMode | null;
-  const wHoursStr = params.get('wHours');
-  const dHoursStr = params.get('dHours');
-  const daysStr = params.get('days');
-  const attendStr = params.get('attend');
+  const hoursStr = params.get('hours');
   const taxStr = params.get('tax') as PartTimeTaxType | null;
   const over5Str = params.get('over5');
   const overtimeStr = params.get('overtime');
   const nightStr = params.get('night');
   const hWorkStr = params.get('hWork');
 
-  if (!wageStr && !modeStr && !wHoursStr && !dHoursStr && !daysStr && !taxStr) {
+  if (!wageStr && !hoursStr && !taxStr) {
     return null;
   }
 
@@ -335,25 +324,9 @@ export const decodePartTimeQuery = (search: string): Partial<PartTimeInput> | nu
     const parsed = Number(wageStr);
     if (!isNaN(parsed) && parsed > 0) result.hourlyWage = parsed;
   }
-  if (modeStr && ['weekly_total', 'daily_hours'].includes(modeStr)) {
-    result.scheduleMode = modeStr;
-  }
-  if (wHoursStr) {
-    const parsed = Number(wHoursStr);
-    if (!isNaN(parsed) && parsed >= 0) result.weeklyTotalHours = parsed;
-  }
-  if (dHoursStr) {
-    const parsed = Number(dHoursStr);
-    if (!isNaN(parsed) && parsed >= 0) result.dailyHours = parsed;
-  }
-  if (daysStr) {
-    const parsed = Number(daysStr);
-    if (!isNaN(parsed) && parsed >= 0) result.workingDaysPerWeek = parsed;
-  }
-  if (attendStr === 'false') {
-    result.hasAttendance = false;
-  } else if (attendStr === 'true') {
-    result.hasAttendance = true;
+  if (hoursStr) {
+    const parsed = Number(hoursStr);
+    if (!isNaN(parsed) && parsed >= 0) result.weeklyWorkHours = parsed;
   }
   if (taxStr && ['none', 'freelancer', 'four_insurances'].includes(taxStr)) {
     result.taxType = taxStr;

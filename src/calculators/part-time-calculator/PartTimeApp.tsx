@@ -12,11 +12,7 @@ import { decodePartTimeQuery, encodePartTimeQuery, syncUrlQuery } from '../../ut
 
 const DEFAULT_PART_TIME_INPUT: PartTimeInput = {
   hourlyWage: MINIMUM_WAGE_2026,
-  scheduleMode: 'weekly_total',
-  weeklyTotalHours: 20,
-  dailyHours: 4,
-  workingDaysPerWeek: 5,
-  hasAttendance: true,
+  weeklyWorkHours: 20,
   taxType: 'none',
   isOver5Employees: false,
   weeklyOvertimeHours: 0,

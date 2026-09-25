@@ -1,14 +1,8 @@
-export type WorkScheduleMode = 'weekly_total' | 'daily_hours';
-
 export type PartTimeTaxType = 'none' | 'freelancer' | 'four_insurances';
 
 export interface PartTimeInput {
   hourlyWage: number; // 시급 (기본 10,320)
-  scheduleMode: WorkScheduleMode; // 근무 시간 입력 방식
-  weeklyTotalHours: number; // 주간 총 근로시간 (weekly_total 모드)
-  dailyHours: number; // 1일 근무시간 (daily_hours 모드)
-  workingDaysPerWeek: number; // 주당 근무일수 (daily_hours 모드)
-  hasAttendance: boolean; // 개근 여부 (기본 true)
+  weeklyWorkHours: number; // 1주 총 근로시간 (기본 20시간, 1~52)
   taxType: PartTimeTaxType; // 공제 방식
   isOver5Employees: boolean; // 5인 이상 사업장 여부 (가산수당 적용용)
   weeklyOvertimeHours: number; // 주간 연장근로 시간

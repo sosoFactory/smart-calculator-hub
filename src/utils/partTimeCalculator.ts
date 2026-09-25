@@ -13,16 +13,9 @@ export function calculatePartTimeWage(input: PartTimeInput): PartTimeCalculation
   const hourlyWage = Math.max(0, input.hourlyWage || 0);
 
   // 1. 주간 실근로시간 계산
-  let weeklyWorkHours = 0;
-  if (input.scheduleMode === 'weekly_total') {
-    weeklyWorkHours = Math.max(0, input.weeklyTotalHours || 0);
-  } else {
-    const dailyHours = Math.max(0, input.dailyHours || 0);
-    const days = Math.max(0, Math.min(7, input.workingDaysPerWeek || 0));
-    weeklyWorkHours = dailyHours * days;
-  }
+  const weeklyWorkHours = Math.max(0, input.weeklyWorkHours || 0);
 
-  // 2. 주휴수당 대상 여부 판정 (주 15시간 이상 + 개근)
+  // 2. 주휴수당 대상 여부 판정 (주 15시간 이상 여부)
   let isHolidayAllowanceEligible = false;
   let ineligibilityReason: string | undefined;
   let weeklyHolidayHours = 0;
@@ -30,9 +23,6 @@ export function calculatePartTimeWage(input: PartTimeInput): PartTimeCalculation
   if (weeklyWorkHours < 15) {
     isHolidayAllowanceEligible = false;
     ineligibilityReason = '주 15시간 미만 근무 (초단시간 근로)';
-  } else if (!input.hasAttendance) {
-    isHolidayAllowanceEligible = false;
-    ineligibilityReason = '소정근로일 결근으로 미발생';
   } else {
     isHolidayAllowanceEligible = true;
     if (weeklyWorkHours >= 40) {

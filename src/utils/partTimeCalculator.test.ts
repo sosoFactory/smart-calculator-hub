@@ -5,11 +5,7 @@ import { MINIMUM_WAGE_2026, PartTimeInput } from '../types/partTime';
 describe('partTimeCalculator Tests', () => {
   const defaultInput: PartTimeInput = {
     hourlyWage: MINIMUM_WAGE_2026, // 10,320원
-    scheduleMode: 'weekly_total',
-    weeklyTotalHours: 40,
-    dailyHours: 8,
-    workingDaysPerWeek: 5,
-    hasAttendance: true,
+    weeklyWorkHours: 40,
     taxType: 'none',
     isOver5Employees: false,
     weeklyOvertimeHours: 0,
@@ -28,8 +24,7 @@ describe('partTimeCalculator Tests', () => {
     expect(result.weekly.baseWage).toBe(40 * 10320); // 412,800
     expect(result.weekly.holidayAllowance).toBe(8 * 10320); // 82,560
 
-    // 월 환산 (40+8 = 48시간 * 4.34524 = 약 208.57 -> 208.6 또는 209시간대)
-    // 2026 최저임금 월급 환산액: 약 2,156,880원 근사치
+    // 월 환산액: 약 2,156,880원 근사치
     expect(result.monthly.grossWage).toBeGreaterThan(2_150_000);
     expect(result.monthly.grossWage).toBeLessThan(2_160_000);
 
@@ -41,7 +36,7 @@ describe('partTimeCalculator Tests', () => {
   it('주 20시간 단시간 근로 시 주휴시간 4시간(20/5)으로 비례 계산되어야 한다', () => {
     const result = calculatePartTimeWage({
       ...defaultInput,
-      weeklyTotalHours: 20,
+      weeklyWorkHours: 20,
     });
 
     expect(result.isHolidayAllowanceEligible).toBe(true);
@@ -54,7 +49,7 @@ describe('partTimeCalculator Tests', () => {
   it('주 14시간 근무 시 주휴수당이 0원이고 미발생 사유가 표기되어야 한다', () => {
     const result = calculatePartTimeWage({
       ...defaultInput,
-      weeklyTotalHours: 14,
+      weeklyWorkHours: 14,
     });
 
     expect(result.isHolidayAllowanceEligible).toBe(false);
@@ -65,23 +60,21 @@ describe('partTimeCalculator Tests', () => {
     expect(result.effectiveRateIncreasePercent).toBe(0);
   });
 
-  it('소정근로일 결근 시 주휴수당이 발생하지 않아야 한다', () => {
+  it('주 15시간 경계선 근무 시 주휴시간 3시간(15/5)이 정확히 발생해야 한다', () => {
     const result = calculatePartTimeWage({
       ...defaultInput,
-      hasAttendance: false,
+      weeklyWorkHours: 15,
     });
 
-    expect(result.isHolidayAllowanceEligible).toBe(false);
-    expect(result.weekly.holidayAllowanceHours).toBe(0);
-    expect(result.ineligibilityReason).toContain('결근');
+    expect(result.isHolidayAllowanceEligible).toBe(true);
+    expect(result.weekly.holidayAllowanceHours).toBe(3);
+    expect(result.weekly.holidayAllowance).toBe(3 * 10320);
   });
 
-  it('일별 근무시간(daily_hours) 모드에서 일 6시간 × 주 4일 = 주 24시간으로 정상 계산되어야 한다', () => {
+  it('주 24시간 근무 시 주휴시간 4.8시간으로 비례 계산되어야 한다', () => {
     const result = calculatePartTimeWage({
       ...defaultInput,
-      scheduleMode: 'daily_hours',
-      dailyHours: 6,
-      workingDaysPerWeek: 4,
+      weeklyWorkHours: 24,
     });
 
     expect(result.weekly.workHours).toBe(24);
@@ -92,7 +85,7 @@ describe('partTimeCalculator Tests', () => {
   it('프리랜서 3.3% 공제가 정확하게 계산되어야 한다', () => {
     const result = calculatePartTimeWage({
       ...defaultInput,
-      weeklyTotalHours: 20,
+      weeklyWorkHours: 20,
       taxType: 'freelancer',
     });
 
@@ -105,7 +98,7 @@ describe('partTimeCalculator Tests', () => {
   it('4대보험 공제가 4대 항목별로 정확하게 계산되어야 한다', () => {
     const result = calculatePartTimeWage({
       ...defaultInput,
-      weeklyTotalHours: 40,
+      weeklyWorkHours: 40,
       taxType: 'four_insurances',
     });
 
@@ -125,7 +118,7 @@ describe('partTimeCalculator Tests', () => {
   it('5인 이상 사업장에서 연장/야간/휴일 가산수당이 정상 반영되어야 한다', () => {
     const result = calculatePartTimeWage({
       ...defaultInput,
-      weeklyTotalHours: 40,
+      weeklyWorkHours: 40,
       isOver5Employees: true,
       weeklyOvertimeHours: 4, // 4 * 10,320 * 1.5 = 61,920
       weeklyNightHours: 2, // 2 * 10,320 * 0.5 = 10,320
@@ -143,7 +136,7 @@ describe('partTimeCalculator Tests', () => {
   it('5인 미만 사업장에서는 가산수당이 0원이어야 한다', () => {
     const result = calculatePartTimeWage({
       ...defaultInput,
-      weeklyTotalHours: 40,
+      weeklyWorkHours: 40,
       isOver5Employees: false,
       weeklyOvertimeHours: 4,
       weeklyNightHours: 2,

@@ -3,6 +3,7 @@ import { PartTimeCalculationResult, PartTimeInput } from '../../../types/partTim
 import { formatKoreanUnit, formatNumberWithWon } from '../../../utils/formatters';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
+import { SegmentedControl, SegmentedOption } from '../../../components/ui/segmented-control';
 import { Copy, Check, Sparkles, Clock, Calendar, ShieldCheck, AlertCircle } from 'lucide-react';
 
 interface PartTimeSummaryCardsProps {
@@ -18,9 +19,7 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
   const currentView = viewMode === 'monthly' ? monthly : weekly;
   const periodLabel = viewMode === 'monthly' ? '월' : '주';
 
-  const workHoursToDisplay = input.scheduleMode === 'weekly_total'
-    ? `${input.weeklyTotalHours}시간`
-    : `주 ${input.workingDaysPerWeek}일 × ${input.dailyHours}시간 (${input.dailyHours * input.workingDaysPerWeek}시간)`;
+  const workHoursToDisplay = `주 ${input.weeklyWorkHours}시간`;
 
   const handleCopy = async () => {
     const text = `[스마트 계산기] 2026 알바 급여 & 주휴수당 계산 결과
@@ -60,6 +59,11 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
     }
   };
 
+  const VIEW_OPTIONS: SegmentedOption<'monthly' | 'weekly'>[] = [
+    { id: 'monthly', label: '월급 기준' },
+    { id: 'weekly', label: '주급 기준' },
+  ];
+
   return (
     <div className="@container space-y-3">
       {/* 보기 전환 토글 (월 기준 / 주 기준) */}
@@ -67,29 +71,13 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
         <span className="text-xs font-semibold text-ghost-dark-ink-soft dark:text-ghost-dark-ink-mute">
           급여 수령 기준
         </span>
-        <div className="inline-flex items-center p-0.5 rounded-lg bg-slate-100 dark:bg-ghost-dark-surface-deep border border-slate-200 dark:border-ghost-dark-hairline">
-          <button
-            type="button"
-            onClick={() => setViewMode('monthly')}
-            className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
-              viewMode === 'monthly'
-                ? 'bg-white dark:bg-ghost-dark-surface-elevated text-slate-900 dark:text-ghost-dark-ink shadow-sm'
-                : 'text-slate-600 dark:text-ghost-dark-ink-mute hover:text-slate-900 dark:hover:text-ghost-dark-ink'
-            }`}
-          >
-            월급 기준
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('weekly')}
-            className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
-              viewMode === 'weekly'
-                ? 'bg-white dark:bg-ghost-dark-surface-elevated text-slate-900 dark:text-ghost-dark-ink shadow-sm'
-                : 'text-slate-600 dark:text-ghost-dark-ink-mute hover:text-slate-900 dark:hover:text-ghost-dark-ink'
-            }`}
-          >
-            주급 기준
-          </button>
+        <div className="w-44">
+          <SegmentedControl
+            options={VIEW_OPTIONS}
+            value={viewMode}
+            onChange={setViewMode}
+            variant="slate-solid"
+          />
         </div>
       </div>
 
@@ -145,7 +133,7 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
               ) : (
                 <span className="text-slate-400 break-keep flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5 text-amber-400 inline shrink-0" />
-                  {ineligibilityReason ?? (!input.hasAttendance ? '결근으로 주휴수당 미반영' : '주 15시간 미만 초단시간 근로')}
+                  {ineligibilityReason ?? '주 15시간 미만 초단시간 근로 (주휴수당 미발생)'}
                 </span>
               )}
             </div>
@@ -220,7 +208,7 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
             {formatNumberWithWon(currentView.holidayAllowance)}
           </div>
           <div className="text-[11px] text-slate-500 dark:text-ghost-dark-ink-mute truncate">
-            {isHolidayAllowanceEligible ? `${formatKoreanUnit(currentView.holidayAllowance)} 추가 지급` : '주 15시간 미만/결근'}
+            {isHolidayAllowanceEligible ? `${formatKoreanUnit(currentView.holidayAllowance)} 추가 지급` : '주 15시간 미만'}
           </div>
         </div>
 

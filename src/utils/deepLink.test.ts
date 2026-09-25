@@ -168,11 +168,7 @@ describe('Deep Link Utilities', () => {
   describe('PartTime Calculator Deep Linking', () => {
     const samplePartTime: PartTimeInput = {
       hourlyWage: 10320,
-      scheduleMode: 'weekly_total',
-      weeklyTotalHours: 25,
-      dailyHours: 5,
-      workingDaysPerWeek: 5,
-      hasAttendance: true,
+      weeklyWorkHours: 25,
       taxType: 'freelancer',
       isOver5Employees: true,
       weeklyOvertimeHours: 2,
@@ -183,8 +179,7 @@ describe('Deep Link Utilities', () => {
     it('correctly encodes and decodes part-time input without data loss', () => {
       const query = encodePartTimeQuery(samplePartTime);
       expect(query).toContain('wage=10320');
-      expect(query).toContain('mode=weekly_total');
-      expect(query).toContain('wHours=25');
+      expect(query).toContain('hours=25');
       expect(query).toContain('tax=freelancer');
       expect(query).toContain('over5=true');
       expect(query).toContain('overtime=2');
@@ -194,8 +189,7 @@ describe('Deep Link Utilities', () => {
       const decoded = decodePartTimeQuery(`?${query}`);
       expect(decoded).not.toBeNull();
       expect(decoded?.hourlyWage).toBe(10320);
-      expect(decoded?.scheduleMode).toBe('weekly_total');
-      expect(decoded?.weeklyTotalHours).toBe(25);
+      expect(decoded?.weeklyWorkHours).toBe(25);
       expect(decoded?.taxType).toBe('freelancer');
       expect(decoded?.isOver5Employees).toBe(true);
       expect(decoded?.weeklyOvertimeHours).toBe(2);
