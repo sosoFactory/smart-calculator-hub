@@ -18,6 +18,7 @@ import {
   LayoutDashboard,
   Activity,
   Coins,
+  CalendarDays,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTitle } from '../ui/sheet';
 import { Button } from '../ui/button';
@@ -60,6 +61,8 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
         return <Calendar className={cls} />;
       case 'goal':
         return <Target className={cls} />;
+      case 'date':
+        return <CalendarDays className={cls} />;
       default:
         return <Calculator className={cls} />;
     }

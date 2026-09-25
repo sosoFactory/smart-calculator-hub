@@ -9,7 +9,7 @@ describe('siteConfig Tests', () => {
     expect(siteConfig.shortNameEn).toBe('Smart Calculator');
     expect(siteConfig.company).toBe('sosoFactory');
     expect(siteConfig.copyright).toBe('© sosoFactory');
-    expect(siteConfig.version).toBe('1.9.40');
+    expect(siteConfig.version).toBe('1.9.41');
     expect(siteConfig.url).toBe('https://soso-calculator.vercel.app');
   });
 

@@ -86,7 +86,7 @@ export const PageMetaUpdater: React.FC = () => {
         applicationCategory:
           currentCalculator.category === 'finance'
             ? 'FinanceApplication'
-            : currentCalculator.category === 'lifestyle'
+            : currentCalculator.id === 'bmi'
             ? 'HealthAndFitnessApplication'
             : 'UtilitiesApplication',
         operatingSystem: 'All',

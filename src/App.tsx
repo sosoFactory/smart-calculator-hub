@@ -41,6 +41,9 @@ const BmiApp = lazy(() =>
 const GoalApp = lazy(() =>
   import('./calculators/goal-calculator/GoalApp').then((m) => ({ default: m.GoalApp }))
 );
+const DateApp = lazy(() =>
+  import('./calculators/date-calculator/DateApp').then((m) => ({ default: m.DateApp }))
+);
 
 const CalculatorLoadingFallback = () => (
   <div className="w-full py-20 flex flex-col items-center justify-center space-y-3">
@@ -121,6 +124,10 @@ export const App: React.FC = () => {
                 <Route
                   path="/goal"
                   element={<GoalApp />}
+                />
+                <Route
+                  path="/date"
+                  element={<DateApp />}
                 />
                 {/* 정의되지 않은 경로는 메인 홈 대시보드로 리다이렉트 */}
                 <Route path="*" element={<Navigate to="/" replace />} />

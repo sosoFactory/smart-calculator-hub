@@ -559,7 +559,29 @@ src/
   - **근로기준법 가이드 패널 (`InfoCard`)**:
     - 주휴수당 법적 발생 요건 3가지, 4.345주 산정 기준, 5인 이상 사업장 가산수당 요건 등 실전 알바 상식 제공.
 
-### 3.9 향후 확장 예정 모듈 및 TODO (Roadmap)
+### 3.9 [생활 & 일정] 날짜 & 디데이 계산기 (`DateApp` - 구현 신설)
+- **기능 요약**: 일상 생활, 업무, 기념일 관리를 위해 디데이 카운트다운, 두 날짜 사이 간격 및 영업일(근무일수), 날짜 더하기/빼기, 대한민국 만 나이 및 살아온 날수를 원스톱으로 산출하는 멀티 탭 날짜 도구.
+- **4대 서브 탭 인터페이스 구성 (방향 A)**:
+  1. **디데이 & 기념일 (`dday`)**:
+     - 목표일 또는 과거 기준일 선택 (시험, 결혼, 전역, 커플 기념일 등).
+     - `D-DAY`, `D-35`, `D+100` 배지 및 남은 일수/경과 일수 대형 타이포 표시.
+     - 주요 기념일 자동 계산: 50일, 100일, 200일, 300일, 1주년, 2주년, 1,000일 날짜 캘린더 리스트 제공.
+     - 빠른 프리셋: "오늘", "+7일(1주 뒤)", "+30일", "+100일", "올해 말(12/31)".
+  2. **날짜 간격 & 영업일 (`diff`)**:
+     - 시작일과 종료일 선택 시 총 일수, 총 주(Weeks), `X개월 Y일` 정밀 산출.
+     - **주말(토/일) 제외 실제 근무일(영업일) 수** 자동 필터링 옵션 토글 지원 (프로젝트 일정 산정 및 연차/근무일 계산).
+  3. **날짜 계산 (더하기/빼기, `calc`)**:
+     - 특정 기준일로부터 "+N일/주/개월/년 뒤" 또는 "-N일/주/개월/년 전"의 정확한 날짜 즉시 계산.
+     - 빠른 증감 버튼(±1일, ±7일, ±30일, ±100일) 제공.
+  4. **만 나이 & 생애 지표 (`age`)**:
+     - 생년월일 입력 시 2023년 개정 행정기본법 기준 **공식 만 나이**, 연 나이, 띠(12간지), 별자리(12성좌).
+     - 태어난 지 며칠째인지(D+N일) 및 다음 생일까지 남은 D-day 표시.
+- **결과 대시보드 및 시각화 표준**:
+  - Ghost 디자인 시스템의 메인 하이라이트 카드 + 일렉트릭 라임 뱃지 + 원클릭 결과 복사.
+  - 3단 서브 요약 지표 카드 및 주요 기념일/상세 정보 테이블.
+  - 날짜 상식 안내 카드 (`DateInfoCard`): 양력/음력과 윤달의 원리, 만 나이 통일법(2023), 주말 제외 영업일과 근로일수 상식.
+
+### 3.10 향후 확장 예정 모듈 및 TODO (Roadmap)
 - **[TODO] BMI 종합 헬스케어 확장 (기초대사량 BMR & 하루 권장 칼로리 TDEE)**:
   - 활동량 수준(좌식 생활, 가벼운 활동, 보통 활동, 격렬한 활동 등) 선택 옵션 추가.
   - Mifflin-St Jeor 공식을 적용한 기초대사량(BMR) 산출.
@@ -986,6 +1008,65 @@ export interface PartTimeCalculationResult {
   effectiveRateIncreasePercent: number; // 실질 시급 인상 효과 (%)
   weekly: PartTimeWeeklyResult;
   monthly: PartTimeMonthlyResult;
+}
+```
+
+### 4.10 날짜 & 디데이 계산 데이터 모델 (`src/types/date.ts`)
+```typescript
+export type DateTabType = 'dday' | 'diff' | 'calc' | 'age';
+
+// 1. 디데이 & 기념일
+export interface MilestoneItem {
+  days: number;
+  label: string;       // "50일", "100일", "1주년" 등
+  date: string;        // YYYY-MM-DD
+  dayOfWeek: string;   // "토요일"
+  isPast: boolean;
+}
+
+export interface DDayResult {
+  targetDate: string;  // YYYY-MM-DD
+  baseDate: string;    // 기준일 (기본 오늘)
+  diffDays: number;    // 음수(미래: -D), 0(당일), 양수(과거: +D)
+  label: string;       // "D-35" | "D-DAY" | "D+100"
+  isPast: boolean;
+  isToday: boolean;
+  milestones: MilestoneItem[];
+}
+
+// 2. 날짜 간격 & 영업일
+export interface DateDiffResult {
+  startDate: string;
+  endDate: string;
+  totalDays: number;
+  businessDays: number;   // 주말 제외 평일 근무일수
+  weekendDays: number;    // 주말(토/일) 일수
+  weeks: number;          // 주차 수
+  formattedPeriod: string;// "X년 Y개월 Z일"
+}
+
+// 3. 날짜 계산 (더하기/빼기)
+export type DateCalcUnit = 'days' | 'weeks' | 'months' | 'years';
+export type DateCalcOp = 'add' | 'subtract';
+
+export interface DateCalcResult {
+  baseDate: string;
+  amount: number;
+  unit: DateCalcUnit;
+  operation: DateCalcOp;
+  resultDate: string;  // YYYY-MM-DD
+  dayOfWeek: string;   // "화요일"
+}
+
+// 4. 만 나이 & 생애 지표
+export interface AgeResult {
+  birthDate: string;
+  internationalAge: number; // 공식 만 나이
+  annualAge: number;        // 연 나이 (당해연도 - 출생연도)
+  daysLived: number;        // 태어난 지 N일째
+  zodiac: string;           // 12간지 띠 (예: "용띠", "호랑이띠")
+  horoscope: string;        // 별자리 (예: "물병자리", "사자자리")
+  daysToNextBirthday: number;// 다음 생일까지 남은 D-day
 }
 ```
 

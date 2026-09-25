@@ -37,18 +37,21 @@ describe('HomeApp Compact Dashboard Tests', () => {
     expect(screen.getByText('환율 계산기')).toBeInTheDocument();
     expect(screen.getByText('BMI 계산기')).toBeInTheDocument();
     expect(screen.getByText('목표자산 역산')).toBeInTheDocument();
+    expect(screen.getByText('날짜·디데이')).toBeInTheDocument();
 
     // 준비 중인 계산기 노출 확인
     expect(screen.getByText('배당금 계산기')).toBeInTheDocument();
   });
 
-  it('카테고리 칩 "생활 & 측정" 클릭 시 단위 변환기만 필터링되어야 한다', () => {
+  it('카테고리 칩 "생활 & 측정" 클릭 시 생활 측정 계산기들이 필터링되어야 한다', () => {
     renderHomeApp();
 
     const lifestyleChip = screen.getByRole('button', { name: '생활 & 측정' });
     fireEvent.click(lifestyleChip);
 
     expect(screen.getByText('단위 변환기')).toBeInTheDocument();
+    expect(screen.getByText('BMI 계산기')).toBeInTheDocument();
+    expect(screen.getByText('날짜·디데이')).toBeInTheDocument();
     expect(screen.queryByText('연복리 계산기')).not.toBeInTheDocument();
     expect(screen.queryByText('대출이자 계산기')).not.toBeInTheDocument();
   });

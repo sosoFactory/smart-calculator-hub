@@ -95,4 +95,16 @@ describe('Seam 2-1: React Router Navigation and Routing', () => {
     expect(await screen.findByText('목표 조건 설정', {}, { timeout: 10000 })).toBeInTheDocument();
     expect(await screen.findByText('목표 달성 필요 월 적립액', {}, { timeout: 10000 })).toBeInTheDocument();
   }, 15000);
+
+  it('/date 경로에서는 날짜 & 디데이 계산기 화면이 렌더링되어야 한다', async () => {
+    render(
+      <MemoryRouter initialEntries={['/date']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    expect(screen.getAllByText('날짜 & 디데이 계산기').length).toBeGreaterThanOrEqual(1);
+    expect(await screen.findByText('디데이·기념일', {}, { timeout: 10000 })).toBeInTheDocument();
+    expect(await screen.findByText('목표일 또는 기념일 선택', {}, { timeout: 10000 })).toBeInTheDocument();
+  }, 15000);
 });

@@ -20,6 +20,7 @@ import {
   Check,
   QrCode,
   Coins,
+  CalendarDays,
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
@@ -82,6 +83,8 @@ export const HomeApp: React.FC = () => {
         return <Calendar className={`${iconCls} text-slate-400`} />;
       case 'goal':
         return <Target className={`${iconCls} text-violet-500 dark:text-violet-400`} />;
+      case 'date':
+        return <CalendarDays className={`${iconCls} text-amber-500 dark:text-amber-400`} />;
       default:
         return <Calculator className={`${iconCls} text-slate-400`} />;
     }

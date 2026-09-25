@@ -8,7 +8,8 @@ export type CalculatorId =
   | 'salary'
   | 'part-time'
   | 'dividend'
-  | 'goal';
+  | 'goal'
+  | 'date';
 
 export type CalculatorCategory = 'finance' | 'lifestyle' | 'global';
 
@@ -120,5 +121,15 @@ export const CALCULATORS_LIST: CalculatorItem[] = [
     category: 'finance',
     status: 'active',
     keywords: ['목표', '목표자산', '역산', '은퇴', '10억', '노후', '월적립', '파이어족'],
+  },
+  {
+    id: 'date',
+    name: '날짜 & 디데이 계산기',
+    shortName: '날짜·디데이',
+    description: '디데이 카운트다운, 두 날짜 간격(근무일수), 날짜 더하기/빼기, 만 나이',
+    category: 'lifestyle',
+    status: 'active',
+    badge: 'NEW',
+    keywords: ['날짜', '디데이', 'dday', '기념일', '근무일수', '영업일', '만나이', '생일', '달력', '100일', '날짜계산'],
   },
 ];
