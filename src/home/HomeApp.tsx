@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   CALCULATORS_LIST,
   CalculatorItem,
@@ -141,10 +141,11 @@ export const HomeApp: React.FC = () => {
             const isComingSoon = item.status === 'coming-soon';
 
             return (
-              <div
+              <Link
                 key={item.id}
+                to={`/${item.id}`}
                 onClick={() => navigate(`/${item.id}`)}
-                className={`group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200 cursor-pointer text-left ${
+                className={`group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200 cursor-pointer text-left no-underline ${
                   isComingSoon
                     ? 'bg-slate-50/60 dark:bg-[#101215]/60 border-slate-200/70 dark:border-[#1d2025] opacity-75 hover:opacity-100'
                     : 'bg-white dark:bg-ghost-dark-surface border-slate-200 dark:border-ghost-dark-hairline hover:border-slate-400 dark:hover:border-[#2f353f] hover:shadow-sm'
@@ -199,7 +200,7 @@ export const HomeApp: React.FC = () => {
                     }`}
                   />
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

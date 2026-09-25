@@ -53,3 +53,11 @@ All AI coding assistants must follow this protocol. Read the applicable rule fil
 
 - The core rules in this file apply to every task.
 - If a detailed rule conflicts with a task requirement, surface the conflict and confirm the intended behavior before proceeding.
+
+## 4. Mandatory SEO Checklist (Definition of Done for New Calculators / Pages)
+
+Whenever adding a new calculator, page, or modifying routes, the following SEO requirements MUST be satisfied before finalizing the task:
+1. **Sitemap Registration**: Add the new canonical endpoint (`<loc>`, `<changefreq>`, and `<priority>`) to `public/sitemap.xml`.
+2. **Dynamic Metadata & Structured Data**: Add route configuration in `src/components/common/PageMetaUpdater.tsx` (`PAGE_SEO_DATA`) specifying unique `title`, `description`, `keywords`, and JSON-LD `applicationCategory`.
+3. **Semantic Crawling & Internal Linking**: Ensure all navigation links (dashboard cards in `HomeApp.tsx`, sidebar drawer menu in `SidebarDrawer.tsx`, and footer navigation) render semantic `<Link>` / `<a href>` elements so search engine crawlers can index the complete site graph without relying on JavaScript `onClick` handlers.
+4. **Verification**: Verify that the dynamic canonical tag correctly updates upon route transition and prevents duplicate URL penalties.

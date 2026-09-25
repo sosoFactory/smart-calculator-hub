@@ -1036,41 +1036,33 @@ export interface PartTimeCalculationResult {
 ### 7.1 메타데이터 및 소셜 공유 (Meta Tags & OpenGraph)
 - **공식 운영 도메인**: `https://soso-calculator.vercel.app`
 - **표준 메타 태그**:
-  - `title`: `[계산기 이름] | 스마트 계산기 허브 - 연복리 · 평수계산 · 환율`
-  - `description`: 검색 사용자의 클릭률(CTR)을 높이는 구체적인 타깃 설명 (예: "아파트 84㎡는 몇 평일까? 평수와 ㎡ 실시간 변환, 연복리 시뮬레이션, 실시간 환율 계산까지 무료로 이용하세요.")
-  - `keywords`: `연복리 계산기, 적립식 복리, 평수 계산기, 아파트 평수 ㎡, 환율 계산기, 달러 환율, 이자 계산기`
-  - `canonical`: `https://soso-calculator.vercel.app/` (중복 URL 방지를 위한 표준 대표 URL 지정)
+  - `title`: `[계산기 이름] | 스마트 계산기 허브` (홈: `스마트 계산기 허브 | Smart Calculator Hub`)
+  - `description`: 8대 계산기별 타깃 키워드 및 기능 상세 설명 (CTR 최적화)
+  - `keywords`: 8대 계산기별 고유 검색 키워드 매핑
+  - `canonical`: 각 라우트별 고유 표준 대표 URL 지정 (`https://soso-calculator.vercel.app/{id}`)으로 중복 색인 제외 방지
   - `robots`: `index, follow`
 - **오픈그래프(OpenGraph) & 트위터 카드**:
-  - 카카오톡, 라인, 페이스북, 슬랙 링크 공유 시 매력적인 미리보기 카드 노출 (`og:title`, `og:description`, `og:image`, `og:url="https://soso-calculator.vercel.app"`, `og:type="website"`).
+  - 카카오톡, 슬랙, 페이스북 등 공유 시 현재 계산기별 `og:title`, `og:description`, `og:image`, `og:url` 실시간 동적 반영.
 
-### 7.2 동적 페이지 헤드 관리 (Dynamic Meta Updater)
-- 단일 페이지 애플리케이션(SPA) 내에서 사용자가 계산기를 전환(`연복리` ↔ `단위변환` ↔ `환율`)할 때:
-  - 브라우저의 `<title>`과 `<meta name="description">`이 실시간으로 해당 계산기의 타깃 키워드로 동적 변경.
-  - 브라우저 히스토리(`window.history.pushState` 또는 해시/쿼리 파라미터 `?tool=compound`, `?tool=unit`)를 지원하여 특정 계산기로 바로 연결되는 딥링크(Deep Link) URL 제공.
+### 7.2 동적 페이지 헤드 및 캐노니컬 관리 (`PageMetaUpdater` / `src/components/common/PageMetaUpdater.tsx`)
+- 단일 페이지 애플리케이션(SPA) 내에서 사용자가 계산기를 전환(`홈` ↔ `연복리` ↔ `대출` ↔ `연봉` ↔ `알바` ↔ `목표` ↔ `BMI` ↔ `단위` ↔ `환율`)할 때:
+  - `document.title`: 현재 계산기명 기반 실시간 갱신 (`siteConfig.getTitle(currentCalculator.shortName)`).
+  - `meta[name="description"]`: 현재 계산기 설명 반영.
+  - `link[rel="canonical"]`: 현재 라우트에 맞는 정규 URL 실시간 갱신(기존 루트 고정 canonical 결함 원천 해소).
+  - `meta[property="og:*"]` 및 `meta[name="twitter:*"]`: 현재 페이지 URL 및 타이틀/설명 동기화.
+  - 브라우저 히스토리(`pushState`) 및 각 계산기 고유 딥링크(Deep Link) URL 공유 지원.
 
 ### 7.3 구조화된 데이터 (JSON-LD / Schema.org)
-- 검색엔진 크롤러가 사이트의 성격을 즉시 파악하고 구글 검색결과에 리치 스니펫(Rich Snippet)으로 표시되도록 `ld+json` 구조화 데이터 삽입:
-  ```json
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "스마트 계산기 허브",
-    "url": "https://soso-calculator.vercel.app",
-    "applicationCategory": "FinanceApplication",
-    "operatingSystem": "All",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "KRW"
-    }
-  }
-  ```
-- **FAQ / HowTo 스키마**: 각 계산기 하단에 검색엔진 노출용 금융/수학 공식 질의응답 아코디언 제공 (예: "복리 계산 공식이란?", "1평은 몇 ㎡인가요?").
+- 검색엔진 크롤러가 사이트 및 각 도구의 성격을 즉시 파악하고 구글 검색결과에 리치 스니펫(Rich Snippet)으로 표시되도록 `ld+json` 구조화 데이터 삽입:
+  - 전역 스키마: `index.html` 내 `WebApplication` 스키마 탑재.
+  - 개별 계산기 스키마: `PageMetaUpdater`를 통해 현재 활성화된 계산기의 `SoftwareApplication` / `FinancialApplication` JSON-LD를 동적으로 주입하여 검색 결과 리치 스니펫 노출 극대화.
 
-### 7.4 크롤러 수집 파일 지원
-- `public/robots.txt`: 검색 크롤러의 전체 페이지 접근 허용 및 `Sitemap: https://soso-calculator.vercel.app/sitemap.xml` 지정
-- `public/sitemap.xml`: 각 계산기 도구별 URL 맵 제공 (`https://soso-calculator.vercel.app/`, `/compound`, `/loan`, `/salary`, `/unit`, `/exchange`)
+### 7.4 크롤러 수집 파일 및 시맨틱 내부 링킹 지원
+- **`public/robots.txt`**: 검색 크롤러의 전체 페이지 접근 허용 및 `Sitemap: https://soso-calculator.vercel.app/sitemap.xml` 지정.
+- **`public/sitemap.xml`**: 8대 전 계산기 및 홈 화면 총 9개 핵심 엔드포인트 완비:
+  - `/` (홈), `/compound` (연복리), `/goal` (목표자산), `/loan` (대출), `/salary` (연봉), `/part-time` (알바), `/bmi` (BMI), `/unit` (단위변환), `/exchange` (환율).
+- **시맨틱 내부 링크 구조 (Semantic Internal Linking)**:
+  - 자바스크립트 실행이 제한적인 검색 로봇(네이버, 빙 등)도 내부 페이지를 막힘없이 탐색할 수 있도록, 홈 카드 및 사이드바 메뉴에 시맨틱 앵커(`Link to="..."`) 구조 적용.
 
 ### 7.5 웹 로그 및 방문자 데이터 분석 (Vercel Web Analytics)
 - **도입 목적**:
@@ -1079,6 +1071,13 @@ export interface PartTimeCalculationResult {
   - `@vercel/analytics` 경량 패키지(번들 오버헤드 < 1KB) 탑재.
   - 최상위 진입점(`src/App.tsx`)에 `<Analytics />` 컴포넌트 마운트로 SPA 라우트 전환에 따른 자동 페이지뷰 추적.
   - Vercel 프로덕션 대시보드와 실시간 연동되어 일별/월별 순 방문자 수(UV), 페이지뷰(PV), 국가/지역, 기기/브라우저, 유입 경로(Referrer) 집계.
+
+### 7.6 신규 계산기 및 라우트 출시 시 SEO 완료 기준 (SEO Definition of Done)
+향후 신규 계산기나 페이지를 추가하거나 라우트를 확장할 때 검색엔진 노출 누락을 방지하기 위해 다음 4대 항목을 배포 완료 기준(DoD)으로 필수 적용한다:
+1. **사이트맵 등록 (`public/sitemap.xml`)**: 신규 캐노니컬 엔드포인트 URL, 갱신 빈도(`changefreq`), 가중치(`priority`) 등록 필수.
+2. **동적 메타 및 구조화 데이터 연동 (`PageMetaUpdater.tsx`)**: `PAGE_SEO_DATA` 테이블에 고유한 `title`, `description`, `keywords`, 및 Schema.org `applicationCategory` 정의 필수.
+3. **시맨틱 크롤링 내부 링크 확보**: 홈 화면 카드 및 사이드바 메뉴 등 내부 링크 요소는 자바스크립트 `onClick`에만 의존하지 않고 시맨틱 `<Link to="...">` / `<a href="...">`로 래핑하여 검색엔진 크롤러가 사이트 구조를 누락 없이 수집하도록 보장.
+4. **캐노니컬 검증**: 라우트 이동 시 `link[rel="canonical"]`이 현재 URL로 실시간 갱신되어 중복 콘텐츠 페널티를 방지하는지 자체 검증.
 
 ---
 

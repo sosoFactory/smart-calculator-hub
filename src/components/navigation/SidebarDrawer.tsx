@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   CalculatorId,
   CALCULATORS_LIST,
@@ -69,12 +70,13 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
   const menuContent = (
     <div className="flex flex-col h-full bg-white dark:bg-ghost-dark-surface-drawer text-[#112220] dark:text-ghost-dark-ink transition-colors duration-200">
       {/* 헤더 로고 영역 (클릭 시 홈으로 이동) */}
-      <div
+      <Link
+        to="/"
         onClick={() => {
           onSelect('home');
           onCloseMobile();
         }}
-        className="h-16 px-4 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline flex items-center shrink-0 cursor-pointer group hover:bg-slate-50/80 dark:hover:bg-ghost-dark-hover transition-colors"
+        className="h-16 px-4 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline flex items-center shrink-0 cursor-pointer group hover:bg-slate-50/80 dark:hover:bg-ghost-dark-hover transition-colors no-underline text-inherit"
       >
         <div className="flex items-center gap-2.5 min-w-0">
           <img
@@ -91,7 +93,7 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
             </span>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* 메뉴 목록 */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
@@ -101,24 +103,28 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
             대시보드
           </div>
           <Button
-            type="button"
+            asChild
             variant="ghost"
-            onClick={() => {
-              onSelect('home');
-              onCloseMobile();
-            }}
             className={`w-full h-auto justify-between px-3 py-2.5 rounded-md text-left font-normal transition-colors ${
               activeId === 'home'
                 ? 'bg-slate-100 dark:bg-ghost-dark-hover text-[#112220] dark:text-white font-bold border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
                 : 'text-[#334155] dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-white font-medium'
             }`}
           >
-            <div className="flex items-center gap-2.5 min-w-0">
-              {renderIcon('home', activeId === 'home')}
-              <span className="text-xs sm:text-sm truncate pt-[0.5px] leading-normal font-semibold">
-                홈 (대시보드)
-              </span>
-            </div>
+            <Link
+              to="/"
+              onClick={() => {
+                onSelect('home');
+                onCloseMobile();
+              }}
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                {renderIcon('home', activeId === 'home')}
+                <span className="text-xs sm:text-sm truncate pt-[0.5px] leading-normal font-semibold">
+                  홈 (대시보드)
+                </span>
+              </div>
+            </Link>
           </Button>
         </div>
         {categories.map((cat) => {
@@ -141,12 +147,8 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
                 return (
                   <Button
                     key={item.id}
-                    type="button"
+                    asChild
                     variant="ghost"
-                    onClick={() => {
-                      onSelect(item.id);
-                      onCloseMobile();
-                    }}
                     className={`w-full h-auto justify-between px-3 py-2.5 rounded-md text-left font-normal transition-colors ${
                       isActive
                         ? 'bg-slate-100 dark:bg-ghost-dark-hover text-[#112220] dark:text-white font-bold border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
@@ -155,12 +157,20 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
                         : 'text-[#334155] dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-white font-medium'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      {renderIcon(item.id, isActive)}
-                      <span className="text-xs sm:text-sm truncate pt-[0.5px] leading-normal">
-                        {item.shortName}
-                      </span>
-                    </div>
+                    <Link
+                      to={`/${item.id}`}
+                      onClick={() => {
+                        onSelect(item.id);
+                        onCloseMobile();
+                      }}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {renderIcon(item.id, isActive)}
+                        <span className="text-xs sm:text-sm truncate pt-[0.5px] leading-normal">
+                          {item.shortName}
+                        </span>
+                      </div>
+                    </Link>
                   </Button>
                 );
               })}
