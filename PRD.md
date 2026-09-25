@@ -1,6 +1,6 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.9.37  
+> **버전**: v1.9.38  
 > **최종 갱신일**: 2026-09-25  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
@@ -1236,6 +1236,33 @@ export interface GoalCalculationResult {
 - **UI 및 반응형 사양**:
   - `variant="outline" size="sm" h-8 px-2.5 text-xs rounded-lg` + `Download (w-3.5 h-3.5)` 아이콘 + 텍스트 **"CSV 다운로드"**.
   - 모바일 및 좁은 뷰포트에서도 텍스트가 사라지지 않고 항상 온전한 라벨로 노출되며, 테이블 헤더 영역에서 공간에 맞춰 자연스럽게 정렬되도록 반응형 보장.
+
+### 11.12 공통 폼 헤더(`FormHeader`) 및 결과 대시보드(`SummaryCards`) 단일 디자인 규격 표준화
+- **도입 목적**:
+  - 계산기별로 제각각이던 폼 헤더(태그, 뱃지 위치, 아이콘 유무, 폰트 규격)와 결과 요약 대시보드(복사 버튼 위치, 메인 금액 강조 컬러, 서브 카드 라운딩 및 패딩)를 단 1px의 오차도 없는 단일 시각 문법으로 100% 통일.
+- **1. 공통 폼 헤더 표준 (`src/components/common/FormHeader.tsx`)**:
+  - **카테고리 뱃지**: 모든 계산기 제목 '앞' 고정 (`Badge variant="meta" size="sm"`).
+  - **폼 제목**: 시맨틱 `h2`, `text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink` 단일 통일.
+  - **제목 내 장식 배제**: 텍스트 가독성을 저해하는 제목 내 Lucide 아이콘 제거.
+  - **우측 액션 슬롯**: 초기화 버튼 등 도구 버튼을 배치하는 표준 `children` 슬롯.
+- **2. 결과 요약 메인 카드 단일 규격**:
+  - **컨테이너**: `relative overflow-hidden rounded-2xl bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-[#15171a] dark:border-ghost-dark-hairline-soft text-white p-5 sm:p-6 shadow-sm`.
+  - **배경 장식**: 우하단 은은한 라임 글로우 (`absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none`).
+  - **1열 (헤더 & 복사)**:
+    - 좌측: 라임 시그니처 캡슐 뱃지 (`px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30`).
+    - 우측: 표준 원클릭 결과 복사 버튼 고정 (`h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 text-white rounded-lg shrink-0 flex items-center gap-1`).
+  - **2열 (핵심 지표 & 한글 독음)**:
+    - 대형 수치: `text-2xl sm:text-3xl font-extrabold tracking-tight text-[#d1ff19] tabular-nums whitespace-nowrap`.
+    - 한글 독음: 인라인 `text-xs sm:text-sm font-medium text-slate-400 whitespace-nowrap (N억 N만 원)`.
+  - **하단 인포 바**:
+    - `mt-4 pt-3 border-t border-slate-800 dark:border-ghost-dark-hairline text-xs text-slate-400`.
+    - 컬러 이모지(`💡`)를 완전 배제하고 단정한 라임 텍스트 헤더(`건강 가이드:`, `안내:`)로 일치.
+- **3. 3단 서브 요약 카드 단일 규격**:
+  - **그리드**: `grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3` (또는 유동 컨테이너 `grid-cols-[repeat(auto-fit,minmax(200px,1fr))]`).
+  - **개별 카드**: `p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1`.
+  - **상단 1행**: `flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider`.
+  - **본문 2행**: `text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums`.
+  - **하단 3행**: `text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate`.
 
 ---
 

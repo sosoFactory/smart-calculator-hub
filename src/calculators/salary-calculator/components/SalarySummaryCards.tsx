@@ -118,7 +118,7 @@ export const SalarySummaryCards: React.FC<SalarySummaryCardsProps> = ({ result }
       {/* 2. 3단 서브 요약 카드 그리드 (세전 월 환산액, 월 총 공제액, 총 공제율) */}
       <div className="grid grid-cols-1 @sm:grid-cols-3 gap-2.5 sm:gap-3">
         {/* 세전 월 환산액 */}
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
           <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute">
             <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
               세전 월 환산액
@@ -135,7 +135,7 @@ export const SalarySummaryCards: React.FC<SalarySummaryCardsProps> = ({ result }
         </div>
 
         {/* 월 총 공제액 */}
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
           <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute">
             <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
               월 총 공제액
@@ -152,7 +152,7 @@ export const SalarySummaryCards: React.FC<SalarySummaryCardsProps> = ({ result }
         </div>
 
         {/* 총 공제 비율 */}
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
           <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute">
             <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
               총 공제 비율

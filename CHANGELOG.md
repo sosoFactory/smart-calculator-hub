@@ -3,6 +3,20 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.38] - 2026-09-25
+
+### 전 계산기 결과 대시보드(메인 & 3단 서브 카드) 단일 디자인 문법 완전 통일
+- **연복리(`SummaryCards`) 및 BMI(`BmiSummaryCards`) 메인 카드 표준화**:
+  - 메인 카드 지표 라벨을 표준 라임 캡슐 뱃지(`bg-[#d1ff19]/20 text-[#d1ff19] border-[#d1ff19]/30`)로 전면 일치.
+  - BMI 계산기 복사 버튼 위치를 메인 카드 1열 상단 우측(`h-7 px-2.5`)으로 표준화.
+  - BMI 메인 수치를 대형 라임 볼드(`text-[#d1ff19] font-extrabold`)로 일치시키고, 하단 건강 가이드 배너의 컬러 이모지(`💡`)를 제거하여 Ghost 디자인 시스템 원칙 준수.
+  - 연복리 계산기 메인 카드 금액 폰트/색상 반전 문제를 해결하여 대형 볼드 라임 수치 및 인라인 한글 독음으로 통일.
+- **전 계산기 3단 서브 카드 디자인 단일 규격 정돈**:
+  - 연봉(`SalarySummaryCards`), 연복리(`SummaryCards`), BMI(`BmiSummaryCards`) 서브 카드의 코너 라운딩을 `rounded-xl`, 패딩 `p-3.5 sm:p-4`, 그림자 `shadow-2xs`, 보더 `border-[#e5e7eb] dark:border-ghost-dark-hairline`로 100% 일치.
+  - 상단 라벨 및 보조 텍스트, 본문 수치, 하단 설명 캡션의 타이포그래피 계층을 전 계산기 동일 문법으로 완성.
+- **PRD 명세 갱신**:
+  - PRD 11.12절(공통 폼 헤더 및 결과 대시보드 단일 디자인 규격 표준화) 신설.
+
 ## [1.9.37] - 2026-09-25
 
 ### 전 계산기 폼 헤더 및 결과 카드 디자인 문법 완전 통일 (Global UI/UX Design System Alignment)
