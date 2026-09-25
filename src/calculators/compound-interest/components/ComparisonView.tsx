@@ -1,12 +1,12 @@
 import React from 'react';
-import { ScenarioComparison } from '../types/calculator';
+import { ScenarioComparison } from '../../../types/calculator';
 import {
   formatCurrency,
   formatKoreanUnit,
   formatPercent,
-} from '../utils/formatters';
+} from '../../../utils/formatters';
 import { TrendingUp, Zap } from 'lucide-react';
-import { Badge } from './ui/badge';
+import { Badge } from '../../../components/ui/badge';
 
 interface ComparisonViewProps {
   comparison: ScenarioComparison;

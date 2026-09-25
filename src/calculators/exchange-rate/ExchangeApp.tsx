@@ -12,6 +12,7 @@ import {
   DEFAULT_EXCHANGE_SNAPSHOT,
   fetchLiveExchangeRates,
 } from '../../utils/exchangeCalculator';
+import { decodeExchangeQuery, encodeExchangeQuery, syncUrlQuery } from '../../utils/deepLink';
 import { DualExchangeCard } from './components/DualExchangeCard';
 import { ExchangePresetChips } from './components/ExchangePresetChips';
 import { MultiExchangeGrid } from './components/MultiExchangeGrid';
@@ -30,7 +31,12 @@ interface StoredExchangeState {
 }
 
 export const ExchangeApp: React.FC = () => {
+  const initialFromUrl = typeof window !== 'undefined' && window.location.search ? decodeExchangeQuery(window.location.search) : null;
+
   const [fromCode, setFromCode] = useState<CurrencyCode>(() => {
+    if (initialFromUrl?.from && CURRENCIES_DATA[initialFromUrl.from as CurrencyCode]) {
+      return initialFromUrl.from as CurrencyCode;
+    }
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -44,6 +50,9 @@ export const ExchangeApp: React.FC = () => {
   });
 
   const [toCode, setToCode] = useState<CurrencyCode>(() => {
+    if (initialFromUrl?.to && CURRENCIES_DATA[initialFromUrl.to as CurrencyCode]) {
+      return initialFromUrl.to as CurrencyCode;
+    }
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -143,6 +152,13 @@ export const ExchangeApp: React.FC = () => {
     } catch {
       // ignore
     }
+    const query = encodeExchangeQuery({
+      from: fromCode,
+      to: toCode,
+      amount: typeof amount === 'number' ? amount : undefined,
+      spread: discount > 0 ? discount : undefined,
+    });
+    syncUrlQuery(query);
   }, [fromCode, toCode, amount, exchangeType, discount]);
 
   // 페이지 타이틀 설정 (국문 네이밍 규칙: 한글 스마트 배제)

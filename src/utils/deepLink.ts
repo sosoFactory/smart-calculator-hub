@@ -3,6 +3,9 @@ import { ScenarioInput, TaxType, ContributionFrequency, CompoundingFrequency } f
 import { SalaryInput, SalaryPaymentType, SeveranceType } from '../types/salary';
 import { GoalInput, GoalTaxType } from '../types/goal';
 import { PartTimeInput, PartTimeTaxType } from '../types/partTime';
+import { BmiInput, Gender } from '../types/bmi';
+import { UnitCategory } from '../types/unit';
+import { DateTabType, DateCalcOp, DateCalcUnit } from '../types/date';
 
 /**
  * 브라우저 히스토리 스택을 오염시키지 않고 주소창 URL 쿼리를 실시간 갱신
@@ -348,6 +351,186 @@ export const decodePartTimeQuery = (search: string): Partial<PartTimeInput> | nu
     const parsed = Number(hWorkStr);
     if (!isNaN(parsed) && parsed >= 0) result.weeklyHolidayWorkHours = parsed;
   }
+
+  return Object.keys(result).length > 0 ? result : null;
+};
+
+// ==========================================
+// 6. BMI 계산기 (/bmi)
+// ==========================================
+
+export const encodeBmiQuery = (input: BmiInput): string => {
+  const params = new URLSearchParams();
+  if (input.height > 0) params.set('height', String(input.height));
+  if (input.weight > 0) params.set('weight', String(input.weight));
+  if (input.gender) params.set('gender', input.gender);
+  return params.toString();
+};
+
+export const decodeBmiQuery = (search: string): Partial<BmiInput> | null => {
+  if (!search) return null;
+  const params = new URLSearchParams(search);
+  const heightStr = params.get('height');
+  const weightStr = params.get('weight');
+  const genderStr = params.get('gender') as Gender | null;
+
+  if (!heightStr && !weightStr && !genderStr) return null;
+
+  const result: Partial<BmiInput> = {};
+  if (heightStr) {
+    const h = Number(heightStr);
+    if (!isNaN(h) && h > 0) result.height = h;
+  }
+  if (weightStr) {
+    const w = Number(weightStr);
+    if (!isNaN(w) && w > 0) result.weight = w;
+  }
+  if (genderStr && (genderStr === 'male' || genderStr === 'female')) {
+    result.gender = genderStr;
+  }
+  return Object.keys(result).length > 0 ? result : null;
+};
+
+// ==========================================
+// 7. 단위 변환기 (/unit)
+// ==========================================
+
+export interface UnitDeepLinkParams {
+  category?: UnitCategory;
+  value?: number;
+  fromUnit?: string;
+  toUnit?: string;
+}
+
+export const encodeUnitQuery = (params: UnitDeepLinkParams): string => {
+  const p = new URLSearchParams();
+  if (params.category) p.set('cat', params.category);
+  if (params.value !== undefined && params.value > 0) p.set('val', String(params.value));
+  if (params.fromUnit) p.set('from', params.fromUnit);
+  if (params.toUnit) p.set('to', params.toUnit);
+  return p.toString();
+};
+
+export const decodeUnitQuery = (search: string): UnitDeepLinkParams | null => {
+  if (!search) return null;
+  const p = new URLSearchParams(search);
+  const cat = p.get('cat') as UnitCategory | null;
+  const valStr = p.get('val');
+  const from = p.get('from');
+  const to = p.get('to');
+
+  if (!cat && !valStr && !from && !to) return null;
+
+  const result: UnitDeepLinkParams = {};
+  const validCategories: UnitCategory[] = ['area', 'length', 'weight', 'volume', 'temperature'];
+  if (cat && validCategories.includes(cat)) result.category = cat;
+  if (valStr) {
+    const v = Number(valStr);
+    if (!isNaN(v) && v >= 0) result.value = v;
+  }
+  if (from) result.fromUnit = from;
+  if (to) result.toUnit = to;
+  return Object.keys(result).length > 0 ? result : null;
+};
+
+// ==========================================
+// 8. 실시간 환율 계산기 (/exchange)
+// ==========================================
+
+export interface ExchangeDeepLinkParams {
+  from?: string;
+  to?: string;
+  amount?: number;
+  spread?: number;
+}
+
+export const encodeExchangeQuery = (params: ExchangeDeepLinkParams): string => {
+  const p = new URLSearchParams();
+  if (params.from) p.set('from', params.from);
+  if (params.to) p.set('to', params.to);
+  if (params.amount !== undefined && params.amount > 0) p.set('amount', String(params.amount));
+  if (params.spread !== undefined && params.spread > 0) p.set('spread', String(params.spread));
+  return p.toString();
+};
+
+export const decodeExchangeQuery = (search: string): ExchangeDeepLinkParams | null => {
+  if (!search) return null;
+  const p = new URLSearchParams(search);
+  const from = p.get('from');
+  const to = p.get('to');
+  const amountStr = p.get('amount');
+  const spreadStr = p.get('spread');
+
+  if (!from && !to && !amountStr && !spreadStr) return null;
+
+  const result: ExchangeDeepLinkParams = {};
+  if (from) result.from = from.toUpperCase();
+  if (to) result.to = to.toUpperCase();
+  if (amountStr) {
+    const a = Number(amountStr);
+    if (!isNaN(a) && a > 0) result.amount = a;
+  }
+  if (spreadStr) {
+    const s = Number(spreadStr);
+    if (!isNaN(s) && s >= 0) result.spread = s;
+  }
+  return Object.keys(result).length > 0 ? result : null;
+};
+
+// ==========================================
+// 9. 날짜 & 디데이 계산기 (/date)
+// ==========================================
+
+export interface DateDeepLinkParams {
+  tab?: DateTabType;
+  target?: string;
+  amount?: number;
+  unit?: DateCalcUnit;
+  op?: DateCalcOp;
+  start?: string;
+  end?: string;
+  birth?: string;
+}
+
+export const encodeDateQuery = (params: DateDeepLinkParams): string => {
+  const p = new URLSearchParams();
+  if (params.tab) p.set('tab', params.tab);
+  if (params.target) p.set('target', params.target);
+  if (params.amount !== undefined) p.set('amount', String(params.amount));
+  if (params.unit) p.set('unit', params.unit);
+  if (params.op) p.set('op', params.op);
+  if (params.start) p.set('start', params.start);
+  if (params.end) p.set('end', params.end);
+  if (params.birth) p.set('birth', params.birth);
+  return p.toString();
+};
+
+export const decodeDateQuery = (search: string): DateDeepLinkParams | null => {
+  if (!search) return null;
+  const p = new URLSearchParams(search);
+  const tab = p.get('tab') as DateTabType | null;
+  const target = p.get('target');
+  const amountStr = p.get('amount');
+  const unit = p.get('unit') as DateCalcUnit | null;
+  const op = p.get('op') as DateCalcOp | null;
+  const start = p.get('start');
+  const end = p.get('end');
+  const birth = p.get('birth');
+
+  if (!tab && !target && !amountStr && !unit && !op && !start && !end && !birth) return null;
+
+  const result: DateDeepLinkParams = {};
+  if (tab && ['dday', 'diff', 'age'].includes(tab)) result.tab = tab;
+  if (target) result.target = target;
+  if (amountStr) {
+    const a = Number(amountStr);
+    if (!isNaN(a) && a >= 0) result.amount = a;
+  }
+  if (unit && ['days', 'weeks', 'months', 'years'].includes(unit)) result.unit = unit;
+  if (op && ['add', 'subtract'].includes(op)) result.op = op;
+  if (start) result.start = start;
+  if (end) result.end = end;
+  if (birth) result.birth = birth;
 
   return Object.keys(result).length > 0 ? result : null;
 };

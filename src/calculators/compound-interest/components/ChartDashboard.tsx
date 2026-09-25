@@ -11,9 +11,9 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
-import { useTheme } from '../context/ThemeContext';
-import { CalculationResult } from '../types/calculator';
-import { formatCurrency, formatKoreanUnit } from '../utils/formatters';
+import { useTheme } from '../../../context/ThemeContext';
+import { CalculationResult } from '../../../types/calculator';
+import { formatCurrency, formatKoreanUnit } from '../../../utils/formatters';
 
 interface ChartDashboardProps {
   resultA: CalculationResult;

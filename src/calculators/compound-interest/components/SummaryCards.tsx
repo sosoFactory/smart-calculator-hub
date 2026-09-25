@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { CalculationResult } from '../types/calculator';
+import { CalculationResult } from '../../../types/calculator';
 import {
   formatCurrency,
   formatKoreanUnit,
   formatMultiple,
   formatPercent,
-} from '../utils/formatters';
+} from '../../../utils/formatters';
 import { Wallet, PiggyBank, ArrowUpRight, ShieldAlert, Copy, Check } from 'lucide-react';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
+import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from './ui/tooltip';
+} from '../../../components/ui/tooltip';
 
 interface SummaryCardsProps {
   result: CalculationResult;

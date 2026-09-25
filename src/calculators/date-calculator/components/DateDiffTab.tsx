@@ -3,6 +3,7 @@ import { calculateDateDiff, formatLocalDate, getTodayString } from '../../../uti
 import { FormHeader } from '../../../components/common/FormHeader';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
 import { Button } from '../../../components/ui/button';
+import { DatePicker } from '../../../components/ui/date-picker';
 import { Calendar, Copy, Check, Briefcase, SunMedium, CalendarRange } from 'lucide-react';
 
 export const DateDiffTab: React.FC = () => {
@@ -92,11 +93,10 @@ export const DateDiffTab: React.FC = () => {
                 {startDate}
               </span>
             </div>
-            <input
-              type="date"
+            <DatePicker
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-slate-50/50 dark:bg-slate-900/60 text-sm font-bold text-[#112220] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#15171a] dark:focus:ring-[#d1ff19] transition-all"
+              onChange={setStartDate}
+              placeholder="시작일을 선택하세요"
             />
           </div>
 
@@ -110,11 +110,10 @@ export const DateDiffTab: React.FC = () => {
                 {endDate}
               </span>
             </div>
-            <input
-              type="date"
+            <DatePicker
               value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-slate-50/50 dark:bg-slate-900/60 text-sm font-bold text-[#112220] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#15171a] dark:focus:ring-[#d1ff19] transition-all"
+              onChange={setEndDate}
+              placeholder="종료일을 선택하세요"
             />
           </div>
         </div>

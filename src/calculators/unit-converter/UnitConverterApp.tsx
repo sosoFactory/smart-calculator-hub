@@ -7,6 +7,7 @@ import {
   convertToAllUnits,
   formatUnitValue,
 } from '../../utils/unitConverter';
+import { decodeUnitQuery, encodeUnitQuery, syncUrlQuery } from '../../utils/deepLink';
 import { UnitCategoryTabs } from './components/UnitCategoryTabs';
 import { DualConverterCard } from './components/DualConverterCard';
 import { QuickPresetChips } from './components/QuickPresetChips';
@@ -25,8 +26,13 @@ interface StoredUnitState {
 }
 
 export const UnitConverterApp: React.FC = () => {
+  const initialFromUrl = typeof window !== 'undefined' && window.location.search ? decodeUnitQuery(window.location.search) : null;
+
   // 로컬 스토리지 초기 상태 로드
   const [category, setCategory] = useState<UnitCategory>(() => {
+    if (initialFromUrl?.category && UNITS_DATA[initialFromUrl.category]) {
+      return initialFromUrl.category;
+    }
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -40,6 +46,7 @@ export const UnitConverterApp: React.FC = () => {
   });
 
   const [fromUnitId, setFromUnitId] = useState<string>(() => {
+    if (initialFromUrl?.fromUnit) return initialFromUrl.fromUnit;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -53,6 +60,7 @@ export const UnitConverterApp: React.FC = () => {
   });
 
   const [toUnitId, setToUnitId] = useState<string>(() => {
+    if (initialFromUrl?.toUnit) return initialFromUrl.toUnit;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -66,6 +74,7 @@ export const UnitConverterApp: React.FC = () => {
   });
 
   const [inputValue, setInputValue] = useState<number | ''>(() => {
+    if (initialFromUrl?.value !== undefined) return initialFromUrl.value;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -105,6 +114,13 @@ export const UnitConverterApp: React.FC = () => {
     } catch {
       // ignore
     }
+    const query = encodeUnitQuery({
+      category,
+      value: typeof inputValue === 'number' ? inputValue : undefined,
+      fromUnit: fromUnitId,
+      toUnit: toUnitId,
+    });
+    syncUrlQuery(query);
   }, [category, fromUnitId, toUnitId, inputValue, precision]);
 
   // 페이지 타이틀 및 메타 동적 업데이트

@@ -3,6 +3,7 @@ import { calculateAge } from '../../../utils/dateCalculator';
 import { FormHeader } from '../../../components/common/FormHeader';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
 import { Button } from '../../../components/ui/button';
+import { DatePicker } from '../../../components/ui/date-picker';
 import { Calendar, Copy, Check, Sparkles, Heart, Gift } from 'lucide-react';
 
 export const AgeTab: React.FC = () => {
@@ -64,12 +65,13 @@ export const AgeTab: React.FC = () => {
               {birthDate}
             </span>
           </div>
-          <input
-            type="date"
-            value={birthDate}
-            onChange={(e) => setBirthDate(e.target.value)}
-            className="w-full h-11 px-3.5 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-slate-50/50 dark:bg-slate-900/60 text-sm font-bold text-[#112220] dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#15171a] dark:focus:ring-[#d1ff19] transition-all"
-          />
+            <DatePicker
+              value={birthDate}
+              onChange={setBirthDate}
+              placeholder="생년월일을 선택하세요"
+              startYear={1920}
+              endYear={new Date().getFullYear()}
+            />
         </div>
 
         {/* 빠른 출생연도 프리셋 칩 (SelectableChip) */}

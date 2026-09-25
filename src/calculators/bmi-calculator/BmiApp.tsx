@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { BmiInput } from '../../types/bmi';
 import { calculateBmi } from '../../utils/bmiCalculator';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { decodeBmiQuery, encodeBmiQuery, syncUrlQuery } from '../../utils/deepLink';
 import { BmiForm } from './components/BmiForm';
 import { BmiSummaryCards } from './components/BmiSummaryCards';
 import { BmiGaugeCard } from './components/BmiGaugeCard';
@@ -14,10 +14,31 @@ const DEFAULT_BMI_INPUT: BmiInput = {
 };
 
 export const BmiApp: React.FC = () => {
-  const [input, setInput] = useLocalStorage<BmiInput>(
-    'bmi-calculator-input',
-    DEFAULT_BMI_INPUT
-  );
+  const [input, setInput] = useState<BmiInput>(() => {
+    if (typeof window !== 'undefined' && window.location.search) {
+      const fromUrl = decodeBmiQuery(window.location.search);
+      if (fromUrl) {
+        return { ...DEFAULT_BMI_INPUT, ...fromUrl };
+      }
+    }
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('bmi-calculator-input');
+      if (saved) {
+        try {
+          return { ...DEFAULT_BMI_INPUT, ...JSON.parse(saved) };
+        } catch {}
+      }
+    }
+    return DEFAULT_BMI_INPUT;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('bmi-calculator-input', JSON.stringify(input));
+    }
+    const query = encodeBmiQuery(input);
+    syncUrlQuery(query);
+  }, [input]);
 
   const result = useMemo(() => {
     return calculateBmi(input);

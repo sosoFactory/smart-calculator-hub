@@ -10,6 +10,14 @@ import {
   decodeGoalQuery,
   encodePartTimeQuery,
   decodePartTimeQuery,
+  encodeBmiQuery,
+  decodeBmiQuery,
+  encodeUnitQuery,
+  decodeUnitQuery,
+  encodeExchangeQuery,
+  decodeExchangeQuery,
+  encodeDateQuery,
+  decodeDateQuery,
 } from './deepLink';
 import { LoanInput } from '../types/loan';
 import { ScenarioInput } from '../types/calculator';
@@ -201,4 +209,125 @@ describe('Deep Link Utilities', () => {
       expect(decodePartTimeQuery('')).toBeNull();
     });
   });
+
+  describe('BMI Calculator Deep Linking', () => {
+    it('correctly encodes and decodes BMI input without data loss', () => {
+      const query = encodeBmiQuery({ height: 175, weight: 70, gender: 'male' });
+      expect(query).toContain('height=175');
+      expect(query).toContain('weight=70');
+      expect(query).toContain('gender=male');
+
+      const decoded = decodeBmiQuery(`?${query}`);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.height).toBe(175);
+      expect(decoded?.weight).toBe(70);
+      expect(decoded?.gender).toBe('male');
+    });
+
+    it('returns null for empty query', () => {
+      expect(decodeBmiQuery('')).toBeNull();
+    });
+  });
+
+  describe('Unit Converter Deep Linking', () => {
+    it('correctly encodes and decodes unit conversion params', () => {
+      const query = encodeUnitQuery({
+        category: 'area',
+        value: 84,
+        fromUnit: 'm2',
+        toUnit: 'pyeong',
+      });
+      expect(query).toContain('cat=area');
+      expect(query).toContain('val=84');
+      expect(query).toContain('from=m2');
+      expect(query).toContain('to=pyeong');
+
+      const decoded = decodeUnitQuery(`?${query}`);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.category).toBe('area');
+      expect(decoded?.value).toBe(84);
+      expect(decoded?.fromUnit).toBe('m2');
+      expect(decoded?.toUnit).toBe('pyeong');
+    });
+
+    it('returns null for empty query', () => {
+      expect(decodeUnitQuery('')).toBeNull();
+    });
+  });
+
+  describe('Exchange Rate Deep Linking', () => {
+    it('correctly encodes and decodes exchange rate params with uppercase currencies', () => {
+      const query = encodeExchangeQuery({
+        from: 'USD',
+        to: 'KRW',
+        amount: 1000,
+        spread: 1.5,
+      });
+      expect(query).toContain('from=USD');
+      expect(query).toContain('to=KRW');
+      expect(query).toContain('amount=1000');
+      expect(query).toContain('spread=1.5');
+
+      const decoded = decodeExchangeQuery(`?${query}`);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.from).toBe('USD');
+      expect(decoded?.to).toBe('KRW');
+      expect(decoded?.amount).toBe(1000);
+      expect(decoded?.spread).toBe(1.5);
+    });
+
+    it('returns null for empty query', () => {
+      expect(decodeExchangeQuery('')).toBeNull();
+    });
+  });
+
+  describe('Date Calculator Deep Linking', () => {
+    it('correctly encodes and decodes date calculator params for dday', () => {
+      const query = encodeDateQuery({
+        tab: 'dday',
+        target: '2026-12-31',
+        amount: 100,
+        unit: 'days',
+        op: 'add',
+      });
+      expect(query).toContain('tab=dday');
+      expect(query).toContain('target=2026-12-31');
+      expect(query).toContain('amount=100');
+      expect(query).toContain('unit=days');
+      expect(query).toContain('op=add');
+
+      const decoded = decodeDateQuery(`?${query}`);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.tab).toBe('dday');
+      expect(decoded?.target).toBe('2026-12-31');
+      expect(decoded?.amount).toBe(100);
+      expect(decoded?.unit).toBe('days');
+      expect(decoded?.op).toBe('add');
+    });
+
+    it('correctly encodes and decodes date calculator params for diff and age', () => {
+      const query = encodeDateQuery({
+        tab: 'diff',
+        start: '2026-01-01',
+        end: '2026-09-25',
+        birth: '1990-05-15',
+      });
+      expect(query).toContain('tab=diff');
+      expect(query).toContain('start=2026-01-01');
+      expect(query).toContain('end=2026-09-25');
+      expect(query).toContain('birth=1990-05-15');
+
+      const decoded = decodeDateQuery(`?${query}`);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.tab).toBe('diff');
+      expect(decoded?.start).toBe('2026-01-01');
+      expect(decoded?.end).toBe('2026-09-25');
+      expect(decoded?.birth).toBe('1990-05-15');
+    });
+
+    it('returns null for empty query', () => {
+      expect(decodeDateQuery('')).toBeNull();
+    });
+  });
 });
+

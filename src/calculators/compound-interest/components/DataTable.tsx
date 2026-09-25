@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { CalculationResult } from '../types/calculator';
-import { formatCurrency, formatPercent } from '../utils/formatters';
+import { CalculationResult } from '../../../types/calculator';
+import { formatCurrency, formatPercent } from '../../../utils/formatters';
 import { ChevronDown, ChevronUp, Download, Table as TableIcon } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from '../../../components/ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from './ui/tooltip';
+} from '../../../components/ui/tooltip';
 import {
   Table,
   TableHeader,
@@ -15,7 +15,7 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from './ui/table';
+} from '../../../components/ui/table';
 
 interface DataTableProps {
   result: CalculationResult;

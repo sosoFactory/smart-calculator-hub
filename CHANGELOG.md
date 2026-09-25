@@ -3,6 +3,40 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.45] - 2026-09-25
+
+### 전체 코드 리뷰 기반 아키텍처 비대칭 해소 및 딥링크 전 계산기 확장
+- **구조적 비대칭 해소 및 복리 계산기 컴포넌트 이관**:
+  - `src/components/` 루트에 방치되어 있던 연복리 계산기 전용 컴포넌트 6종(`CalculatorForm`, `SummaryCards`, `ChartDashboard`, `DataTable`, `ComparisonView`, `QuickAmountButtons`)을 `src/calculators/compound-interest/components/`로 온전히 이관.
+  - 9대 계산기 전 모듈이 독립 디렉터리(`src/calculators/[domain]/components/`)를 일관되게 갖추는 100% 아키텍처 대칭성 확립.
+- **DatePicker 공통 유틸 통합 및 접근성(a11y) 보강**:
+  - `src/components/ui/date-picker.tsx` 내부 중복 `parseLocalDate`를 제거하고 `src/utils/dateCalculator.ts` 통합 유틸 활용.
+  - 팝오버 트리거 버튼에 `aria-haspopup="dialog"`, `aria-expanded={open}` 웹 접근성 표준 속성 부여.
+  - 날짜 미선택 시 안전한 `undefined` fallback 처리 적용.
+- **딥링크(Deep Link) 9대 전 계산기 전역 확장 & 실시간 URL 동기화**:
+  - 기존 5개 계산기 외 누락되어 있던 BMI, 단위변환, 환율, 날짜 4대 계산기의 인코더/디코더(`encode*Query`, `decode*Query`) 구현 완료 (`src/utils/deepLink.ts`).
+  - `BmiApp`, `UnitConverterApp`, `ExchangeApp`, `DateApp`에 `syncUrlQuery` 실시간 쿼리 스트링 동기화 및 최초 URL 파라미터 복원 로직 연동.
+  - `src/utils/deepLink.test.ts`에 신규 4개 계산기 단위 테스트 추가 (총 19개 딥링크 테스트 케이스 100% 통과).
+- **PRD 및 프로젝트 문서 표준화**:
+  - `PRD.md` Section 2.4(디렉터리 아키텍처 트리) 및 Section 2.9(9대 전 계산기 딥링크 URL 쿼리 파라미터 표준 규격) 등재.
+  - `PRD.md` Section 5, 11 및 `GEMINI.md`에 `/shadcn` 스킬(`.agents/skills/shadcn/SKILL.md`) 필수 참조 규칙 명시.
+
+## [1.9.44] - 2026-09-25
+
+### shadcn/ui 기반 Calendar, Popover 및 Ghost DatePicker 공통 컴포넌트 전면 도입
+- **shadcn/ui 및 Ghost 테마 기반 DatePicker 구현 (`Calendar`, `Popover`, `DatePicker`)**:
+  - `react-day-picker` v10 및 `@radix-ui/react-popover` 기반의 일체형 `DatePicker` 컴포넌트(`src/components/ui/date-picker.tsx`) 신설.
+  - Ghost 디자인 시스템 시그니처 스타일링 적용: 일렉트릭 라임(`#d1ff19`) 선택일 하이라이트, 모노크롬 다크 서피스(`bg-[#15171a] dark:bg-ghost-dark-surface-drawer`), 오늘 날짜 핀 링 표시, 팝업 내 '오늘로 지정' 원클릭 액션 버튼.
+  - 연/월 드롭다운 내비게이션(`captionLayout="dropdown"`) 기본 제공으로 수십 년 전후(1920년~2100년)의 과거/미래 날짜를 단 몇 번의 터치로 신속히 이동 가능.
+  - `date-fns` 한국어 로케일(`ko`) 연동을 통해 한글 요일 및 날짜 포맷팅 완벽 지원.
+- **날짜 계산기 전 탭의 브라우저 기본 `<input type="date">` 전면 교체**:
+  - `DDayTab.tsx`: 기준 날짜 선택기를 Ghost DatePicker로 교체.
+  - `DateDiffTab.tsx`: 시작일 및 종료일 선택기를 Ghost DatePicker로 교체.
+  - `AgeTab.tsx`: 생년월일 선택기를 1920년~현재연도 범위의 Ghost DatePicker로 교체.
+- **테스트 커버리지 및 문서 규격화**:
+  - `src/components/ui/date-picker.test.tsx` 신설 및 30개 스위트, 168개 단위 테스트 100% 통과.
+  - `PRD.md` 2.4, 3.9, 11.13절에 DatePicker, Calendar, Popover 아키텍처 및 UI/UX 표준 명세 등재.
+
 ## [1.9.43] - 2026-09-25
 
 ### 디데이 및 날짜 연산 원스톱 통합 개편 (D-Day & Date Math One-Stop Integration)

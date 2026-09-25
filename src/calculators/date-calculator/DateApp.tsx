@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DateTabType } from '../../types/date';
+import { decodeDateQuery, encodeDateQuery, syncUrlQuery } from '../../utils/deepLink';
 import { DateCategoryTabs } from './components/DateCategoryTabs';
 import { DDayTab } from './components/DDayTab';
 import { DateDiffTab } from './components/DateDiffTab';
@@ -11,6 +12,10 @@ const STORAGE_KEY = 'smart_calculator_date_tab_v1';
 
 export const DateApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<DateTabType>(() => {
+    if (typeof window !== 'undefined' && window.location.search) {
+      const fromUrl = decodeDateQuery(window.location.search);
+      if (fromUrl?.tab) return fromUrl.tab;
+    }
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved && ['dday', 'diff', 'age'].includes(saved)) {
@@ -28,6 +33,8 @@ export const DateApp: React.FC = () => {
     } catch {
       // ignore
     }
+    const query = encodeDateQuery({ tab: activeTab });
+    syncUrlQuery(query);
   }, [activeTab]);
 
   useEffect(() => {

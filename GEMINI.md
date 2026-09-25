@@ -11,9 +11,9 @@ All AI coding assistants must follow this protocol. Read the applicable rule fil
   - Clearly explain the cause and the proposed solution first. Do NOT start implementing until the user explicitly approves.
 - **NEVER PUSH AUTOMATICALLY UPON COMMIT**:
   - Commit locally only after explicit approval. Never run `git push` unless the user explicitly requests a push.
-- **STRICT ADHERENCE TO PRD & GHOST DESIGN SYSTEM**:
-  - Before writing or modifying any UI, always thoroughly refer to and comply with `./PRD.md` (especially Chapter 11 for Common Components) and `./ghost.design.md`.
-  - Mandatory reuse of existing common components (`Tabs`, `FormHeader`, `SelectableChip`, `SegmentedControl`, `NumericInput`, `InfoCard`, `SummaryCards`) instead of writing duplicate inline tags.
+- **STRICT ADHERENCE TO PRD, GHOST DESIGN SYSTEM & SHADCN SKILL**:
+  - Before writing or modifying any UI, always thoroughly refer to and comply with `./PRD.md` (especially Chapter 11 for Common Components), `./ghost.design.md`, and the `/shadcn` agent skill (`.agents/skills/shadcn/SKILL.md`).
+  - Mandatory reuse of existing common components (`Tabs`, `FormHeader`, `SelectableChip`, `SegmentedControl`, `NumericInput`, `DatePicker`, `Calendar`, `Popover`, `InfoCard`, `SummaryCards`) instead of writing duplicate inline tags.
   - Never write raw Tailwind classes or inline styles into `./PRD.md`; keep PRD focused on functional logic and component architecture.
 - Analyze the request and relevant code before implementing feature work, spec changes, or bug fixes.
 - Update ./PRD.md before changing code when the request affects the product or behavior.

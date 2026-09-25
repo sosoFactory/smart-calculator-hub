@@ -4,22 +4,22 @@ import {
   ContributionFrequency,
   ScenarioInput,
   TaxType,
-} from '../types/calculator';
-import { formatKoreanUnit } from '../utils/formatters';
+} from '../../../types/calculator';
+import { formatKoreanUnit } from '../../../utils/formatters';
 import { QuickAmountButtons } from './QuickAmountButtons';
 import { Copy } from 'lucide-react';
-import { Button } from './ui/button';
-import { SelectableChip } from './ui/selectable-chip';
-import { FormHeader } from './common/FormHeader';
-import { NumericInput } from './ui/numeric-input';
-import { Slider } from './ui/slider';
+import { Button } from '../../../components/ui/button';
+import { SelectableChip } from '../../../components/ui/selectable-chip';
+import { FormHeader } from '../../../components/common/FormHeader';
+import { NumericInput } from '../../../components/ui/numeric-input';
+import { Slider } from '../../../components/ui/slider';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from '../../../components/ui/select';
 
 interface CalculatorFormProps {
   scenario: ScenarioInput;

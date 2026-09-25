@@ -187,41 +187,61 @@ src/
 │   ├── bmi-calculator/              # BMI & 비만도 측정 모듈
 │   │   ├── components/              # BmiForm, BmiSummaryCards, BmiGaugeCard, BmiInfoCard
 │   │   └── BmiApp.tsx               # BMI 계산기 메인 뷰
+│   ├── compound-interest/           # 연복리 & 자산 성장 계산기 모듈
+│   │   ├── components/              # CalculatorForm, SummaryCards, ChartDashboard, DataTable, ComparisonView 등
+│   │   └── CompoundInterestApp.tsx  # 연복리 계산기 메인 뷰
+│   ├── date-calculator/             # 날짜 & 디데이 계산기 모듈
+│   │   ├── components/              # DateCategoryTabs, DDayTab, DateDiffTab, AgeTab, DateInfoCard
+│   │   └── DateApp.tsx              # 날짜 & 디데이 계산기 메인 뷰
+│   ├── exchange-rate/               # 실시간 환율 계산기 모듈
+│   │   ├── components/              # DualExchangeCard, ExchangeTable, ExchangeInfoCard
+│   │   └── ExchangeApp.tsx          # 환율 계산기 메인 뷰
 │   ├── goal-calculator/             # 목표 자산 역산 모듈
 │   │   ├── components/              # GoalForm, GoalSummaryCards, GoalChartCard, GoalRateComparisonCard, GoalInfoCard
 │   │   └── GoalApp.tsx              # 목표 자산 역산 메인 뷰
 │   ├── loan-calculator/             # 대출이자 & 상환방식 비교 모듈
-│   │   ├── components/              # LoanForm, LoanComparisonCard, LoanScheduleTable 등
+│   │   ├── components/              # LoanForm, LoanComparisonCard, LoanScheduleTable, LoanChartDashboard 등
 │   │   └── LoanApp.tsx              # 대출 계산기 메인 뷰
+│   ├── part-time-calculator/        # 알바 급여 & 주휴수당 계산 모듈
+│   │   ├── components/              # PartTimeForm, PartTimeSummaryCards, PartTimeChartDashboard, PartTimeTable 등
+│   │   └── PartTimeApp.tsx          # 알바 급여 계산기 메인 뷰
 │   ├── salary-calculator/           # 연봉 실수령액 계산 모듈
-│   │   ├── components/              # SalaryForm, SalarySummaryCards, DeductionBreakdownTable 등
+│   │   ├── components/              # SalaryForm, SalarySummaryCards, SalaryChartDashboard, DeductionBreakdownTable 등
 │   │   └── SalaryApp.tsx            # 연봉 계산기 메인 뷰
-│   └── part-time-calculator/        # 알바 급여 & 주휴수당 계산 모듈 (신규)
-│       ├── components/              # PartTimeForm, PartTimeSummaryCards, PartTimeChartDashboard, PartTimeTable 등
-│       └── PartTimeApp.tsx          # 알바 급여 계산기 메인 뷰
+│   └── unit-converter/              # 다기능 단위 변환기 모듈
+│       ├── components/              # UnitCategoryTabs, DualConverterCard, UnitConversionTable, UnitInfoCard
+│       └── UnitConverterApp.tsx     # 단위 변환기 메인 뷰
 ├── components/
-│   ├── common/                      # 공통 전역 유틸리티 컴포넌트
-│   │   └── FloatingShareButton.tsx  # 전 페이지 일관 우하단 플로팅 공유 버튼(FAB)
-│   ├── ui/                          # shadcn/ui 기반 표준 토큰 컴포넌트
-│   │   ├── badge.tsx                # Badge (메타 정보 및 상태 뱃지)
-│   │   ├── button.tsx               # Button (통일된 호버 및 상태 인터랙션)
-│   │   ├── input.tsx                # Input (대형 인풋 및 유효성 대응)
-│   │   ├── selectable-chip.tsx      # SelectableChip (프리셋 선택 칩)
-│   │   ├── segmented-control.tsx    # SegmentedControl (세그먼트 탭)
-│   │   ├── select.tsx               # Radix Select 기반 드롭다운
-│   │   ├── slider.tsx               # Radix Slider (정밀 슬라이더 제어)
-│   │   ├── table.tsx                # Table (전역 표준 데이터 테이블 SSOT)
-│   │   ├── tabs.tsx                 # Radix Tabs 기반 표준 WAI-ARIA 탭
-│   │   └── tooltip.tsx              # 툴팁 안내
-│   ├── CalculatorForm.tsx           # 연복리 입력 폼 (표준 풀 와이드 인풋, 프리셋 4개화)
-│   ├── SummaryCards.tsx             # 연복리 요약 카드 (메인 결과 + 서브 지표)
-│   ├── DataTable.tsx                # 연복리 상세 테이블
-│   ├── ChartDashboard.tsx           # 연복리 자산 성장 차트
-│   ├── DualConverterCard.tsx        # 단위 변환기 From/To 듀얼 카드
-│   ├── DualExchangeCard.tsx         # 환율 계산기 From/To 듀얼 카드
-│   ├── GlobalHeader.tsx             # 상단 전역 헤더
-│   ├── LeftSidebar.tsx              # 좌측 네비게이션 사이드바
-│   └── SidebarDrawer.tsx            # 모바일 슬라이드 드로어
+│   ├── common/                      # 전역 공통 컴포넌트
+│   │   ├── FloatingShareButton.tsx  # 전 페이지 일관 우하단 플로팅 공유 버튼(FAB)
+│   │   ├── FormHeader.tsx           # 전 계산기 통일 폼 헤더
+│   │   ├── InfoCard.tsx             # 전 계산기 최하단 지식 안내 카드
+│   │   └── PageMetaUpdater.tsx      # 동적 메타데이터 & Canonical SEO 관리자
+│   ├── navigation/                  # 레이아웃 네비게이션
+│   │   ├── GlobalHeader.tsx         # 상단 헤더
+│   │   ├── LeftSidebar.tsx          # 데스크톱 사이드바
+│   │   └── SidebarDrawer.tsx        # 모바일 슬라이드 드로어
+│   ├── pwa/                         # PWA 인앱 설치 및 업데이트
+│   │   ├── PWAInstallButton.tsx
+│   │   ├── PWAInstallModal.tsx
+│   │   └── PWAUpdateToast.tsx
+│   └── ui/                          # shadcn/ui 기반 표준 토큰 컴포넌트
+│       ├── badge.tsx                # Badge (메타 정보 및 상태 뱃지)
+│       ├── button.tsx               # Button (통일된 호버 및 상태 인터랙션)
+│       ├── calendar.tsx             # react-day-picker 기반 달력 뷰
+│       ├── date-picker.tsx          # Calendar + Popover 결합형 표준 날짜 선택기
+│       ├── input.tsx                # Input (대형 인풋 및 유효성 대응)
+│       ├── numeric-input.tsx        # NumericInput (천 단위 콤마 및 수량 제어)
+│       ├── popover.tsx              # Radix Popover 기반 팝업 오버레이
+│       ├── selectable-chip.tsx      # SelectableChip (프리셋 선택 칩)
+│       ├── segmented-control.tsx    # SegmentedControl (세그먼트 탭)
+│       ├── select.tsx               # Radix Select 기반 드롭다운
+│       ├── sheet.tsx                # Radix Dialog 기반 슬라이드 드로어
+│       ├── slider.tsx               # Radix Slider (정밀 슬라이더 제어)
+│       ├── table.tsx                # Table (전역 표준 데이터 테이블 SSOT)
+│       ├── tabs.tsx                 # Radix Tabs 기반 표준 WAI-ARIA 탭
+│       ├── toast.tsx                # Radix Toast 기반 토스트 알림
+│       └── tooltip.tsx              # 툴팁 안내
 ├── config/
 │   └── site.ts                      # 사이트 전역 메타데이터 및 브랜드 명칭 SSOT
 ├── context/
@@ -371,6 +391,20 @@ src/
      - **Web Share API 미지원 환경**:
        - 현재 URL 클립보드 자동 복사 (`navigator.clipboard.writeText`).
        - shadcn/ui Toast 배너로 *"공유 링크가 복사되었습니다"* 안내 팝업.
+
+### 2.9 9대 전 계산기 딥링크(Deep Link) URL 쿼리 동기화 규격 (`src/utils/deepLink.ts`)
+- **도입 목적**:
+  - 사용자가 계산기에서 입력한 값을 실시간으로 브라우저 URL 쿼리 파라미터에 동기화(`window.history.replaceState`)하여, 히스토리 스택을 오염시키지 않고 페이지 새로고침 시에도 입력 상태를 100% 보존하며 플로팅 공유 버튼(FAB)을 통해 타인에게 계산 결과를 온전히 전달.
+- **계산기별 쿼리 파라미터 표준 규격**:
+  1. **연복리 (`/compound`)**: `principal`(원금), `monthly`(월적립), `years`(기간), `rate`(수익률), `tax`(과세유형), `freq`(복리주기)
+  2. **목표 자산 (`/goal`)**: `target`(목표액), `initial`(초기자금), `years`(기간), `rate`(수익률), `tax`(과세유형)
+  3. **대출 이자 (`/loan`)**: `amount`(원금), `rate`(금리), `years`(기간), `grace`(거치), `method`(상환방식), `early`(중도상환)
+  4. **연봉 실수령액 (`/salary`)**: `payType`(지급방식), `salary`(연봉), `nonTaxable`(비과세), `dependents`(부양가족), `under20`(미성년자녀), `severance`(퇴직금)
+  5. **알바 & 주휴수당 (`/part-time`)**: `wage`(시급), `hours`(주근로시간), `tax`(세금), `over5`(5인이상), `overtime`(연장), `night`(야간), `hWork`(휴일)
+  6. **BMI & 비만도 (`/bmi`)**: `height`(신장), `weight`(체중), `gender`(성별)
+  7. **단위 변환기 (`/unit`)**: `category`(변환카테고리), `fromVal`(입력수치), `fromUnit`(출발단위), `toUnit`(도착단위)
+  8. **환율 계산기 (`/exchange`)**: `from`(출발통화), `to`(도착통화), `amount`(금액), `spread`(우대율)
+  9. **날짜 & 디데이 (`/date`)**: `tab`(활성탭: dday/diff/age), `target`(기준일), `unit`(연산단위), `amount`(연산수량), `op`(연산방향), `start`(시작일), `end`(종료일), `birth`(생년월일)
 
 ---
 
@@ -569,6 +603,10 @@ src/
     2. **날짜 간격 & 영업일 (`diff`)**: `CalendarRange` 아이콘 + 두 날짜 간 총 일수 및 주말 제외 평일 근무일(영업일) 산출.
     3. **만 나이 & 생애 지표 (`age`)**: `UserCheck` 아이콘 + 대한민국 2023년 만 나이 통일법 기준 공식 만 나이, 연 나이, 살아온 날수, 띠/별자리 산출.
   - **활성 탭 시각 피드백**: 활성 탭에 Ghost 다크 서피스 및 일렉트릭 라임 아이콘/도트 인디케이터 적용.
+- **입력 폼 표준 및 shadcn/ui 기반 DatePicker 전면 교체**:
+  - 기존 OS/브라우저별로 상이하고 투박했던 네이티브 `<input type="date">`를 전면 배제.
+  - shadcn/ui 기반 `Calendar`(`react-day-picker`)와 `Popover`(`@radix-ui/react-popover`)를 결합한 통합 **`DatePicker`** 컴포넌트를 공통 적용.
+  - 한국어 로케일(`ko`) 기본 적용(년·월·요일 국문 표기), 오늘 날짜 인디케이터, 선택 날짜 일렉트릭 라임 하이라이트 및 Ghost 다크 팝업 서피스 일체화.
 - **결과 대시보드 및 시각화 표준 (공통 컴포넌트 규격 준수)**:
   - Ghost 디자인 시스템의 메인 하이라이트 카드 + 일렉트릭 라임 뱃지 + 우상단 표준 원클릭 결과 복사.
   - 3단 서브 요약 지표 카드 및 주요 기념일/상세 정보 테이블.
@@ -1078,8 +1116,9 @@ export interface AgeResult {
   - 브라우저 히스토리(뒤로가기/앞으로가기) 네이티브 지원 및 딥링크 공유
 - **디자인 시스템**: Ghost 디자인 시스템 (`ghost.design.md` 사양 전면 채택)
 - **UI 컴포넌트 라이브러리**: shadcn/ui 기반 표준 컴포넌트 구축 (Ghost 디자인 토큰 정렬)
-  - 표준 컴포넌트: 버튼(Button), 카드(Card), 입력창(Input), 슬라이더(Slider), 탭(Tabs), 배지(Badge), 테이블(Table), 툴팁(Tooltip), 드롭다운(Select)
-  - 기존 브라우저 기본 `<select>` 태그를 Radix UI 기반 모듈형 Select로 전면 교체하여 일관된 인터랙션 확보.
+  - UI 컴포넌트 추가, 확장, 스타일링 및 합성 시 프로젝트 에이전트 스킬인 `/shadcn` (`.agents/skills/shadcn/SKILL.md`) 가이드라인(컴포넌트 합성, 폼 필드 그룹화, 접근성, 타이포그래피 규칙)을 필히 참조하고 준수할 것.
+  - 표준 컴포넌트: 버튼(Button), 카드(Card), 입력창(Input), 슬라이더(Slider), 탭(Tabs), 배지(Badge), 테이블(Table), 툴팁(Tooltip), 드롭다운(Select), 토스트(Toast), 캘린더(Calendar), 데이트피커(DatePicker)
+  - 기존 브라우저 기본 `<select>`, `<input type="date">` 태그를 Radix UI 및 react-day-picker 기반 컴포넌트로 전면 교체하여 일관된 인터랙션 확보.
 - **스타일링 프레임워크**: Tailwind CSS
 - **타이포그래피**: Pretendard Variable (전역 단일 표준 서체, 타 폰트 혼용 전면 금지, 고정폭 숫자 `tabular-nums` 및 한글/영문 가독성 최적화)
 - **문구 및 표기 원칙**:
@@ -1283,6 +1322,7 @@ export interface AgeResult {
 ## 11. 공통 폼 및 인터랙션 컴포넌트 표준 규격
 
 모든 공통 폼 및 인터랙션 요소는 Ghost 디자인 시스템(`ghost.design.md`)의 절제된 미니멀리즘과 일관된 조작감을 계승하여 구현합니다.
+컴포넌트 설계, 합성(Composition) 및 스타일링 시에는 프로젝트에 등록된 에이전트 스킬인 `/shadcn` (`.agents/skills/shadcn/SKILL.md`)의 공식 가이드와 규칙을 반드시 참조하고 준수합니다.
 
 ### 11.1 Input 컴포넌트 및 숫자 입력 제어 표준 (`src/components/ui/input.tsx`, `src/hooks/useClampedNumberInput.ts`)
 - **도입 목적**: 전 계산기 모듈의 입력 필드를 단일 표준 컴포넌트와 공통 훅(`useClampedNumberInput`)으로 일원화하여 포커스 상태, 빈 값 버퍼링, 유효성 검증, 자동 클램핑 보정을 일관되게 관리.
@@ -1412,6 +1452,22 @@ export interface AgeResult {
   - **상단 1행**: 소제목 및 메타 지표 (대문자 트래킹).
   - **본문 2행**: 볼드 수치 및 단위.
   - **하단 3행**: 부가 설명 텍스트.
+
+### 11.13 shadcn/ui 기반 공통 캘린더 및 데이트피커 컴포넌트 표준 규격 (`Calendar`, `Popover`, `DatePicker`)
+- **도입 목적**:
+  - 기존 브라우저/OS별로 상이하고 투박했던 네이티브 `<input type="date">`를 대체하고, Ghost 디자인 시스템(Dark surface, Electric Lime selection, 일관된 모노크롬 토큰)과 100% 일체화된 프리미엄 날짜 선택 인터페이스 제공.
+- **아키텍처 구성 및 역할 분담**:
+  - `Calendar` (`src/components/ui/calendar.tsx`): `react-day-picker`를 기반으로 한 커스텀 캘린더 뷰. 한국어 로케일(`ko`) 지원, 월 이동 내비게이션, 오늘 날짜 및 선택일 스타일링.
+  - `Popover` (`src/components/ui/popover.tsx`): `@radix-ui/react-popover` 기반의 접근성(WAI-ARIA) 준수 플로팅 오버레이 팝업.
+  - `DatePicker` (`src/components/ui/date-picker.tsx`): 상기 `Calendar`와 `Popover`를 결합하여 트리거 버튼(날짜 포맷 텍스트 + 캘린더 아이콘)과 달력 팝오버를 일원화한 공통 컴포넌트.
+- **주요 UI/UX 사양**:
+  - **트리거 버튼**: 모바일 터치 친화적 높이(h-11), 부드러운 라운드, 선택된 날짜(`YYYY-MM-DD (요일)`) 표기 및 캘린더 아이콘 배치.
+  - **달력 오버레이**: Ghost 다크 서피스 배경, 선택된 날짜에 일렉트릭 라임 시그니처 하이라이트(`bg-[#d1ff19] text-[#112220]`), 오늘 날짜 핀 표시.
+  - **접근성 및 반응형**: 키보드 내비게이션 및 ESC 닫기, 모바일 터치 시 화면 벗어남 방지 플로팅 정렬(Align="start").
+- **적용 대상**:
+  - `DDayTab.tsx`: 기준 날짜 선택
+  - `DateDiffTab.tsx`: 시작 날짜 및 종료 날짜 선택
+  - `AgeTab.tsx`: 출생일 및 기준일 선택
 
 ---
 
