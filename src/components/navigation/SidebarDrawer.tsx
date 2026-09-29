@@ -5,6 +5,7 @@ import {
   CALCULATORS_LIST,
   CATEGORY_NAMES,
   CalculatorCategory,
+  compareCalculatorsKorean,
 } from '../../types/navigation';
 import {
   TrendingUp,
@@ -134,10 +135,10 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
           </Button>
         </div>
         {categories.map((cat) => {
-          // 출시 예정(coming-soon) 항목은 메뉴 목록에서 제외
-          const items = CALCULATORS_LIST.filter(
-            (calc) => calc.category === cat && calc.status !== 'coming-soon'
-          );
+          // 출시 예정(coming-soon) 항목은 메뉴 목록에서 제외하고 가나다 순 동적 정렬
+          const items = CALCULATORS_LIST
+            .filter((calc) => calc.category === cat && calc.status !== 'coming-soon')
+            .sort(compareCalculatorsKorean);
           if (items.length === 0) return null;
 
           return (

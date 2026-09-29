@@ -4,6 +4,7 @@ import {
   CALCULATORS_LIST,
   CalculatorItem,
   CATEGORY_NAMES,
+  compareCalculatorsKorean,
 } from '../types/navigation';
 import {
   TrendingUp,
@@ -93,17 +94,15 @@ export const HomeApp: React.FC = () => {
     }
   };
 
-  // 카테고리 필터링 및 정렬 (활성 계산기 우선 노출, 출시 예정 항목은 목록 최하단 배치)
+  // 카테고리 필터링 및 동적 가나다 정렬 (미출시된 배당금 계산기 제외 & 향후 즐겨찾기 지원 준비)
   const filteredCalculators = useMemo(() => {
+    const activeList = CALCULATORS_LIST.filter((calc) => calc.status !== 'coming-soon');
     const list =
       selectedCategory === 'all'
-        ? [...CALCULATORS_LIST]
-        : CALCULATORS_LIST.filter((calc) => calc.category === selectedCategory);
+        ? activeList
+        : activeList.filter((calc) => calc.category === selectedCategory);
 
-    return list.sort((a, b) => {
-      if (a.status === b.status) return 0;
-      return a.status === 'coming-soon' ? 1 : -1;
-    });
+    return [...list].sort(compareCalculatorsKorean);
   }, [selectedCategory]);
 
   const categories: { key: string; label: string }[] = [

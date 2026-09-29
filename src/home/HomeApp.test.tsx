@@ -24,23 +24,25 @@ describe('HomeApp Compact Dashboard Tests', () => {
       </MemoryRouter>
     );
 
-  it('헤더와 5대 계산기 카드가 렌더링되어야 한다', () => {
+  it('헤더와 10대 활성 계산기 카드가 렌더링되고 배당금 카드는 노출되지 않아야 한다', () => {
     renderHomeApp();
 
     expect(screen.getByRole('button', { name: '전체' })).toBeInTheDocument();
 
-    // 활성 계산기 shortName 노출 확인
-    expect(screen.getByText('연복리 계산기')).toBeInTheDocument();
-    expect(screen.getByText('대출이자 계산기')).toBeInTheDocument();
-    expect(screen.getByText('연봉 계산기')).toBeInTheDocument();
+    // 10대 활성 계산기 shortName 노출 확인
+    expect(screen.getByText('날짜·디데이')).toBeInTheDocument();
     expect(screen.getByText('단위 변환기')).toBeInTheDocument();
+    expect(screen.getByText('대출이자 계산기')).toBeInTheDocument();
+    expect(screen.getByText('목표자산 역산')).toBeInTheDocument();
+    expect(screen.getByText('알바·주휴수당 계산기')).toBeInTheDocument();
+    expect(screen.getByText('연복리 계산기')).toBeInTheDocument();
+    expect(screen.getByText('연봉 계산기')).toBeInTheDocument();
+    expect(screen.getByText('파이어 현금흐름')).toBeInTheDocument();
     expect(screen.getByText('환율 계산기')).toBeInTheDocument();
     expect(screen.getByText('BMI 계산기')).toBeInTheDocument();
-    expect(screen.getByText('목표자산 역산')).toBeInTheDocument();
-    expect(screen.getByText('날짜·디데이')).toBeInTheDocument();
 
-    // 준비 중인 계산기 노출 확인
-    expect(screen.getByText('배당금 계산기')).toBeInTheDocument();
+    // 배당금 계산기(coming-soon) 카드는 삭제되어 노출되지 않아야 함
+    expect(screen.queryByText('배당금 계산기')).not.toBeInTheDocument();
   });
 
   it('카테고리 칩 "생활 & 측정" 클릭 시 생활 측정 계산기들이 필터링되어야 한다', () => {
