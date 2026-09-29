@@ -1437,8 +1437,9 @@ export interface CashFlowCalculationResult {
 
 ## 11. 공통 폼 및 인터랙션 컴포넌트 표준 규격
 
-모든 공통 폼 및 인터랙션 요소는 Ghost 디자인 시스템(`ghost.design.md`)의 절제된 미니멀리즘과 일관된 조작감을 계승하여 구현합니다.
-컴포넌트 설계, 합성(Composition) 및 스타일링 시에는 프로젝트에 등록된 에이전트 스킬인 `/shadcn` (`.agents/skills/shadcn/SKILL.md`)의 공식 가이드와 규칙을 반드시 참조하고 준수합니다.
+모든 공통 폼 및 인터랙션 요소는 Ghost 디자인 시스템([`ghost.design.md`](./ghost.design.md))과 UI/UX 컴포넌트 가이드([`ui-ux.md`](./ui-ux.md))의 계층 구조와 일관된 조작감을 계승하여 구현합니다.
+본 섹션에서는 컴포넌트의 기능적 역할, 데이터 모델 및 동작 사양을 정의하며, 구체적인 시각 계층/스타일 토큰 규격은 [`ui-ux.md`](./ui-ux.md)를 참조합니다.
+컴포넌트 설계, 합성(Composition) 시에는 프로젝트에 등록된 에이전트 스킬인 `/shadcn` (`.agents/skills/shadcn/SKILL.md`)의 공식 가이드와 규칙을 반드시 참조하고 준수합니다.
 
 ### 11.1 Input 컴포넌트 및 숫자 입력 제어 표준 (`src/components/ui/input.tsx`, `src/hooks/useClampedNumberInput.ts`)
 - **도입 목적**: 전 계산기 모듈의 입력 필드를 단일 표준 컴포넌트와 공통 훅(`useClampedNumberInput`)으로 일원화하여 포커스 상태, 빈 값 버퍼링, 유효성 검증, 자동 클램핑 보정을 일관되게 관리.
@@ -1501,15 +1502,12 @@ export interface CashFlowCalculationResult {
 
 ### 11.8 공통 숫자 및 금액 입력 컴포넌트 표준 규격 (`NumericInput` / `src/components/ui/numeric-input.tsx`)
 - **도입 목적**:
-  - 기존 대출 계산기(`LoanForm`), 연복리 계산기(`CalculatorForm`), 연봉 계산기(`SalaryForm`)에서 중복 작성되던 큰 규격(`h-11`, 우측 정렬, 볼드 폰트, 우측 단위 심볼 뱃지)의 수치 및 금액 입력 UI 패턴을 공통 컴포넌트로 일원화.
-  - 화면별 디자인 불일치(패딩, 테두리 라운드, 폰트 크기, 높이 등)를 원천 제거하고 Ghost 디자인 시스템 표준 준수.
-- **주요 UI/UX 및 인터랙션 사양**:
-  - **터치 친화적 높이**: 모바일 터치 접근성에 최적화된 높이 44px (`h-11`).
-  - **정렬 및 타이포그래피**: 우측 정렬 (`text-right`), 볼드 폰트 (`font-bold text-base sm:text-lg tracking-tight`), 다크 모드 호환 텍스트 색상 (`text-[#112220] dark:text-slate-100`).
-  - **우측 단위 심볼(`suffix`) 렌더링**: '원', '%', '년', '개월' 등 단위를 인풋 내측 우측에 일관된 간격(`right-3.5`)으로 배치하고 포인터 이벤트 통과(`pointer-events-none`) 처리.
-  - **천 단위 콤마 포맷팅(`thousandSeparator`)**: 통화/금액 입력 시 `toLocaleString('ko-KR')` 기반 자동 3자리 콤마 표시 및 숫자 추출 핸들러 내장.
-  - **테마 및 포커스 링**: `bg-slate-50/50 dark:bg-slate-900/60`, `rounded-xl`, Ghost 시그니처 포커스 링(`focus-visible:ring-[#15171a] dark:focus-visible:ring-[#d1ff19]`).
-  - **웹 접근성(WCAG)**: `id`, `aria-label`, `inputMode="numeric"`, `placeholder` 등 기본 접근성 속성 완벽 지원.
+  - 각 계산기 입력 폼에서 중복 작성되던 수치 및 금액 입력 UI 패턴을 공통 컴포넌트로 일원화하여 조작성과 데이터 정합성을 전역 보장.
+- **기능 및 데이터 인터페이스 사양**:
+  - **터치 친화적 인터페이스**: 모바일 터치 접근성에 최적화된 높이 및 우측 정렬된 볼드 수치 렌더링.
+  - **우측 단위 심볼(`suffix`) 처리**: '원', '%', '년', '개월' 등 단위를 인풋 내측 우측에 배치하고 포인터 이벤트 통과 처리.
+  - **천 단위 콤마 포맷팅(`thousandSeparator`)**: 통화/금액 입력 시 자동 3자리 콤마 표시 및 숫자 추출 핸들러 내장.
+  - **상세 UI/UX 및 스타일 규격**: [`ui-ux.md`](./ui-ux.md) Section 2.4 참조.
 - **적용 대상**:
   - `SalaryForm.tsx`: 세전 급여 금액 입력 필드 ('원')
   - `LoanForm.tsx`: 대출 원금 ('원'), 연 대출 금리 ('%')
@@ -1517,92 +1515,58 @@ export interface CashFlowCalculationResult {
 
 ### 11.9 shadcn/ui Toast 컴포넌트 표준 규격 (`toast.tsx`, `toaster.tsx`, `use-toast.ts`)
 - **도입 목적**:
-  - `@radix-ui/react-toast` 기반 shadcn/ui 표준 토스트 아키텍처를 도입하여 시스템 알림, PWA 버전 업데이트, 향후 클립보드 복사 피드백 등에 일관된 피드백 UX 제공.
-- **주요 UI/UX 사양**:
-  - **위치 및 애니메이션**: 화면 우하단(모바일: 하단 중앙), 부드러운 슬라이드 인/아웃 트랜지션.
-  - **Ghost 디자인 시스템 호환**: 다크 모노크롬 베이스(`bg-[#15171a] dark:bg-slate-900`), 시그니처 쉐도우(`shadow-xl`), 테두리(`border border-[#e5e7eb] dark:border-slate-800`), 액션 버튼에 Electric Lime 포인트 또는 반전 버튼 적용.
-  - **웹 접근성(WCAG)**: WAI-ARIA `role="status"` 및 `aria-live="polite"` 준수.
+  - `@radix-ui/react-toast` 기반 shadcn/ui 표준 토스트 아키텍처를 도입하여 시스템 알림, PWA 버전 업데이트, 클립보드 복사 피드백 등에 일관된 알림 UX 제공.
+- **기능 및 접근성 사양**:
+  - WAI-ARIA `role="status"` 및 `aria-live="polite"` 준수.
+  - 슬라이드 인/아웃 상태 전환 및 자동 타임아웃 닫기 지원.
+  - **상세 UI/UX 및 스타일 규격**: [`ui-ux.md`](./ui-ux.md) 참조.
 
 ### 11.10 공통 폼 입력값 초기화 버튼 표준 규격 (`ResetButton`)
 - **도입 목적**:
-  - 연복리(`CalculatorForm`), 대출(`LoanForm`), 연봉(`SalaryForm`) 등 전 계산기 입력 폼의 초기화 버튼 위치, 스타일 및 반응형 동작을 단일 표준으로 일원화하여 조작 일관성 확보.
-- **배치 위치**:
-  - 전 계산기 입력 폼 카드 상단 우측(`CardHeader` 우측)으로 고정 통일. (기존 연복리 계산기 헤더 위치는 폐기하여 폼 입력 영역으로 시선 일원화).
-- **UI 및 반응형 사양**:
-  - `variant="ghost" size="sm" h-8 px-2.5 rounded-lg text-xs` + `RotateCcw (w-3.5 h-3.5)` 아이콘 + 텍스트 **"초기화"**.
-  - `shrink-0` 속성을 적용하여 좁은 모바일 화면에서도 카드 타이틀과 겹치거나 개행되지 않고 우측 상단에 정돈되어 표시됨.
-- **인터랙션 사양**:
-  - 불필요한 브라우저 confirm 다이얼로그를 제거하고 원클릭으로 각 계산기 초기 기본값으로 즉각 안전하게 리셋.
+  - 전 계산기 입력 폼의 초기화 버튼 위치, 동작 및 반응형 동작을 단일 표준으로 일원화하여 조작 일관성 확보.
+- **기능 및 배치 원칙**:
+  - 전 계산기 입력 폼 카드 상단 우측(`FormHeader` 우측 슬롯)으로 배치 통일.
+  - 불필요한 브라우저 confirm 다이얼로그 없이 원클릭으로 각 계산기 초기 기본값으로 즉각 안전하게 리셋.
+  - **상세 UI/UX 및 스타일 규격**: [`ui-ux.md`](./ui-ux.md) Section 2.1 참조.
 
 ### 11.11 공통 데이터 내보내기 버튼 표준 규격 (`DataExportButton`)
 - **도입 목적**:
   - 연도별 복리 계산표(`DataTable.tsx`) 및 월별 대출 상환 스케줄표(`LoanScheduleTable.tsx`) 등 상세 데이터 표의 다운로드 버튼 명칭과 인터랙션 일원화.
-- **단일 표준 명칭 및 라벨**:
-  - **`CSV 다운로드`** 로 전역 통일 (기존 'CSV 내보내기', '엑셀(CSV) 다운로드' 등 파편화 해소 및 아이콘 단독 노출 방지).
-- **UI 및 반응형 사양**:
-  - `variant="outline" size="sm" h-8 px-2.5 text-xs rounded-lg` + `Download (w-3.5 h-3.5)` 아이콘 + 텍스트 **"CSV 다운로드"**.
-  - 모바일 및 좁은 뷰포트에서도 텍스트가 사라지지 않고 항상 온전한 라벨로 노출되며, 테이블 헤더 영역에서 공간에 맞춰 자연스럽게 정렬되도록 반응형 보장.
+- **기능 및 라벨링 사양**:
+  - **`CSV 다운로드`** 단일 명칭으로 전역 통일.
+  - 클릭 시 현재 계산 결과 테이블을 UTF-8 BOM 기반 CSV 파일로 즉각 생성하여 브라우저 다운로드 트리거.
+  - **상세 UI/UX 및 스타일 규격**: [`ui-ux.md`](./ui-ux.md) Section 2.7 참조.
 
-### 11.12 공통 폼 헤더(`FormHeader`) 및 결과 대시보드(`SummaryCards`) 단일 디자인 규격 표준화
+### 11.12 공통 폼 헤더(`FormHeader`) 및 결과 대시보드(`SummaryCards`, `SubMetricCard`) 표준 규격
 - **도입 목적**:
-  - 계산기별로 제각각이던 폼 헤더와 결과 요약 대시보드의 계층 구조를 공통 컴포넌트 기반으로 100% 통일.
+  - 계산기별로 상이하던 폼 헤더와 결과 요약 대시보드의 계층 구조를 공통 컴포넌트 기반으로 100% 통일.
 - **1. 공통 폼 헤더 표준 (`src/components/common/FormHeader.tsx`)**:
-  - **카테고리 뱃지**: 모든 계산기 제목 앞에 위치하는 표준 메타 뱃지 (`Badge variant="meta"`).
-  - **폼 제목**: 시맨틱 `h2` 태그 적용 및 단일 볼드 타이포그래피.
-  - **제목 내 장식 배제**: 텍스트 가독성을 저해하는 제목 내 아이콘 제거.
-  - **우측 액션 슬롯**: 초기화 버튼 등 도구 버튼을 배치하는 표준 `children` 슬롯.
-- **2. 결과 요약 메인 카드 단일 규격**:
-  - **컨테이너**: Ghost 다크 서피스 기반 메인 카드 컨테이너 (`SummaryCards` 표준).
-  - **배경 장식**: 우하단 은은한 라임 글로우 블러 효과.
-  - **1열 (헤더 & 복사)**:
-    - 좌측: 일렉트릭 라임 시그니처 캡슐 뱃지.
-    - 우측: 표준 원클릭 결과 복사 버튼.
-  - **2열 (핵심 지표 & 한글 독음)**:
-    - 대형 수치: 일렉트릭 라임 볼드 타이포그래피.
-    - 한글 독음: 인라인 텍스트 표기 (예: N억 N만 원).
-  - **하단 인포 바**:
-    - 컬러 이모지를 완전 배제하고 단정한 라임 텍스트 헤더(`건강 가이드:`, `안내:`)로 일치.
-- **3. 3단 서브 요약 카드 공통 컴포넌트 규격 (`src/components/common/SubMetricCard.tsx`)**:
-  - **도입 목적**: 계산기마다 제각각이던 아이콘 위치(좌/우), 배지 위치, 텍스트 상하 순서, 색상(빨강/초록/파랑), 패딩 및 여백을 단일 공통 컴포넌트로 100% 일원화.
-  - **그리드 레이아웃**: `grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3` 전 계산기 동일 적용.
-  - **카드 컨테이너**: `p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1`.
-  - **1행 (헤더)**:
-    - **좌측**: 표준 14px Lucide 아이콘(`w-3.5 h-3.5`) + 소제목 라벨(`text-[11px] font-bold uppercase tracking-wider`).
-    - **우측**: 선택적 보조 배지 또는 지표 뱃지(예: `86.9시간`, `원금의 63.2%`, `유급 17.4시간`).
-  - **2행 (메인 수치)**:
-    - 볼드 타이포그래피(`text-base sm:text-lg font-bold tabular-nums`).
-    - 통화 표기 표준화: `₩` 전치 기호를 지양하고 대한민국 표준인 `N원` 후치 표기로 일원화.
-    - 시맨틱 색상 테마:
-      - `default`: 일반 수치/원금/급여 (`text-ghost-ink dark:text-ghost-dark-ink`)
-      - `rose`: 공제액/세금/대출이자/손실 (`text-rose-600 dark:text-rose-400`)
-      - `emerald`: 순수익/주휴수당/비과세 (`text-emerald-600 dark:text-emerald-400`)
-      - `indigo`: 공제비율/수익기여도 (`text-indigo-600 dark:text-indigo-400`)
-  - **3행 (하단 캡션)**:
-    - 보조 설명 텍스트(`text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate`).
-    - 한글 독음(예: N억 N만 원), 계산 공식, 부가 안내 등을 일관되게 최하단 3행에 배치하여 계층 구조 통일.
+  - **카테고리 뱃지**: 도메인 분류 메타 뱃지 (`Badge variant="meta"`).
+  - **폼 제목**: 시맨틱 `h2` 태그 적용 및 단일 볼드 타이포그래피 (제목 내 장식용 이모지/아이콘 배제).
+  - **우측 액션 슬롯**: 초기화 버튼 등 도구 버튼을 수용하는 표준 `children` 슬롯.
+- **2. 결과 요약 메인 카드 표준**:
+  - 핵심 산출 결과(실수령액, 최종자산, 대출이자 등)를 최상단에 대형 타이포로 강조.
+  - 대한민국 표준 한글 독음(N억 N만 원) 병기 및 원클릭 클립보드 복사 버튼 내장.
+- **3. 3단 서브 요약 카드 공통 컴포넌트 (`src/components/common/SubMetricCard.tsx`)**:
+  - **도입 목적**: 아이콘 위치, 배지 위치, 텍스트 상하 배치, 색상, 패딩의 전 계산기 일원화.
+  - **표준 3행 계층 구조**:
+    - **1행 (헤더)**: 좌측 아이콘 + 라벨, 우측 선택적 뱃지 (`badge`, `badgeColor`).
+    - **2행 (메인 수치)**: 대형 볼드 수치. 시맨틱 컬러(`default`, `rose`, `emerald`, `indigo`, `amber`) 제어. 통화 표기는 대한민국 표준 후치 `원`으로 일원화.
+    - **3행 (하단 캡션)**: 한글 독음, 산식, 보조 설명 1줄 말줄임 배치.
+  - **상세 UI/UX 및 스타일 규격**: [`ui-ux.md`](./ui-ux.md) Section 2.3 참조.
 
 ### 11.13 shadcn/ui 기반 하이브리드 공통 캘린더 및 데이트피커 컴포넌트 표준 규격 (`Calendar`, `Popover`, `DatePicker`)
 - **도입 목적**:
-  - 브라우저/OS별로 파편화된 네이티브 날짜 입력을 대체하고, 모바일 및 데스크톱 환경 모두에서 최적화된 하이브리드 입력 경험(초고속 숫자 타이핑 + Ghost 테마 캘린더 시각 선택)을 일원화된 인터페이스로 제공.
-- **아키텍처 구성 및 역할 분담**:
-  - `Calendar` (`src/components/ui/calendar.tsx`): `react-day-picker` 기반 커스텀 캘린더 뷰. 한국어 로케일 지원, 연/월 드롭다운 내비게이션, 오늘 날짜 및 선택일 하이라이트 스타일링.
-  - `Popover` (`src/components/ui/popover.tsx`): `@radix-ui/react-popover` 기반의 접근성(WAI-ARIA) 준수 플로팅 오버레이 팝업.
-  - `DatePicker` (`src/components/ui/date-picker.tsx`): 상기 `Calendar`와 `Popover`를 텍스트 인풋 필드와 결합한 하이브리드 날짜 입력 공통 컴포넌트.
-- **주요 UI/UX 및 기능 사양**:
-  - **하이브리드 입력 필드 (`inputMode="numeric"`, `type="text"`)**:
-    - **모바일 UX**: 본문 텍스트 영역 터치 시 스마트폰 가상 키보드가 숫자 전용 키패드로 즉시 열리며, 팝오버 간섭 없이 8자리 숫자(예: 19950515)를 2초 만에 초고속 타이핑 가능. 하이픈 자동 포맷팅 및 날짜 유효성 검증 제공.
-    - **데스크톱 UX**: 키보드로 `YYYY-MM-DD` 직접 수정 및 복사/붙여넣기 자유 지원.
-  - **캘린더 아이콘 트리거**:
-    - 인풋 우측의 캘린더 아이콘 버튼 클릭/터치 시 가상 키보드를 닫고 부드럽게 Ghost 캘린더 팝오버를 오픈하여 달력을 보고 원하는 날짜를 직관적으로 선택 가능.
-  - **`showTodayButton` 맞춤형 액션 제어**:
-    - `showTodayButton={true}` (기본값): 디데이(`DDayTab`) 및 날짜 간격(`DateDiffTab`)에서 달력 팝오버 내 명확한 '오늘 날짜로 선택' 원클릭 액션 버튼 제공.
-    - `showTodayButton={false}`: 만 나이 계산기(`AgeTab`) 생년월일 입력 화면에서는 불필요한 '오늘' 버튼을 완전히 숨겨 과거 출생일 선택에 집중하도록 UX 정돈.
-  - **접근성 및 반응형**:
-    - 모바일 화면 벗어남 방지 플로팅 정렬, WAI-ARIA 팝업 다이얼로그 속성, 키보드 ESC 닫기 및 포커스 링 표준 준수.
+  - 브라우저별 파편화된 날짜 입력을 대체하고 모바일/데스크톱 모두에서 최적화된 하이브리드 입력 경험(초고속 숫자 타이핑 + Ghost 테마 캘린더 시각 선택) 제공.
+- **컴포넌트 구성 및 기능 사양**:
+  - `Calendar` (`src/components/ui/calendar.tsx`): `react-day-picker` 기반 커스텀 한국어 캘린더 뷰.
+  - `Popover` (`src/components/ui/popover.tsx`): WAI-ARIA 준수 플로팅 오버레이 팝업.
+  - `DatePicker` (`src/components/ui/date-picker.tsx`): 텍스트 인풋 필드와 캘린더 팝오버를 결합한 하이브리드 날짜 입력기.
+  - **하이브리드 입력 UX**: 숫자 키패드 즉시 입력(`inputMode="numeric"`) 및 우측 아이콘 터치 시 캘린더 팝오버 오픈.
+  - **`showTodayButton` 제어**: 디데이/간격 계산기에서는 '오늘' 버튼 활성화, 만 나이(출생일) 입력에서는 '오늘' 버튼 숨김 처리.
+  - **상세 UI/UX 및 스타일 규격**: [`ui-ux.md`](./ui-ux.md) Section 2.7 참조.
 - **적용 대상**:
-  - `DDayTab.tsx`: 기준 날짜 선택 (오늘 버튼 활성화)
-  - `DateDiffTab.tsx`: 시작 날짜 및 종료 날짜 선택 (오늘 버튼 활성화)
-  - `AgeTab.tsx`: 출생일 선택 (`showTodayButton={false}` 적용으로 생년월일 전용 집중)
+  - `DDayTab.tsx`, `DateDiffTab.tsx`, `AgeTab.tsx`
 
 
 ---
@@ -1647,11 +1611,10 @@ export interface CashFlowCalculationResult {
 
 ## 13. 금융 및 생활 상식 안내 카드 규격 (`InfoCard`)
 
-### 13.1 목적 및 공통 설계 사양
+### 13.1 목적 및 배치 원칙
 - 각 계산기 하단에 유용한 상식, 계산 공식, 세무 및 금융 유의사항을 압축 요약 제공하여 서비스 신뢰도와 검색엔진 SEO 가치를 동시에 확보.
-- **최하단 풀위드(Full-Width) 단독 배치 원칙**: 2열 그리드(`lg:grid-cols-12`)를 채택하는 계산기(`Compound`, `Loan`, `Salary`, `Goal`, `Bmi`, `CashFlow`, `PartTime`)라도 `InfoCard`는 우측 7열 내부에 종속되지 않고, 그리드 컨테이너 바깥 최하단에 단독 풀위드(`w-full`) 패널로 배치하여 시각적 안정감과 여유로운 가독성을 제공한다 (날짜 계산기 및 단위 변환기 표준과 일치).
-- **Ghost 디자인 시스템 토큰 엄격 준수**: 임의의 대괄호 헥스코드 하드코딩(`text-[#112220]`, `border-[#e5e7eb]`, `text-[#64748b]`, `text-[#d1ff19]`, `bg-[#15171a]`, `rounded-[24px]` 등)을 원천 배제하고, `tailwind.config.js` 및 `ghost.design.md`에 선언된 시맨틱 토큰(`ghost-ink`, `ghost-hairline`, `ghost-ink-mute`, `ghost-lime`, `ghost-surface-elevated`, `rounded-ghost-xl`)을 엄격 적용한다.
-- 가독성 높은 카드 형태 배치, 단정한 텍스트 및 표준 라인 아이콘 적용, 컬러 이모지 배제.
+- **최하단 풀위드(Full-Width) 단독 배치 원칙**: 2열 그리드(`lg:grid-cols-12`)를 채택하는 계산기라도 `InfoCard`는 우측 7열 내부에 종속되지 않고, 그리드 컨테이너 바깥 최하단에 단독 풀위드(`w-full`) 패널로 배치하여 시각적 안정감과 여유로운 가독성을 제공한다.
+- **상세 UI/UX 및 스타일 규격**: [`ui-ux.md`](./ui-ux.md) Section 2.8 참조.
 
 ### 13.2 모듈별 핵심 콘텐츠 요약
 1. **연복리 계산기 (`CompoundInfoCard.tsx`)**:

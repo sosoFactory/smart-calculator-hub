@@ -11,10 +11,10 @@ All AI coding assistants must follow this protocol. Read the applicable rule fil
   - Clearly explain the cause and the proposed solution first. Do NOT start implementing until the user explicitly approves.
 - **NEVER PUSH AUTOMATICALLY UPON COMMIT**:
   - Commit locally only after explicit approval. Never run `git push` unless the user explicitly requests a push.
-- **STRICT ADHERENCE TO PRD, GHOST DESIGN SYSTEM & SHADCN SKILL**:
-  - Before writing or modifying any UI, always thoroughly refer to and comply with `./PRD.md` (especially Chapter 11 for Common Components), `./ghost.design.md`, and the `/shadcn` agent skill (`.agents/skills/shadcn/SKILL.md`).
-  - Mandatory reuse of existing common components (`Tabs`, `FormHeader`, `SelectableChip`, `SegmentedControl`, `NumericInput`, `DatePicker`, `Calendar`, `Popover`, `InfoCard`, `SummaryCards`) instead of writing duplicate inline tags.
-  - Never write raw Tailwind classes or inline styles into `./PRD.md`; keep PRD focused on functional logic and component architecture.
+- **STRICT ADHERENCE TO PRD, UI/UX GUIDE, GHOST DESIGN SYSTEM & SHADCN SKILL**:
+  - Before writing or modifying any UI, always thoroughly refer to and comply with `./PRD.md` (functional logic & component architecture), `./ui-ux.md` (component layout, visual hierarchy & interaction specs), `./ghost.design.md` (base typography, colors & shadow tokens), and the `/shadcn` agent skill (`.agents/skills/shadcn/SKILL.md`).
+  - Mandatory reuse of existing common components (`Tabs`, `FormHeader`, `SelectableChip`, `SegmentedControl`, `NumericInput`, `DatePicker`, `Calendar`, `Popover`, `InfoCard`, `SummaryCards`, `SubMetricCard`) instead of writing duplicate inline tags.
+  - Never write raw Tailwind classes or inline styles into `./PRD.md`; keep PRD focused on functional logic and component architecture, and place UI/UX/layout specifications in `./ui-ux.md`.
 - **MANDATORY TDD SKILL FOR LOGIC, FORMULAS & UTILITIES**:
   - When implementing or modifying mathematical formulas, financial/medical/date calculation logic, business rules, or data transformation utilities, ALWAYS refer to and follow the `/tdd` agent skill (`.agents/skills/tdd/SKILL.md`).
   - Strictly enforce the Red-Green-Refactor cycle: write unit tests first before writing production code, verify test failures, implement code to pass tests, and ensure 100% test suite pass rate without regressions.
