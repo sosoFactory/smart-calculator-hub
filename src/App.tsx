@@ -41,6 +41,9 @@ const BmiApp = lazy(() =>
 const GoalApp = lazy(() =>
   import('./calculators/goal-calculator/GoalApp').then((m) => ({ default: m.GoalApp }))
 );
+const CashFlowApp = lazy(() =>
+  import('./calculators/cashflow-calculator/CashFlowApp').then((m) => ({ default: m.CashFlowApp }))
+);
 const DateApp = lazy(() =>
   import('./calculators/date-calculator/DateApp').then((m) => ({ default: m.DateApp }))
 );
@@ -124,6 +127,10 @@ export const App: React.FC = () => {
                 <Route
                   path="/goal"
                   element={<GoalApp />}
+                />
+                <Route
+                  path="/cashflow"
+                  element={<CashFlowApp />}
                 />
                 <Route
                   path="/date"

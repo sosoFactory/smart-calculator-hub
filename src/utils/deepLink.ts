@@ -6,6 +6,7 @@ import { PartTimeInput, PartTimeTaxType } from '../types/partTime';
 import { BmiInput, Gender } from '../types/bmi';
 import { UnitCategory } from '../types/unit';
 import { DateTabType, DateCalcOp, DateCalcUnit } from '../types/date';
+import { CashFlowInput, CashFlowTaxType } from '../types/cashFlow';
 
 /**
  * 브라우저 히스토리 스택을 오염시키지 않고 주소창 URL 쿼리를 실시간 갱신
@@ -531,6 +532,43 @@ export const decodeDateQuery = (search: string): DateDeepLinkParams | null => {
   if (start) result.start = start;
   if (end) result.end = end;
   if (birth) result.birth = birth;
+
+  return Object.keys(result).length > 0 ? result : null;
+};
+
+// ==========================================
+// 10. 파이어 현금흐름 계산기 (/cashflow)
+// ==========================================
+
+export const encodeCashFlowQuery = (input: CashFlowInput): string => {
+  const p = new URLSearchParams();
+  if (input.monthlyNetDesired > 0) p.set('net', String(input.monthlyNetDesired));
+  if (input.annualReturnRate > 0) p.set('rate', String(input.annualReturnRate));
+  if (input.taxType) p.set('tax', input.taxType);
+  return p.toString();
+};
+
+export const decodeCashFlowQuery = (search: string): Partial<CashFlowInput> | null => {
+  if (!search) return null;
+  const p = new URLSearchParams(search);
+  const netStr = p.get('net');
+  const rateStr = p.get('rate');
+  const taxStr = p.get('tax') as CashFlowTaxType | null;
+
+  if (!netStr && !rateStr && !taxStr) return null;
+
+  const result: Partial<CashFlowInput> = {};
+  if (netStr) {
+    const net = Number(netStr);
+    if (!isNaN(net) && net >= 0) result.monthlyNetDesired = net;
+  }
+  if (rateStr) {
+    const rate = Number(rateStr);
+    if (!isNaN(rate) && rate > 0) result.annualReturnRate = rate;
+  }
+  if (taxStr && ['normal', 'isa', 'none'].includes(taxStr)) {
+    result.taxType = taxStr;
+  }
 
   return Object.keys(result).length > 0 ? result : null;
 };

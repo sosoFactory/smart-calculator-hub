@@ -18,12 +18,15 @@ import {
   decodeExchangeQuery,
   encodeDateQuery,
   decodeDateQuery,
+  encodeCashFlowQuery,
+  decodeCashFlowQuery,
 } from './deepLink';
 import { LoanInput } from '../types/loan';
 import { ScenarioInput } from '../types/calculator';
 import { SalaryInput } from '../types/salary';
 import { GoalInput } from '../types/goal';
 import { PartTimeInput } from '../types/partTime';
+import { CashFlowInput } from '../types/cashFlow';
 
 describe('Deep Link Utilities', () => {
   describe('Loan Calculator Deep Linking', () => {
@@ -327,6 +330,31 @@ describe('Deep Link Utilities', () => {
 
     it('returns null for empty query', () => {
       expect(decodeDateQuery('')).toBeNull();
+    });
+  });
+
+  describe('Cash Flow Calculator Deep Linking', () => {
+    const sampleInput: CashFlowInput = {
+      monthlyNetDesired: 3_500_000,
+      annualReturnRate: 4.5,
+      taxType: 'isa',
+    };
+
+    it('correctly encodes and decodes cash flow input without data loss', () => {
+      const query = encodeCashFlowQuery(sampleInput);
+      expect(query).toContain('net=3500000');
+      expect(query).toContain('rate=4.5');
+      expect(query).toContain('tax=isa');
+
+      const decoded = decodeCashFlowQuery(`?${query}`);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.monthlyNetDesired).toBe(3_500_000);
+      expect(decoded?.annualReturnRate).toBe(4.5);
+      expect(decoded?.taxType).toBe('isa');
+    });
+
+    it('returns null for empty query', () => {
+      expect(decodeCashFlowQuery('')).toBeNull();
     });
   });
 });

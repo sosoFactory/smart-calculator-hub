@@ -9,6 +9,7 @@ export type CalculatorId =
   | 'part-time'
   | 'dividend'
   | 'goal'
+  | 'cashflow'
   | 'date';
 
 export type CalculatorCategory = 'finance' | 'lifestyle' | 'global';
@@ -121,6 +122,16 @@ export const CALCULATORS_LIST: CalculatorItem[] = [
     category: 'finance',
     status: 'active',
     keywords: ['목표', '목표자산', '역산', '은퇴', '10억', '노후', '월적립', '파이어족'],
+  },
+  {
+    id: 'cashflow',
+    name: '파이어 현금흐름 계산기',
+    shortName: '파이어 현금흐름',
+    description: '목표 월 실수령액과 예상 수익률 기반 필요 은퇴 총 원금 역산',
+    category: 'finance',
+    status: 'active',
+    badge: 'NEW',
+    keywords: ['파이어', '파이어족', '현금흐름', '은퇴', '트리니티', '4%룰', '배당', '월수령', '조기은퇴', '노후자금'],
   },
   {
     id: 'date',

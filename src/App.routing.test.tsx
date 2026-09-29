@@ -108,4 +108,17 @@ describe('Seam 2-1: React Router Navigation and Routing', () => {
     expect(await screen.findByText('디데이·날짜 연산', {}, { timeout: 10000 })).toBeInTheDocument();
     expect(await screen.findByText('목표일 또는 기념일 선택', {}, { timeout: 10000 })).toBeInTheDocument();
   }, 15000);
+
+  it('/cashflow 경로에서는 파이어 현금흐름 계산기 화면이 렌더링되어야 한다', async () => {
+    render(
+      <MemoryRouter initialEntries={['/cashflow']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    expect(screen.getAllByText('파이어 현금흐름 계산기').length).toBeGreaterThanOrEqual(1);
+    expect(await screen.findByText('현금흐름 역산 조건', {}, { timeout: 10000 })).toBeInTheDocument();
+    expect(await screen.findByText('필요 총 은퇴 원금', {}, { timeout: 10000 })).toBeInTheDocument();
+  }, 15000);
 });
+

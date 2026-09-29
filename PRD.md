@@ -1,7 +1,7 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.9.39  
-> **최종 갱신일**: 2026-09-25  
+> **버전**: v1.9.48  
+> **최종 갱신일**: 2026-09-29  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
 
@@ -19,6 +19,7 @@
    - 2.6 스마트 계산기 허브 메인 홈 화면 명세 (Home Dashboard)
    - 2.7 금융 시나리오 딥링크(Deep Link) 및 상태 공유 시스템
    - 2.8 전역 플로팅 공유 버튼 (Floating Share Button)
+   - 2.9 10대 전 계산기 딥링크(Deep Link) URL 쿼리 동기화 규격
 3. [계산기 모듈별 상세 기능 명세](#3-계산기-모듈별-상세-기능-명세)
    - 3.1 [금융/투자] 연복리 & 자산 성장 계산기 (`CompoundInterestApp` - 구현 완료)
    - 3.2 [생활/측정] 단위 변환기 (`UnitConverterApp` - 구현 완료)
@@ -28,7 +29,9 @@
    - 3.6 [생활/건강] BMI & 비만도 계산기 (`BmiApp` - 구현 완료)
    - 3.7 [금융/투자] 목표 자산 역산 계산기 (`GoalApp` - 구현 완료)
    - 3.8 [금융/급여] 알바 급여 & 주휴수당 계산기 (`PartTimeApp` - 구현 완료)
-   - 3.9 향후 확장 예정 모듈 (Roadmap)
+   - 3.9 [생활/일정] 날짜 & 디데이 계산기 (`DateApp` - 구현 완료)
+   - 3.10 [금융/투자] 파이어 현금흐름 계산기 (`CashFlowApp` - 신규 구현)
+   - 3.11 향후 확장 예정 모듈 및 TODO (Roadmap)
 4. [데이터 모델 (Data Models)](#4-데이터-모델-data-models)
    - 4.0 사이트 전역 설정 모델 (`src/config/site.ts`)
    - 4.1 글로벌 네비게이션 모델 (`src/types/navigation.ts`)
@@ -40,6 +43,8 @@
    - 4.7 BMI 및 신체 계측 데이터 모델 (`src/types/bmi.ts`)
    - 4.8 목표 자산 역산 데이터 모델 (`src/types/goal.ts`)
    - 4.9 알바 급여 & 주휴수당 데이터 모델 (`src/types/partTime.ts`)
+   - 4.10 날짜 & 디데이 계산 데이터 모델 (`src/types/date.ts`)
+   - 4.11 파이어 현금흐름 데이터 모델 (`src/types/cashFlow.ts`)
 5. [기술 스택 및 아키텍처](#5-기술-스택-및-아키텍처)
 6. [비기능적 요구사항 및 품질 검증 기준](#6-비기능적-요구사항-및-품질-검증-기준)
 7. [검색엔진 최적화 (SEO) 전략 및 웹 분석 명세](#7-검색엔진-최적화-seo-전략-및-웹-분석-명세)
@@ -187,6 +192,9 @@ src/
 │   ├── bmi-calculator/              # BMI & 비만도 측정 모듈
 │   │   ├── components/              # BmiForm, BmiSummaryCards, BmiGaugeCard, BmiInfoCard
 │   │   └── BmiApp.tsx               # BMI 계산기 메인 뷰
+│   ├── cashflow-calculator/         # 파이어 현금흐름 역산 모듈
+│   │   ├── components/              # CashFlowForm, CashFlowSummaryCards, CashFlowCharts, CashFlowInfoCard
+│   │   └── CashFlowApp.tsx          # 파이어 현금흐름 계산기 메인 뷰
 │   ├── compound-interest/           # 연복리 & 자산 성장 계산기 모듈
 │   │   ├── components/              # CalculatorForm, SummaryCards, ChartDashboard, DataTable, ComparisonView 등
 │   │   └── CompoundInterestApp.tsx  # 연복리 계산기 메인 뷰
@@ -249,6 +257,7 @@ src/
 ├── types/
 │   ├── bmi.ts                       # BMI 및 신체 계측 타입
 │   ├── calculator.ts                # 연복리 계산 타입
+│   ├── cashFlow.ts                  # 파이어 현금흐름 계산 타입
 │   ├── exchange.ts                  # 환율 계산 타입
 │   ├── goal.ts                      # 목표 자산 역산 계산 타입
 │   ├── loan.ts                      # 대출 이자 계산 타입
@@ -258,6 +267,7 @@ src/
 └── utils/
     ├── bmiCalculator.ts             # BMI 및 KSSO 기준 판정 로직
     ├── calculator.ts                # 복리 연산 비즈니스 로직
+    ├── cashFlowCalculator.ts        # 파이어 현금흐름 및 필요 원금 역산 로직
     ├── deepLink.ts                  # URL 쿼리 파라미터 딥링크 인코딩/디코딩 로직
     ├── exchangeCalculator.ts        # 환율 및 우대율 연산 로직
     ├── formatters.ts                # 통화, 한글 단위, 백분율 포매터
@@ -392,7 +402,7 @@ src/
        - 현재 URL 클립보드 자동 복사 (`navigator.clipboard.writeText`).
        - shadcn/ui Toast 배너로 *"공유 링크가 복사되었습니다"* 안내 팝업.
 
-### 2.9 9대 전 계산기 딥링크(Deep Link) URL 쿼리 동기화 규격 (`src/utils/deepLink.ts`)
+### 2.9 10대 전 계산기 딥링크(Deep Link) URL 쿼리 동기화 규격 (`src/utils/deepLink.ts`)
 - **도입 목적**:
   - 사용자가 계산기에서 입력한 값을 실시간으로 브라우저 URL 쿼리 파라미터에 동기화(`window.history.replaceState`)하여, 히스토리 스택을 오염시키지 않고 페이지 새로고침 시에도 입력 상태를 100% 보존하며 플로팅 공유 버튼(FAB)을 통해 타인에게 계산 결과를 온전히 전달.
 - **계산기별 쿼리 파라미터 표준 규격**:
@@ -405,6 +415,7 @@ src/
   7. **단위 변환기 (`/unit`)**: `category`(변환카테고리), `fromVal`(입력수치), `fromUnit`(출발단위), `toUnit`(도착단위)
   8. **환율 계산기 (`/exchange`)**: `from`(출발통화), `to`(도착통화), `amount`(금액), `spread`(우대율)
   9. **날짜 & 디데이 (`/date`)**: `tab`(활성탭: dday/diff/age), `target`(기준일), `unit`(연산단위), `amount`(연산수량), `op`(연산방향), `start`(시작일), `end`(종료일), `birth`(생년월일)
+  10. **파이어 현금흐름 (`/cashflow`)**: `net`(목표월수령액), `rate`(수익률), `tax`(과세유형)
 
 ---
 
@@ -622,7 +633,57 @@ src/
   - 3단 서브 요약 지표 카드 및 주요 기념일/상세 정보 테이블.
   - 날짜 상식 안내 카드 (`DateInfoCard`): 양력/음력과 윤달의 원리, 만 나이 통일법(2023), 주말 제외 영업일과 근로일수 상식.
 
-### 3.10 향후 확장 예정 모듈 및 TODO (Roadmap)
+### 3.10 [금융/투자] 파이어 현금흐름 계산기 (`CashFlowApp` - 신규 구현)
+- **도입 목적 및 배경**:
+  - 파이어족(FIRE, Financial Independence, Retire Early) 및 은퇴 생활자, 배당 생활자를 위해 목표로 하는 **월 세후 실수령액**과 **예상 연 수익률(배당률)**, **과세 체계**를 바탕으로 은퇴에 필요한 **총 자산(필요 원금)을 역산**하고, 연간/월간 현금흐름과 세금 부담을 시뮬레이션하는 전문 금융 계산기.
+  - 트리니티 대학교 연구진의 '트리니티 4% 룰(Trinity 4% Rule)' 및 한국의 배당소득세(15.4%), 금융소득종합과세(2,000만 원 초과), 절세계좌(ISA 9.9%) 체계를 정밀하게 반영.
+- **핵심 비즈니스 수학 로직 (Mathematical Logic)**:
+  - **연간 목표 세후 실수령액**:
+    $$A_{net} = \text{monthlyNetDesired} \times 12$$
+  - **연간 필요 세전 수익금**:
+    $$A_{gross} = \frac{A_{net}}{1 - \text{taxRate}}$$
+  - **필요 총 은퇴 원금 ($P$)**:
+    $$P = \frac{A_{gross}}{r} = \frac{A_{net}}{r \times (1 - \text{taxRate})}$$
+    (단, $r$은 연 예상 수익률 및 배당률, $\text{taxRate}$는 선택된 과세율)
+  - **세후 실효 연 수익률 ($r_{net}$)**:
+    $$r_{net} = r \times (1 - \text{taxRate})$$
+  - **연간 예상 세금**:
+    $$\text{Tax}_{annual} = A_{gross} - A_{net}$$
+  - **월간 환산 지표**:
+    - 월 세전 수익금: $A_{gross} / 12$
+    - 월 예상 세금: $\text{Tax}_{annual} / 12$
+  - **금융소득종합과세 판정 플래그**:
+    - $A_{gross} > 20,000,000$ (연 2,000만 원 초과 시 종합과세 및 건보료 피부양자 자격 변동 안내 배너 자동 활성화)
+  - **수익률 민감도 분석 배열 (Sensitivity Analysis)**:
+    - 연 수익률 2.0%부터 10.0%까지 1.0%p 단위(2%, 3%, 4%, 5%, 6%, 7%, 8%, 9%, 10%)로 각 수익률별 필요 은퇴 원금을 산출하여 비교 데이터 제공.
+- **입력 폼 표준 규격 (Ghost Form Standards)**:
+  - **목표 수령액 (`NumericInput`)**: 월 세후 실수령액 원 단위 입력창, 기본값 `3,000,000원`, 프리셋 버튼 칩(`+50만`, `+100만`, `+200만`, `+300만`, `+500만`), 초기화 시 3,000,000원으로 복원.
+  - **예상 연 수익률 / 배당률 (`Slider` + `Input`)**: 풀 와이드 슬라이더(1.0% ~ 20.0%, 0.1% 단위) + 직접 입력창, 기본값 `4.0%`, **파이어 4% 룰 프리셋 칩**(`3.0% (초보수적)`, `4.0% (파이어 표준)`, `5.0% (중립)`, `7.0% (적극)`).
+  - **과세 체계 선택 (`SelectableChip` 3분할 대칭 그리드)**:
+    - `일반과세 (15.4%)` (기본값)
+    - `ISA 절세 (9.9%)`
+    - `비과세 (0%)`
+- **결과 대시보드 표준 규격 (Ghost Dashboard Standards)**:
+  - **메인 하이라이트 카드 (Primary Highlight Card)**:
+    - **필요 총 원금** 대형 타이포 + 일렉트릭 라임 강조 + 한글 금액 표기(예: `10억 6,383만 원`) + 우상단 표준 원클릭 결과 복사.
+    - 배지: 목표 월 세후 실수령액 및 선택한 과세율 요약.
+  - **3단 서브 요약 지표 카드**:
+    - `연간 세전 수익금`: 필요한 총 연간 수익금액 (예: `4,255만 원`).
+    - `연간 예상 세금`: 선택한 세율에 따른 연간 세금액 (예: `655만 원`).
+    - `세후 실효 수익률`: 세금을 공제한 실제 자산 수익률 (예: `3.38%`).
+  - **금융소득종합과세 알림 배너**:
+    - 연간 세전 수익금 2,000만 원 초과 시, 종합과세(타 소득 합산 누진세율 6%~45%) 및 건강보험료 지역가입자 부과/피부양자 박탈 가능성을 안내하는 경고 및 팁 배너 노출.
+  - **시각화 차트 대시보드 (`CashFlowCharts`)**:
+    - **수익률별 필요 원금 비교 막대차트 (`BarChart`)**: 2%~10% 수익률별 필요 원금을 비교하고 현재 사용자가 선택한 수익률 구간을 일렉트릭 라임으로 하이라이트.
+    - **세전 수익 구성비 도넛차트 (`DonutChart`)**: 세후 실수령액 vs 연간 세금 비중 시각화.
+  - **주기별 상세 명세 분석표 (`Table`)**:
+    - 구분(월간 / 연간), 세전 수익금, 예상 세금, 세후 실수령액, 실효 수익률 대조.
+  - **파이어 실전 금융 가이드 패널 (`CashFlowInfoCard`)**:
+    - 1) 미국 트리니티 대학교 연구진의 '트리니티 4% 룰' 원리와 성공 확률(주식 75% + 채권 25% 포트폴리오 기준).
+    - 2) 한국형 은퇴 설계 유의점: 배당소득세(15.4%) 차감, 금융소득종합과세(2,000만 원 초과) 및 건강보험료 피부양자 자격 유지 기준(연 2,000만 원 이하).
+    - 3) 절세 계좌(ISA, 연금저축펀드, IRP)를 활용하여 실효 세부담을 낮추고 필요 은퇴 원금을 줄이는 실전 팁.
+
+### 3.11 향후 확장 예정 모듈 및 TODO (Roadmap)
 - **[TODO] BMI 종합 헬스케어 확장 (기초대사량 BMR & 하루 권장 칼로리 TDEE)**:
   - 활동량 수준(좌식 생활, 가벼운 활동, 보통 활동, 격렬한 활동 등) 선택 옵션 추가.
   - Mifflin-St Jeor 공식을 적용한 기초대사량(BMR) 산출.
@@ -1108,6 +1169,37 @@ export interface AgeResult {
   zodiac: string;           // 12간지 띠 (예: "용띠", "호랑이띠")
   horoscope: string;        // 별자리 (예: "물병자리", "사자자리")
   daysToNextBirthday: number;// 다음 생일까지 남은 D-day
+}
+```
+
+### 4.11 파이어 현금흐름 데이터 모델 (`src/types/cashFlow.ts`)
+```typescript
+export type CashFlowTaxType = 'normal' | 'isa' | 'none';
+
+export interface CashFlowInput {
+  monthlyNetDesired: number;   // 목표 월 세후 실수령액 (원, 기본 3,000,000원)
+  annualReturnRate: number;    // 예상 연 수익률/배당률 (%, 1.0 ~ 20.0, 기본 4.0%)
+  taxType: CashFlowTaxType;    // 과세 체계: 일반과세(15.4%) | ISA(9.9%) | 비과세(0%)
+}
+
+export interface SensitivityItem {
+  rate: number;                // 수익률 (%)
+  requiredCapital: number;     // 해당 수익률에서의 필요 원금 (원)
+  isCurrent: boolean;          // 현재 선택된 수익률 여부
+}
+
+export interface CashFlowCalculationResult {
+  monthlyNet: number;          // 월 세후 실수령액
+  annualNet: number;           // 연 세후 실수령액
+  monthlyGross: number;        // 월 세전 필요 수익금
+  annualGross: number;         // 연 세전 필요 수익금
+  monthlyTax: number;          // 월 예상 세금
+  annualTax: number;           // 연 예상 세금
+  taxRatePercent: number;      // 적용 세율 (15.4, 9.9, 0)
+  effectiveNetReturnRate: number; // 세후 실효 연 수익률 (%)
+  requiredCapital: number;     // 필요 총 은퇴 원금 (원)
+  isComprehensiveTaxWarning: boolean; // 연 세전 2,000만원 초과 여부
+  sensitivityList: SensitivityItem[]; // 2% ~ 10% 민감도 분석 리스트
 }
 ```
 
