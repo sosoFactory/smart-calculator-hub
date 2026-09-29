@@ -15,6 +15,9 @@ All AI coding assistants must follow this protocol. Read the applicable rule fil
   - Before writing or modifying any UI, always thoroughly refer to and comply with `./PRD.md` (especially Chapter 11 for Common Components), `./ghost.design.md`, and the `/shadcn` agent skill (`.agents/skills/shadcn/SKILL.md`).
   - Mandatory reuse of existing common components (`Tabs`, `FormHeader`, `SelectableChip`, `SegmentedControl`, `NumericInput`, `DatePicker`, `Calendar`, `Popover`, `InfoCard`, `SummaryCards`) instead of writing duplicate inline tags.
   - Never write raw Tailwind classes or inline styles into `./PRD.md`; keep PRD focused on functional logic and component architecture.
+- **MANDATORY TDD SKILL FOR LOGIC, FORMULAS & UTILITIES**:
+  - When implementing or modifying mathematical formulas, financial/medical/date calculation logic, business rules, or data transformation utilities, ALWAYS refer to and follow the `/tdd` agent skill (`.agents/skills/tdd/SKILL.md`).
+  - Strictly enforce the Red-Green-Refactor cycle: write unit tests first before writing production code, verify test failures, implement code to pass tests, and ensure 100% test suite pass rate without regressions.
 - Analyze the request and relevant code before implementing feature work, spec changes, or bug fixes.
 - Update ./PRD.md before changing code when the request affects the product or behavior.
 - Ask the user when the PRD impact is unclear, and wait for explicit approval before implementation.
@@ -43,9 +46,12 @@ All AI coding assistants must follow this protocol. Read the applicable rule fil
 
 ### Step 4: Implement and Verify
 
-- Implement according to the approved PRD and validate with relevant tests or build checks.
+- Implement according to the approved PRD.
+- For calculation algorithms, formulas, and utility logic, strictly apply the `/tdd` skill (`.agents/skills/tdd/SKILL.md`) test-first approach.
 - For frontend work, read [rules/frontend-mobile.md](rules/frontend-mobile.md) and validate the screen and UX flow before backend integration.
 - Batch jobs, ETL tasks, internal schedulers, CLI-only tools, and pure backend services may follow an API- or logic-first approach.
+- Validate with all unit tests (`npm test -- --run`) and production build checks (`npm run build`) before finalizing.
+
 
 ### Step 5: Final Review and Commit
 
