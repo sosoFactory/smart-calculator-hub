@@ -4,6 +4,7 @@ import { FormHeader } from '../../../components/common/FormHeader';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
 import { Button } from '../../../components/ui/button';
 import { DatePicker } from '../../../components/ui/date-picker';
+import { SubMetricCard } from '../../../components/common/SubMetricCard';
 import { Calendar, Copy, Check, Sparkles, Heart, Gift } from 'lucide-react';
 
 export const AgeTab: React.FC = () => {
@@ -144,47 +145,33 @@ export const AgeTab: React.FC = () => {
           </div>
         </div>
 
-        {/* 3단 서브 요약 지표 카드 (PRD 11.12 단일 규격) */}
+        {/* 3단 서브 요약 지표 카드 */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-ghost-ink-mute dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>살아온 날수</span>
-              <Heart className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink tabular-nums">
-              D+{result.daysLived.toLocaleString()}일
-            </div>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate">
-              출생 당일을 1일로 기산
-            </p>
-          </div>
+          <SubMetricCard
+            label="살아온 날수"
+            icon={Heart}
+            iconColor="rose"
+            value={`D+${result.daysLived.toLocaleString()}일`}
+            description="출생 당일을 1일로 기산"
+          />
 
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-ghost-ink-mute dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>다음 생일까지</span>
-              <Gift className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink tabular-nums">
-              {result.daysToNextBirthday === 0 ? '오늘 생일!' : `D-${result.daysToNextBirthday}`}
-            </div>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate">
-              다가오는 생일 D-day
-            </p>
-          </div>
+          <SubMetricCard
+            label="다음 생일까지"
+            icon={Gift}
+            iconColor="indigo"
+            badge={result.daysToNextBirthday === 0 ? '축하합니다' : undefined}
+            badgeColor="emerald"
+            value={result.daysToNextBirthday === 0 ? '오늘 생일!' : `D-${result.daysToNextBirthday}`}
+            description="다가오는 생일 D-day"
+          />
 
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-ghost-ink-mute dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>띠 / 별자리</span>
-              <Sparkles className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink">
-              {result.zodiac} • {result.horoscope}
-            </div>
-
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate">
-              12간지 및 서양 12성좌
-            </p>
-          </div>
+          <SubMetricCard
+            label="띠 / 별자리"
+            icon={Sparkles}
+            iconColor="amber"
+            value={`${result.zodiac} • ${result.horoscope}`}
+            description="12간지 및 서양 12성좌"
+          />
         </div>
       </div>
     </div>

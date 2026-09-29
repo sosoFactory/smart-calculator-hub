@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BmiResult } from '../../../types/bmi';
 import { Button } from '../../../components/ui/button';
+import { SubMetricCard } from '../../../components/common/SubMetricCard';
 import { Copy, Check, Sparkles, Target, ShieldCheck, Scale } from 'lucide-react';
 
 interface BmiSummaryCardsProps {
@@ -53,16 +54,6 @@ export const BmiSummaryCards: React.FC<BmiSummaryCardsProps> = ({ result }) => {
     }
   };
 
-  const getDiffColor = (status: 'maintain' | 'lose' | 'gain') => {
-    switch (status) {
-      case 'maintain':
-        return 'text-emerald-600 dark:text-[#d1ff19]';
-      case 'lose':
-        return 'text-rose-500 dark:text-rose-400';
-      case 'gain':
-        return 'text-blue-500 dark:text-blue-400';
-    }
-  };
 
   return (
     <div className="space-y-3">
@@ -134,74 +125,65 @@ export const BmiSummaryCards: React.FC<BmiSummaryCardsProps> = ({ result }) => {
       </div>
 
       {/* 2. 3대 핵심 서브 요약 카드 그리드 */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2.5 sm:gap-3">
-        {/* 1. 나의 적정 표준 체중 */}
-        <div className="@container p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs min-w-0 space-y-1">
-          <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute">
-            <span className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-sky-500" />
-              적정 표준 체중
-            </span>
-            <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone font-medium">
-              KSSO 표준
-            </span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tracking-tight flex items-baseline gap-0.5 tabular-nums">
-            <span>{result.idealWeight}</span>
-            <span className="text-xs font-semibold text-slate-500 dark:text-ghost-dark-ink-mute ml-0.5">kg</span>
-          </div>
-          <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-            신장 기준 권장 표준 몸무게
-          </p>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+        <SubMetricCard
+          label="적정 표준 체중"
+          icon={Target}
+          iconColor="indigo"
+          badge="KSSO 표준"
+          badgeColor="slate"
+          value={`${result.idealWeight}kg`}
+          description="신장 기준 권장 표준 몸무게"
+        />
 
-        {/* 2. 정상 체중 범위 */}
-        <div className="@container p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs min-w-0 space-y-1">
-          <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute">
-            <span className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-              정상 체중 범위
-            </span>
-            <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone font-medium">
-              BMI 18.5~22.9
-            </span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tracking-tight flex items-baseline gap-0.5 tabular-nums">
-            <span>{result.normalWeightMin} ~ {result.normalWeightMax}</span>
-            <span className="text-xs font-semibold text-slate-500 dark:text-ghost-dark-ink-mute ml-0.5">kg</span>
-          </div>
-          <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-            대한비만학회 정상 체중 구간
-          </p>
-        </div>
+        <SubMetricCard
+          label="정상 체중 범위"
+          icon={ShieldCheck}
+          iconColor="emerald"
+          badge="BMI 18.5~22.9"
+          badgeColor="emerald"
+          value={`${result.normalWeightMin} ~ ${result.normalWeightMax}kg`}
+          description="대한비만학회 정상 체중 구간"
+        />
 
-        {/* 3. 체중 조절 목표 */}
-        <div className="@container p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs min-w-0 space-y-1">
-          <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute">
-            <span className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <Scale className="w-3.5 h-3.5 text-amber-500" />
-              체중 조절 목표
-            </span>
-            <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone font-medium">
-              {result.weightDiffStatus === 'maintain' ? '정상 유지 중' : '권장 변화량'}
-            </span>
-          </div>
-          <div className={`text-base sm:text-lg font-bold tracking-tight flex items-baseline gap-0.5 tabular-nums ${getDiffColor(result.weightDiffStatus)}`}>
-            <span>
-              {result.weightDiffStatus === 'maintain'
-                ? '유지 중'
-                : result.weightDiffStatus === 'lose'
-                ? `-${result.weightDiff}`
-                : `+${result.weightDiff}`}
-            </span>
-            {result.weightDiffStatus !== 'maintain' && (
-              <span className="text-xs font-semibold text-slate-500 dark:text-ghost-dark-ink-mute ml-0.5">kg</span>
-            )}
-          </div>
-          <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-            {result.weightDiffStatus === 'maintain' ? '현재 정상 체중을 유지하세요' : '정상 체중 진입 권장치'}
-          </p>
-        </div>
+        <SubMetricCard
+          label="체중 조절 목표"
+          icon={Scale}
+          iconColor={
+            result.weightDiffStatus === 'maintain'
+              ? 'emerald'
+              : result.weightDiffStatus === 'lose'
+              ? 'rose'
+              : 'indigo'
+          }
+          badge={result.weightDiffStatus === 'maintain' ? '정상 유지 중' : '권장 변화량'}
+          badgeColor={
+            result.weightDiffStatus === 'maintain'
+              ? 'emerald'
+              : result.weightDiffStatus === 'lose'
+              ? 'rose'
+              : 'indigo'
+          }
+          value={
+            result.weightDiffStatus === 'maintain'
+              ? '유지 중'
+              : result.weightDiffStatus === 'lose'
+              ? `-${result.weightDiff}kg`
+              : `+${result.weightDiff}kg`
+          }
+          valueColor={
+            result.weightDiffStatus === 'maintain'
+              ? 'emerald'
+              : result.weightDiffStatus === 'lose'
+              ? 'rose'
+              : 'indigo'
+          }
+          description={
+            result.weightDiffStatus === 'maintain'
+              ? '현재 정상 체중을 유지하세요'
+              : '정상 체중 진입 권장치'
+          }
+        />
       </div>
     </div>
   );

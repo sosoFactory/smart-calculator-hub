@@ -4,6 +4,7 @@ import { FormHeader } from '../../../components/common/FormHeader';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
 import { Button } from '../../../components/ui/button';
 import { DatePicker } from '../../../components/ui/date-picker';
+import { SubMetricCard } from '../../../components/common/SubMetricCard';
 import { Calendar, Copy, Check, Briefcase, SunMedium, CalendarRange } from 'lucide-react';
 
 export const DateDiffTab: React.FC = () => {
@@ -211,46 +212,35 @@ export const DateDiffTab: React.FC = () => {
           </div>
         </div>
 
-        {/* 3단 서브 요약 지표 카드 (PRD 11.12 단일 규격) */}
+        {/* 3단 서브 요약 지표 카드 */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-ghost-ink-mute dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>평일 근무일 (영업일)</span>
-              <Briefcase className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink tabular-nums">
-              {result.businessDays.toLocaleString()}일
-            </div>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate">
-              주말(토/일) 제외 순수 근무일
-            </p>
-          </div>
+          <SubMetricCard
+            label="평일 근무일"
+            icon={Briefcase}
+            iconColor="indigo"
+            badge="영업일"
+            badgeColor="indigo"
+            value={`${result.businessDays.toLocaleString()}일`}
+            description="주말(토/일) 제외 순수 근무일"
+          />
 
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-ghost-ink-mute dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>주말 일수 (토/일)</span>
-              <SunMedium className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink tabular-nums">
-              {result.weekendDays.toLocaleString()}일
-            </div>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate">
-              휴일 토요일 및 일요일
-            </p>
-          </div>
+          <SubMetricCard
+            label="주말 일수"
+            icon={SunMedium}
+            iconColor="amber"
+            badge="토/일"
+            badgeColor="amber"
+            value={`${result.weekendDays.toLocaleString()}일`}
+            description="휴일 토요일 및 일요일"
+          />
 
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-ghost-ink-mute dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>총 주차(Weeks)</span>
-              <CalendarRange className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink tabular-nums">
-              {result.weeks}주 {result.totalDays % 7}일
-            </div>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate">
-              7일 단위 주차 환산
-            </p>
-          </div>
+          <SubMetricCard
+            label="총 주차 (Weeks)"
+            icon={CalendarRange}
+            iconColor="emerald"
+            value={`${result.weeks}주 ${result.totalDays % 7}일`}
+            description="7일 단위 주차 환산"
+          />
         </div>
       </div>
     </div>

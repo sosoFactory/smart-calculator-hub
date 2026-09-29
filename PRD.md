@@ -1562,12 +1562,24 @@ export interface CashFlowCalculationResult {
     - 한글 독음: 인라인 텍스트 표기 (예: N억 N만 원).
   - **하단 인포 바**:
     - 컬러 이모지를 완전 배제하고 단정한 라임 텍스트 헤더(`건강 가이드:`, `안내:`)로 일치.
-- **3. 3단 서브 요약 카드 단일 규격**:
-  - **그리드**: 반응형 유동 3단 카드 그리드 레이아웃.
-  - **개별 카드**: 표준 라운드 및 경계선이 적용된 Ghost 서피스 카드.
-  - **상단 1행**: 소제목 및 메타 지표 (대문자 트래킹).
-  - **본문 2행**: 볼드 수치 및 단위.
-  - **하단 3행**: 부가 설명 텍스트.
+- **3. 3단 서브 요약 카드 공통 컴포넌트 규격 (`src/components/common/SubMetricCard.tsx`)**:
+  - **도입 목적**: 계산기마다 제각각이던 아이콘 위치(좌/우), 배지 위치, 텍스트 상하 순서, 색상(빨강/초록/파랑), 패딩 및 여백을 단일 공통 컴포넌트로 100% 일원화.
+  - **그리드 레이아웃**: `grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3` 전 계산기 동일 적용.
+  - **카드 컨테이너**: `p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1`.
+  - **1행 (헤더)**:
+    - **좌측**: 표준 14px Lucide 아이콘(`w-3.5 h-3.5`) + 소제목 라벨(`text-[11px] font-bold uppercase tracking-wider`).
+    - **우측**: 선택적 보조 배지 또는 지표 뱃지(예: `86.9시간`, `원금의 63.2%`, `유급 17.4시간`).
+  - **2행 (메인 수치)**:
+    - 볼드 타이포그래피(`text-base sm:text-lg font-bold tabular-nums`).
+    - 통화 표기 표준화: `₩` 전치 기호를 지양하고 대한민국 표준인 `N원` 후치 표기로 일원화.
+    - 시맨틱 색상 테마:
+      - `default`: 일반 수치/원금/급여 (`text-ghost-ink dark:text-ghost-dark-ink`)
+      - `rose`: 공제액/세금/대출이자/손실 (`text-rose-600 dark:text-rose-400`)
+      - `emerald`: 순수익/주휴수당/비과세 (`text-emerald-600 dark:text-emerald-400`)
+      - `indigo`: 공제비율/수익기여도 (`text-indigo-600 dark:text-indigo-400`)
+  - **3행 (하단 캡션)**:
+    - 보조 설명 텍스트(`text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate`).
+    - 한글 독음(예: N억 N만 원), 계산 공식, 부가 안내 등을 일관되게 최하단 3행에 배치하여 계층 구조 통일.
 
 ### 11.13 shadcn/ui 기반 하이브리드 공통 캘린더 및 데이트피커 컴포넌트 표준 규격 (`Calendar`, `Popover`, `DatePicker`)
 - **도입 목적**:

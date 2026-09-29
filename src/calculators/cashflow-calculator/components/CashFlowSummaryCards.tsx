@@ -3,6 +3,7 @@ import { CashFlowCalculationResult } from '../../../types/cashFlow';
 import { formatCurrency, formatKoreanCurrency } from '../../../utils/formatters';
 import { Flame, Coins, TrendingUp, AlertTriangle, Check, Copy, Percent } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
+import { SubMetricCard } from '../../../components/common/SubMetricCard';
 
 interface CashFlowSummaryCardsProps {
   result: CashFlowCalculationResult;
@@ -101,48 +102,35 @@ ${isComprehensiveTaxWarning ? '※ 연 금융소득 2,000만원 초과로 금융
       </div>
 
       {/* 2. 3단 서브 요약 지표 카드 */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {/* 연간 세전 수익금 */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1.5 transition-colors">
-          <div className="flex items-center gap-1.5 text-xs text-[#64748b] dark:text-ghost-dark-ink-soft">
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
-            <span>연간 세전 필요 수익</span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-            {formatKoreanCurrency(annualGross)}
-          </div>
-          <div className="text-[11px] text-[#94a3b8] dark:text-ghost-dark-ink-mute tabular-nums">
-            월 {formatCurrency(monthlyGross)}
-          </div>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+        <SubMetricCard
+          label="연간 세전 필요 수익"
+          icon={TrendingUp}
+          iconColor="emerald"
+          badge={`월 ${formatCurrency(monthlyGross)}`}
+          badgeColor="slate"
+          value={formatCurrency(annualGross)}
+          description={`한글 독음: ${formatKoreanCurrency(annualGross)}`}
+        />
 
-        {/* 연간 예상 세금 */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1.5 transition-colors">
-          <div className="flex items-center gap-1.5 text-xs text-[#64748b] dark:text-ghost-dark-ink-soft">
-            <Coins className="w-3.5 h-3.5 text-rose-500" />
-            <span>연간 예상 세금 ({taxRatePercent}%)</span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-rose-600 dark:text-rose-400 tabular-nums">
-            {formatKoreanCurrency(annualTax)}
-          </div>
-          <div className="text-[11px] text-[#94a3b8] dark:text-ghost-dark-ink-mute tabular-nums">
-            월 {formatCurrency(monthlyTax)}
-          </div>
-        </div>
+        <SubMetricCard
+          label="연간 예상 세금"
+          icon={Coins}
+          iconColor="rose"
+          badge={`${taxRatePercent}%`}
+          badgeColor="rose"
+          value={formatCurrency(annualTax)}
+          valueColor="rose"
+          description={`월 ${formatCurrency(monthlyTax)} (${formatKoreanCurrency(annualTax)})`}
+        />
 
-        {/* 세후 실효 연 수익률 */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1.5 transition-colors">
-          <div className="flex items-center gap-1.5 text-xs text-[#64748b] dark:text-ghost-dark-ink-soft">
-            <Percent className="w-3.5 h-3.5 text-[#112220] dark:text-[#d1ff19]" />
-            <span>세후 실효 수익률</span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-            연 {effectiveNetReturnRate.toFixed(2)}%
-          </div>
-          <div className="text-[11px] text-[#94a3b8] dark:text-ghost-dark-ink-mute">
-            세금 차감 후 실질 연수익
-          </div>
-        </div>
+        <SubMetricCard
+          label="세후 실효 수익률"
+          icon={Percent}
+          iconColor="indigo"
+          value={`연 ${effectiveNetReturnRate.toFixed(2)}%`}
+          description="세금 차감 후 실질 연수익"
+        />
       </div>
 
       {/* 3. 금융소득종합과세 안내 배너 (연 2,000만원 초과 시) */}

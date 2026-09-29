@@ -3,6 +3,31 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.50] - 2026-09-29
+
+### refactor: 전 계산기 결과 하단 3단 서브 요약 지표 공통 컴포넌트(`SubMetricCard`) 구축 및 레이아웃·색상·계층 일관성 전면 통일
+- **공통 컴포넌트 `SubMetricCard` 신설 (`src/components/common/SubMetricCard.tsx`)**:
+  - 메인 다크 카드 직하단에 위치하는 3단 서브 요약 정보 카드들의 제각각이던 레이아웃, 아이콘 위치(좌/우 혼용), 색상, 뱃지 위치, 위아래 갭/패딩을 완벽히 일원화.
+  - **표준 3행 계층 규격 확립**:
+    - **1행 (헤더)**: 좌측 아이콘(`w-3.5 h-3.5`) + 라벨(`text-[11px] font-bold uppercase tracking-wider text-ghost-ink-mute`), 우측 선택적 뱃지(`badge`, `badgeColor`).
+    - **2행 (메인 수치)**: 굵은 볼드 폰트(`text-base sm:text-lg font-bold tabular-nums text-ghost-ink`), 시맨틱 컬러(`rose`, `emerald`, `indigo`, `amber`, `slate`) 옵션 지원.
+    - **3행 (하단 캡션)**: 한글 독음(N억 N만 원), 계산 산식, 보조 설명을 일관된 1줄 말줄임(`text-[11px] text-ghost-ink-mute truncate`)으로 배치.
+  - 화폐 표기를 영문 기호(`₩`) 대신 대한민국 표준 규격인 후치 `원` 표기로 일원화.
+- **전 계산기 대시보드 100% 적용**:
+  - `대출 계산기 (LoanSummaryCards.tsx)`: 총 상환금액, 총 대출이자, 대출 원금 적용.
+  - `연봉 계산기 (SalarySummaryCards.tsx)`: 세전 월 환산액, 월 총 공제액, 총 공제 비율 적용.
+  - `목표자산 계산기 (GoalSummaryCards.tsx)`: 총 투입 원금, 예상 복리 수익, 이자/수익 기여도 적용 (화폐 기호 `원` 통일).
+  - `알바 계산기 (PartTimeSummaryCards.tsx)`: 기본 급여, 주휴수당, 세금 및 공제액 적용 및 '급여 수령 기준' 라벨 시인성 개선.
+  - `연복리 계산기 (SummaryCards.tsx)`: 총 투자원금, 세후 순이자/순손실, 이자 소득세 적용.
+  - `파이어 현금흐름 계산기 (CashFlowSummaryCards.tsx)`: 연간 세전 필요 수익, 연간 예상 세금, 세후 실효 수익률 적용.
+  - `날짜 계산기 디데이 탭 (DDayTab.tsx)`: 오늘 기준 디데이, 적용된 연산 수식, 도달 요일 적용.
+  - `날짜 계산기 간격 탭 (DateDiffTab.tsx)`: 평일 근무일, 주말 일수, 총 주차 적용.
+  - `날짜 계산기 만 나이 탭 (AgeTab.tsx)`: 살아온 날수, 다음 생일까지, 띠/별자리 적용.
+  - `BMI 계산기 (BmiSummaryCards.tsx)`: 적정 표준 체중, 정상 체중 범위, 체중 조절 목표 적용.
+- **TDD 단위 테스트 구축 및 검증 완비**:
+  - `SubMetricCard.test.tsx` 단위 테스트 작성 및 전체 33개 테스트 스위트 (193개 테스트) 100% 통과.
+  - PRD Section 11.12에 `SubMetricCard` 설계 사양 공식 등재.
+
 ## [1.9.49] - 2026-09-29
 
 ### refactor: 전 계산기 하단 추가정보 카드(InfoCard) 풀위드 단독 배치 통일 및 Ghost 디자인 토큰 전면 정돈

@@ -9,6 +9,7 @@ import {
 import { Wallet, PiggyBank, ArrowUpRight, ShieldAlert, Copy, Check } from 'lucide-react';
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
+import { SubMetricCard } from '../../../components/common/SubMetricCard';
 import {
   Tooltip,
   TooltipContent,
@@ -162,64 +163,37 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
 
       {/* 3단 서브 지표 그리드 (비교 모드에서는 좌우 분할 공간 협소 방지를 위해 1열 세로 배치, 단일 모드에서는 sm 3열) */}
       <div className={title ? "grid grid-cols-1 gap-2.5" : "grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3"}>
-        {/* 총 투자 원금 */}
-        <div className="p-3.5 sm:p-4 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface shadow-2xs space-y-1">
-          <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute">
-            <span className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <PiggyBank className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-              총 투자원금
-            </span>
-            <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone font-medium">
-              {formatKoreanUnit(result.totalPrincipal)}
-            </span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-            {formatCurrency(result.totalPrincipal)}
-          </div>
-          <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-            원금 비중 {principalRatio.toFixed(1)}%
-          </p>
-        </div>
+        <SubMetricCard
+          label="총 투자원금"
+          icon={PiggyBank}
+          iconColor="slate"
+          badge={formatKoreanUnit(result.totalPrincipal)}
+          badgeColor="slate"
+          value={formatCurrency(result.totalPrincipal)}
+          description={`원금 비중 ${principalRatio.toFixed(1)}%`}
+        />
 
-        {/* 세후 총 이자 / 손익 */}
-        <div className="p-3.5 sm:p-4 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface shadow-2xs space-y-1">
-          <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute">
-            <span className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <ArrowUpRight className={`w-3.5 h-3.5 ${isLoss ? 'text-rose-500 rotate-90' : 'text-emerald-500 dark:text-emerald-400'}`} />
-              {isLoss ? '순손실액' : '세후 순이자'}
-            </span>
-            <span className={`text-[11px] font-medium ${
-              isLoss ? 'text-rose-700 dark:text-rose-300' : 'text-emerald-700 dark:text-emerald-300'
-            }`}>
-              {formatPercent(result.netReturnRate, true)}
-            </span>
-          </div>
-          <div className={`text-base sm:text-lg font-bold ${isLoss ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'} tabular-nums`}>
-            {formatCurrency(result.netInterest)}
-          </div>
-          <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-            {isLoss ? '투자 원금 대비 손실' : `원금 대비 ${formatMultiple(result.principalMultiple)}`}
-          </p>
-        </div>
+        <SubMetricCard
+          label={isLoss ? '순손실액' : '세후 순이자'}
+          icon={ArrowUpRight}
+          iconColor={isLoss ? 'rose' : 'emerald'}
+          badge={formatPercent(result.netReturnRate, true)}
+          badgeColor={isLoss ? 'rose' : 'emerald'}
+          value={formatCurrency(result.netInterest)}
+          valueColor={isLoss ? 'rose' : 'emerald'}
+          description={isLoss ? '투자 원금 대비 손실' : `원금 대비 ${formatMultiple(result.principalMultiple)}`}
+        />
 
-        {/* 이자 소득세 */}
-        <div className="p-3.5 sm:p-4 rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface shadow-2xs space-y-1">
-          <div className="flex items-center justify-between text-[#64748b] dark:text-ghost-dark-ink-mute">
-            <span className="text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
-              이자 소득세
-            </span>
-            <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone font-medium">
-              세전 {formatCurrency(result.grossInterest)}
-            </span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-rose-600 dark:text-rose-400 tabular-nums">
-            {formatCurrency(result.taxAmount)}
-          </div>
-          <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-            이자 과세율 15.4% 기준
-          </p>
-        </div>
+        <SubMetricCard
+          label="이자 소득세"
+          icon={ShieldAlert}
+          iconColor="rose"
+          badge={`세전 ${formatCurrency(result.grossInterest)}`}
+          badgeColor="slate"
+          value={formatCurrency(result.taxAmount)}
+          valueColor="rose"
+          description="이자 과세율 15.4% 기준"
+        />
       </div>
     </div>
   );

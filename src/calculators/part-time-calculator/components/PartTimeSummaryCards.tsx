@@ -4,6 +4,7 @@ import { formatKoreanUnit, formatNumberWithWon } from '../../../utils/formatters
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { SegmentedControl, SegmentedOption } from '../../../components/ui/segmented-control';
+import { SubMetricCard } from '../../../components/common/SubMetricCard';
 import { Copy, Check, Sparkles, Clock, Calendar, ShieldCheck, AlertCircle } from 'lucide-react';
 
 interface PartTimeSummaryCardsProps {
@@ -68,7 +69,7 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
     <div className="@container space-y-3">
       {/* 보기 전환 토글 (월 기준 / 주 기준) */}
       <div className="flex items-center justify-between pb-1">
-        <span className="text-xs font-semibold text-ghost-dark-ink-soft dark:text-ghost-dark-ink-mute">
+        <span className="text-xs font-bold text-ghost-ink dark:text-ghost-dark-ink">
           급여 수령 기준
         </span>
         <div className="w-44">
@@ -176,64 +177,46 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
 
       {/* 2. 하단 3단 서브 요약 카드 */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-        {/* 카드 1: 기본급 */}
-        <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#64748b] dark:text-ghost-dark-ink-mute flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-blue-500" />
-              기본 급여
-            </span>
-            <span className="text-[11px] font-semibold text-slate-400 dark:text-ghost-dark-ink-stone tabular-nums">
-              {currentView.workHours.toFixed(1)}시간
-            </span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-            {formatNumberWithWon(currentView.baseWage)}
-          </div>
-          <div className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-            {input.hourlyWage.toLocaleString()}원 × {currentView.workHours.toFixed(1)}h
-          </div>
-        </div>
+        <SubMetricCard
+          label="기본 급여"
+          icon={Clock}
+          iconColor="indigo"
+          badge={`${currentView.workHours.toFixed(1)}시간`}
+          badgeColor="slate"
+          value={formatNumberWithWon(currentView.baseWage)}
+          description={`${input.hourlyWage.toLocaleString()}원 × ${currentView.workHours.toFixed(1)}h`}
+        />
 
-        {/* 카드 2: 주휴수당 */}
-        <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#64748b] dark:text-ghost-dark-ink-mute flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-emerald-500" />
-              주휴수당
-            </span>
-            <span className={`text-[11px] font-semibold tabular-nums ${isHolidayAllowanceEligible ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-400 dark:text-ghost-dark-ink-stone'}`}>
-              {isHolidayAllowanceEligible ? `유급 ${currentView.holidayAllowanceHours.toFixed(1)}시간` : '미발생'}
-            </span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-            {formatNumberWithWon(currentView.holidayAllowance)}
-          </div>
-          <div className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-            {isHolidayAllowanceEligible ? `${formatKoreanUnit(currentView.holidayAllowance)} 추가 지급` : '주 15시간 미만'}
-          </div>
-        </div>
+        <SubMetricCard
+          label="주휴수당"
+          icon={Calendar}
+          iconColor="emerald"
+          badge={isHolidayAllowanceEligible ? `유급 ${currentView.holidayAllowanceHours.toFixed(1)}시간` : '미발생'}
+          badgeColor={isHolidayAllowanceEligible ? 'emerald' : 'slate'}
+          value={formatNumberWithWon(currentView.holidayAllowance)}
+          description={isHolidayAllowanceEligible ? `${formatKoreanUnit(currentView.holidayAllowance)} 추가 지급` : '주 15시간 미만'}
+        />
 
-        {/* 카드 3: 세금 및 공제 */}
-        <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-[#64748b] dark:text-ghost-dark-ink-mute flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-rose-500" />
-              공제액 ({input.taxType === 'none' ? '0%' : input.taxType === 'freelancer' ? '3.3%' : '약 9.4%'})
-            </span>
-            <span className="text-[11px] font-semibold text-rose-500 dark:text-rose-400 tabular-nums">
-              {currentView.grossWage > 0
-                ? `${((currentView.taxAmount / currentView.grossWage) * 100).toFixed(1)}%`
-                : '0%'}
-            </span>
-          </div>
-          <div className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-            -{formatNumberWithWon(currentView.taxAmount)}
-          </div>
-          <div className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute truncate">
-            {input.taxType === 'none' ? '세금 미적용 (전액 수령)' : input.taxType === 'freelancer' ? '사업소득세 3.3%' : '4대 보험 근로자 부담분'}
-          </div>
-        </div>
+        <SubMetricCard
+          label={`공제액 (${input.taxType === 'none' ? '0%' : input.taxType === 'freelancer' ? '3.3%' : '약 9.4%'})`}
+          icon={ShieldCheck}
+          iconColor="rose"
+          badge={
+            currentView.grossWage > 0
+              ? `${((currentView.taxAmount / currentView.grossWage) * 100).toFixed(1)}%`
+              : '0%'
+          }
+          badgeColor="rose"
+          value={`-${formatNumberWithWon(currentView.taxAmount)}`}
+          valueColor="rose"
+          description={
+            input.taxType === 'none'
+              ? '세금 미적용 (전액 수령)'
+              : input.taxType === 'freelancer'
+              ? '사업소득세 3.3%'
+              : '4대 보험 근로자 부담분'
+          }
+        />
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { GoalCalculationResult } from '../../../types/goal';
-import { formatCurrency, formatKoreanCurrency } from '../../../utils/formatters';
+import { formatCurrency, formatKoreanCurrency, formatNumberWithWon } from '../../../utils/formatters';
 import { Target, Coins, TrendingUp, Percent, Copy, Check, Sparkles } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
+import { SubMetricCard } from '../../../components/common/SubMetricCard';
 
 interface GoalSummaryCardsProps {
   result: GoalCalculationResult;
@@ -159,63 +160,39 @@ export const GoalSummaryCards: React.FC<GoalSummaryCardsProps> = ({ result }) =>
 
 
       {/* 2. 3단 서브 요약 카드 (PRD 3.7: 총 투입 원금, 예상 복리 수익, 이자/수익 기여도) */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(185px,1fr))] gap-2.5 sm:gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
         {/* 1) 총 투입 원금 */}
-        <div className="bg-white dark:bg-ghost-dark-surface rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-3.5 sm:p-4 space-y-1 shadow-2xs">
-          <div className="flex items-center justify-between sm:justify-start gap-1.5 text-slate-500 dark:text-ghost-dark-ink-mute">
-            <div className="flex items-center gap-1.5">
-              <Coins className="w-3.5 h-3.5 text-sky-500 shrink-0" />
-              <span className="text-xs font-semibold">총 투입 원금</span>
-            </div>
-            <span className="sm:hidden text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone truncate">
-              {initialAmount > 0 ? '초기 자금 + 월 적립' : '순수 월 적립액'}
-            </span>
-          </div>
-          <p className="text-base sm:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-            {formatCurrency(totalPrincipal)}
-          </p>
-          <p className="hidden sm:block text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone truncate">
-            {initialAmount > 0 ? '초기 자금 + 월 적립' : '전액 순수 월 적립'}
-          </p>
-        </div>
+        <SubMetricCard
+          label="총 투입 원금"
+          icon={Coins}
+          iconColor="text-sky-500"
+          value={formatNumberWithWon(totalPrincipal)}
+          description={initialAmount > 0 ? '초기 자금 + 월 적립' : '순수 월 적립액'}
+        />
 
         {/* 2) 예상 복리 수익 */}
-        <div className="bg-white dark:bg-ghost-dark-surface rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-3.5 sm:p-4 space-y-1 shadow-2xs">
-          <div className="flex items-center justify-between sm:justify-start gap-1.5 text-slate-500 dark:text-ghost-dark-ink-mute">
-            <div className="flex items-center gap-1.5">
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-              <span className="text-xs font-semibold">예상 복리 수익</span>
-            </div>
-            <span className="sm:hidden text-[11px] text-emerald-600/80 dark:text-emerald-400/80 font-medium">
-              +{formatKoreanCurrency(totalInterest)}
-            </span>
-          </div>
-          <p className="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
-            +{formatCurrency(totalInterest)}
-          </p>
-          <p className="hidden sm:block text-[11px] text-emerald-600/80 dark:text-emerald-400/80 truncate font-medium">
-            복리 효과로 불어난 순이익
-          </p>
-        </div>
+        <SubMetricCard
+          label="예상 복리 수익"
+          icon={TrendingUp}
+          iconColor="text-emerald-500"
+          badge={`+${formatKoreanCurrency(totalInterest)}`}
+          badgeColor="emerald"
+          value={`+${formatNumberWithWon(totalInterest)}`}
+          valueColor="emerald"
+          description="복리 효과로 불어난 순이익"
+        />
 
-        {/* 3) 이자/수익 기여도 (PRD 3.7) */}
-        <div className="bg-white dark:bg-ghost-dark-surface rounded-xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-3.5 sm:p-4 space-y-1 shadow-2xs">
-          <div className="flex items-center justify-between sm:justify-start gap-1.5 text-slate-500 dark:text-ghost-dark-ink-mute">
-            <div className="flex items-center gap-1.5">
-              <Percent className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-              <span className="text-xs font-semibold">이자/수익 기여도</span>
-            </div>
-            <span className="sm:hidden text-[11px] text-indigo-600 dark:text-indigo-400 font-medium">
-              목표액의 {interestRatio}%
-            </span>
-          </div>
-          <p className="text-base sm:text-lg font-bold text-indigo-600 dark:text-indigo-400 tabular-nums">
-            {interestRatio}%
-          </p>
-          <p className="hidden sm:block text-[11px] text-slate-400 dark:text-ghost-dark-ink-stone truncate font-medium">
-            전체 목표 자산 중 복리 이자 비중
-          </p>
-        </div>
+        {/* 3) 이자/수익 기여도 */}
+        <SubMetricCard
+          label="이자/수익 기여도"
+          icon={Percent}
+          iconColor="text-indigo-500"
+          badge={`목표액의 ${interestRatio}%`}
+          badgeColor="indigo"
+          value={`${interestRatio}%`}
+          valueColor="indigo"
+          description="전체 목표 자산 중 복리 이자 비중"
+        />
       </div>
     </div>
   );

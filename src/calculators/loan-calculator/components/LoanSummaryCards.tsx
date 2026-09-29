@@ -3,6 +3,7 @@ import { RepaymentCalculationResult } from '../../../types/loan';
 import { formatKoreanLoanAmount } from '../../../utils/loanCalculator';
 import { TrendingDown, Sparkles, Copy, Check, CreditCard, Banknote, ShieldAlert, CircleDollarSign } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
+import { SubMetricCard } from '../../../components/common/SubMetricCard';
 
 interface LoanSummaryCardsProps {
   result: RepaymentCalculationResult;
@@ -148,72 +149,34 @@ export const LoanSummaryCards: React.FC<LoanSummaryCardsProps> = ({ result, loan
       </div>
 
       {/* 2. 3대 핵심 서브 요약 카드 그리드 (총 상환금액, 총 대출이자, 대출 원금) */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
         {/* 1. 총 상환금액 */}
-        <div className="@container p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs min-w-0">
-          <div className="flex flex-col @xs:flex-row @xs:items-center @xs:justify-between gap-1 @xs:gap-3">
-            <div>
-              <div className="flex items-center gap-1.5 text-[#64748b] dark:text-ghost-dark-ink-mute">
-                <Banknote className="w-3.5 h-3.5" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">
-                  총 상환금액
-                </span>
-              </div>
-              <p className="text-[11px] font-bold text-[#64748b] dark:text-ghost-dark-ink-mute mt-0.5">
-                {formatKoreanLoanAmount(result.totalRepayment)}
-              </p>
-            </div>
-            <div className="text-base sm:text-lg xl:text-xl font-black text-[#112220] dark:text-ghost-dark-ink tracking-tight flex items-baseline gap-0.5 whitespace-nowrap @xs:text-right">
-              <span>{result.totalRepayment.toLocaleString('ko-KR')}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-ghost-dark-ink-mute shrink-0">원</span>
-            </div>
-          </div>
-        </div>
+        <SubMetricCard
+          label="총 상환금액"
+          icon={Banknote}
+          value={`${result.totalRepayment.toLocaleString('ko-KR')}원`}
+          description={formatKoreanLoanAmount(result.totalRepayment)}
+        />
 
         {/* 2. 총 대출이자 */}
-        <div className="@container p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs min-w-0">
-          <div className="flex flex-col @xs:flex-row @xs:items-center @xs:justify-between gap-1 @xs:gap-3">
-            <div>
-              <div className="flex items-center gap-1.5 text-[#64748b] dark:text-ghost-dark-ink-mute">
-                <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">
-                  총 대출이자
-                </span>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 shrink-0">
-                  원금의 {interestRatio.toFixed(1)}%
-                </span>
-              </div>
-              <p className="text-[11px] font-bold text-rose-500/80 dark:text-rose-400/80 mt-0.5">
-                {formatKoreanLoanAmount(result.totalInterest)}
-              </p>
-            </div>
-            <div className="text-base sm:text-lg xl:text-xl font-black text-rose-600 dark:text-rose-400 tracking-tight flex items-baseline gap-0.5 whitespace-nowrap @xs:text-right">
-              <span>{result.totalInterest.toLocaleString('ko-KR')}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-ghost-dark-ink-mute shrink-0">원</span>
-            </div>
-          </div>
-        </div>
+        <SubMetricCard
+          label="총 대출이자"
+          icon={ShieldAlert}
+          iconColor="text-rose-500"
+          badge={`원금의 ${interestRatio.toFixed(1)}%`}
+          badgeColor="rose"
+          value={`${result.totalInterest.toLocaleString('ko-KR')}원`}
+          valueColor="rose"
+          description={formatKoreanLoanAmount(result.totalInterest)}
+        />
 
         {/* 3. 대출 원금 */}
-        <div className="@container p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-2xs min-w-0">
-          <div className="flex flex-col @xs:flex-row @xs:items-center @xs:justify-between gap-1 @xs:gap-3">
-            <div>
-              <div className="flex items-center gap-1.5 text-[#64748b] dark:text-ghost-dark-ink-mute">
-                <CircleDollarSign className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">
-                  대출 원금
-                </span>
-              </div>
-              <p className="text-[11px] font-bold text-[#64748b] dark:text-ghost-dark-ink-mute mt-0.5">
-                {formatKoreanLoanAmount(loanAmount)}
-              </p>
-            </div>
-            <div className="text-base sm:text-lg xl:text-xl font-black text-[#112220] dark:text-ghost-dark-ink tracking-tight flex items-baseline gap-0.5 whitespace-nowrap @xs:text-right">
-              <span>{loanAmount.toLocaleString('ko-KR')}</span>
-              <span className="text-xs font-semibold text-slate-500 dark:text-ghost-dark-ink-mute shrink-0">원</span>
-            </div>
-          </div>
-        </div>
+        <SubMetricCard
+          label="대출 원금"
+          icon={CircleDollarSign}
+          value={`${loanAmount.toLocaleString('ko-KR')}원`}
+          description={formatKoreanLoanAmount(loanAmount)}
+        />
       </div>
     </div>
   );

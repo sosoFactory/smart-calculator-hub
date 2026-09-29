@@ -12,6 +12,7 @@ import { NumericInput } from '../../../components/ui/numeric-input';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { DatePicker } from '../../../components/ui/date-picker';
+import { SubMetricCard } from '../../../components/common/SubMetricCard';
 import {
   Calendar,
   CalendarHeart,
@@ -311,51 +312,39 @@ export const DDayTab: React.FC = () => {
           </div>
         </div>
 
-        {/* 3단 서브 요약 지표 카드 (Ghost 표준 모노크롬 규격) */}
+        {/* 3단 서브 요약 지표 카드 */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-ghost-ink-mute dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>오늘 기준 디데이</span>
-              <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink tabular-nums">
-              {ddayResult.isToday
+          <SubMetricCard
+            label="오늘 기준 디데이"
+            icon={Clock}
+            iconColor="indigo"
+            badge={ddayResult.isToday ? 'D-DAY' : ddayResult.isPast ? '경과' : '디데이'}
+            badgeColor={ddayResult.isToday ? 'emerald' : ddayResult.isPast ? 'slate' : 'indigo'}
+            value={
+              ddayResult.isToday
                 ? 'D-DAY 오늘'
                 : ddayResult.isPast
                 ? `D+${Math.abs(ddayResult.diffDays)}일째`
-                : `D-${ddayResult.diffDays}`}
-            </div>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate">
-              {ddayResult.isPast ? '기준일 이후 경과일' : '도달까지 남은 기간'}
-            </p>
-          </div>
+                : `D-${ddayResult.diffDays}`
+            }
+            description={ddayResult.isPast ? '기준일 이후 경과일' : '도달까지 남은 기간'}
+          />
 
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-ghost-ink-mute dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>적용된 연산 수식</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink truncate">
-              {operation === 'add' ? `+${numericAmount}` : `-${numericAmount}`}
-              {unitLabels[unit]} {operation === 'add' ? '뒤' : '전'}
-            </div>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate">
-              기준일 대비 적용 범위
-            </p>
-          </div>
+          <SubMetricCard
+            label="적용된 연산 수식"
+            icon={ArrowRight}
+            iconColor="slate"
+            value={`${operation === 'add' ? `+${numericAmount}` : `-${numericAmount}`}${unitLabels[unit]} ${operation === 'add' ? '뒤' : '전'}`}
+            description="기준일 대비 적용 범위"
+          />
 
-          <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1">
-            <div className="flex items-center justify-between text-ghost-ink-mute dark:text-ghost-dark-ink-mute text-[11px] font-bold uppercase tracking-wider">
-              <span>도달 요일</span>
-              <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-ghost-dark-ink-stone" />
-            </div>
-            <div className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink">
-              {calcResult.dayOfWeek}
-            </div>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate">
-              해당 날짜의 요일
-            </p>
-          </div>
+          <SubMetricCard
+            label="도달 요일"
+            icon={Calendar}
+            iconColor="emerald"
+            value={calcResult.dayOfWeek}
+            description="해당 날짜의 요일"
+          />
         </div>
       </div>
 
