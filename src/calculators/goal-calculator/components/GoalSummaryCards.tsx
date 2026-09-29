@@ -148,8 +148,9 @@ export const GoalSummaryCards: React.FC<GoalSummaryCardsProps> = ({ result }) =>
         <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 dark:bg-amber-950/20 p-3.5 sm:p-4 text-xs space-y-1.5 text-slate-700 dark:text-slate-200">
           <div className="flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-400 text-xs sm:text-sm">
             <Sparkles className="w-4 h-4 shrink-0 text-amber-500" />
-            <span>💡 금융 인사이트: 여유 자금 인출 시뮬레이션</span>
+            <span>금융 인사이트: 여유 자금 인출 시뮬레이션</span>
           </div>
+
           <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300 break-keep">
             목표 기간({targetYears}년)을 꽉 채워 최종 시점에 정확히 <strong className="text-slate-900 dark:text-white font-bold">{formatKoreanCurrency(targetAmount)}</strong>만 남기고자 하신다면, 추가 적립은커녕 복리 수익 범위 내에서 <strong className="text-amber-700 dark:text-amber-300 font-extrabold">매월 최대 약 {formatCurrency(earlyAchievement.safeMonthlyWithdrawal)} ({formatKoreanCurrency(earlyAchievement.safeMonthlyWithdrawal)})</strong>씩 인출하여 생활비나 여유자금으로 쓰셔도 10년 뒤 목표 금액이 유지됩니다.
           </p>

@@ -2,6 +2,7 @@ import React from 'react';
 import { GoalYearlyBreakdown, EarlyAchievementInfo } from '../../../types/goal';
 import { formatCurrency, formatKoreanCurrency } from '../../../utils/formatters';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine } from 'recharts';
+import { Target } from 'lucide-react';
 
 interface GoalChartCardProps {
   breakdown: GoalYearlyBreakdown[];
@@ -46,10 +47,12 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
             목표 {formatKoreanCurrency(targetAmount)}
           </span>
           {isEarly && earlyAchievement && (
-            <span className='text-[10px] font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 px-1.5 py-0.5 rounded'>
-              🎯 {earlyAchievement.reachYearsText}에 조기 돌파
+            <span className='text-[10px] font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 px-1.5 py-0.5 rounded flex items-center gap-1'>
+              <Target className='w-3 h-3 shrink-0 text-amber-600 dark:text-amber-400' />
+              <span>{earlyAchievement.reachYearsText}에 조기 돌파</span>
             </span>
           )}
+
         </div>
       </div>
 
