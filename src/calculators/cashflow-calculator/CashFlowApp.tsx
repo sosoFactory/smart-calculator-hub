@@ -5,6 +5,7 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { CashFlowForm } from './components/CashFlowForm';
 import { CashFlowSummaryCards } from './components/CashFlowSummaryCards';
 import { CashFlowCharts } from './components/CashFlowCharts';
+import { CashFlowTable } from './components/CashFlowTable';
 import { CashFlowInfoCard } from './components/CashFlowInfoCard';
 import { encodeCashFlowQuery, decodeCashFlowQuery, syncUrlQuery } from '../../utils/deepLink';
 import { siteConfig } from '../../config/site';
@@ -69,6 +70,7 @@ export const CashFlowApp: React.FC = () => {
         <div className="lg:col-span-7 space-y-4 sm:space-y-5 w-full min-w-0">
           <CashFlowSummaryCards result={result} />
           <CashFlowCharts result={result} />
+          <CashFlowTable result={result} />
           <CashFlowInfoCard />
         </div>
       </div>

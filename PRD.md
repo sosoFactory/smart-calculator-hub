@@ -193,7 +193,7 @@ src/
 │   │   ├── components/              # BmiForm, BmiSummaryCards, BmiGaugeCard, BmiInfoCard
 │   │   └── BmiApp.tsx               # BMI 계산기 메인 뷰
 │   ├── cashflow-calculator/         # 파이어 현금흐름 역산 모듈
-│   │   ├── components/              # CashFlowForm, CashFlowSummaryCards, CashFlowCharts, CashFlowInfoCard
+│   │   ├── components/              # CashFlowForm, CashFlowSummaryCards, CashFlowCharts, CashFlowTable, CashFlowInfoCard
 │   │   └── CashFlowApp.tsx          # 파이어 현금흐름 계산기 메인 뷰
 │   ├── compound-interest/           # 연복리 & 자산 성장 계산기 모듈
 │   │   ├── components/              # CalculatorForm, SummaryCards, ChartDashboard, DataTable, ComparisonView 등
@@ -676,8 +676,9 @@ src/
   - **시각화 차트 대시보드 (`CashFlowCharts`)**:
     - **수익률별 필요 원금 비교 막대차트 (`BarChart`)**: 2%~10% 수익률별 필요 원금을 비교하고 현재 사용자가 선택한 수익률 구간을 일렉트릭 라임으로 하이라이트.
     - **세전 수익 구성비 도넛차트 (`DonutChart`)**: 세후 실수령액 vs 연간 세금 비중 시각화.
-  - **주기별 상세 명세 분석표 (`Table`)**:
-    - 구분(월간 / 연간), 세전 수익금, 예상 세금, 세후 실수령액, 실효 수익률 대조.
+  - **주기별 상세 명세 분석표 (`CashFlowTable.tsx` & `CSV 다운로드`)**:
+    - 구분(월간 / 연간), 세전 필요 수익금, 예상 세금, 세후 실수령액, 실효 수익률 정밀 대조표.
+    - 우측 상단 표준 "CSV 다운로드" 버튼 연동 (엑셀 호환 UTF-8 BOM 인코딩).
   - **파이어 실전 금융 가이드 패널 (`CashFlowInfoCard`)**:
     - 1) 미국 트리니티 대학교 연구진의 '트리니티 4% 룰' 원리와 성공 확률(주식 75% + 채권 25% 포트폴리오 기준).
     - 2) 한국형 은퇴 설계 유의점: 배당소득세(15.4%) 차감, 금융소득종합과세(2,000만 원 초과) 및 건강보험료 피부양자 자격 유지 기준(연 2,000만 원 이하).

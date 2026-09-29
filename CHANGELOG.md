@@ -15,14 +15,18 @@
   - **3단 서브 요약**: 연간 세전 필요 수익금, 연간 예상 세금, 세후 실효 연 수익률.
   - **수익률 민감도 막대 차트 (`BarChart`)**: 2% ~ 10% 수익률별 필요 은퇴 원금 비교 및 현재 선택 수익률 하이라이트.
   - **세전 수익 구성비 도넛 차트 (`DonutChart`)**: 세후 실수령액 vs 연간 납부 세금 시각화.
-  - **주기별 분석표 (`Table`)**: 월간 및 연간 세전 수익금, 예상 세금, 세후 실수령액 대조.
+  - **과세 체계 UI 일관성 강화 (`CashFlowForm.tsx`)**:
+    - 목표 자산 계산기(`GoalForm.tsx`)와 동일하게 `SelectableChip` 3분할 칩 및 선택된 과세율 실시간 헤더 표기 적용.
+    - 선택 과세 방식(일반과세 15.4%, ISA 9.9% 분리과세, 비과세 0%)별 상세 안내 가이드 박스 추가.
+  - **독립된 상세 명세표 및 CSV 다운로드 연동 (`CashFlowTable.tsx`)**:
+    - `PRD.md` 공통 테이블 규격에 따라 독립된 테이블 카드로 분리하고, 엑셀 호환 UTF-8 BOM 인코딩 기반 **"CSV 다운로드"** 기능 탑재.
   - **파이어 실전 금융 가이드 (`CashFlowInfoCard`)**: 트리니티 4% 룰 원리, 한국형 세금/건보료 유의사항, ISA/연금저축/IRP 절세계좌 활용법 안내.
 - **딥링크 및 SEO & 네비게이션 완비**:
   - `src/utils/deepLink.ts`에 `encodeCashFlowQuery`, `decodeCashFlowQuery` 쿼리 동기화 연동 (`?net=...&rate=...&tax=...`).
   - 사이드바 메뉴 및 홈 대시보드 10번째 카드 등록 (`Flame` 아이콘).
   - `public/sitemap.xml` 등록 및 `PageMetaUpdater.tsx` 동적 메타태그/JSON-LD 구조화 데이터 자동 연동.
 - **TDD 기반 품질 검증 및 빌드 통과**:
-  - `src/utils/cashFlowCalculator.test.ts`, `src/utils/deepLink.test.ts`, `src/App.routing.test.tsx` 포함 총 31개 스위트, 187개 테스트 100% 통과 및 프로덕션 빌드 0 errors 완료.
+  - `src/utils/cashFlowCalculator.test.ts`, `src/calculators/cashflow-calculator/components/CashFlowTable.test.tsx`, `src/App.routing.test.tsx` 포함 총 32개 스위트, 190개 테스트 100% 통과 및 프로덕션 빌드 0 errors 완료.
 
 ## [1.9.47] - 2026-09-29
 

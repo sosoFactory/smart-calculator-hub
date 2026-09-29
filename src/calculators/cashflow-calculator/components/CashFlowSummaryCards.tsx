@@ -3,14 +3,6 @@ import { CashFlowCalculationResult } from '../../../types/cashFlow';
 import { formatCurrency, formatKoreanCurrency } from '../../../utils/formatters';
 import { Flame, Coins, TrendingUp, AlertTriangle, Check, Copy, Percent } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../../../components/ui/table';
 
 interface CashFlowSummaryCardsProps {
   result: CashFlowCalculationResult;
@@ -165,63 +157,6 @@ ${isComprehensiveTaxWarning ? '※ 연 금융소득 2,000만원 초과로 금융
           </p>
         </div>
       )}
-
-      {/* 4. 주기별 상세 명세 분석표 */}
-      <div className="bg-white dark:bg-ghost-dark-surface rounded-2xl border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-5 shadow-2xs space-y-3 transition-colors">
-        <h4 className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink">
-          주기별 현금흐름 상세 대조표
-        </h4>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
-                <TableHead className="text-xs font-bold text-[#64748b] dark:text-ghost-dark-ink-mute">
-                  구분
-                </TableHead>
-                <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute">
-                  세전 수익금
-                </TableHead>
-                <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute">
-                  예상 세금 ({taxRatePercent}%)
-                </TableHead>
-                <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute">
-                  세후 실수령액
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow className="border-b border-slate-100 dark:border-ghost-dark-hairline/60">
-                <TableCell className="text-xs font-medium text-[#112220] dark:text-ghost-dark-ink">
-                  월간 기준
-                </TableCell>
-                <TableCell className="text-xs text-right font-medium text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-                  {formatCurrency(monthlyGross)}
-                </TableCell>
-                <TableCell className="text-xs text-right font-medium text-rose-500 tabular-nums">
-                  -{formatCurrency(monthlyTax)}
-                </TableCell>
-                <TableCell className="text-xs text-right font-bold text-emerald-600 dark:text-[#d1ff19] tabular-nums">
-                  {formatCurrency(monthlyNet)}
-                </TableCell>
-              </TableRow>
-              <TableRow className="border-b-0">
-                <TableCell className="text-xs font-bold text-[#112220] dark:text-ghost-dark-ink">
-                  연간 기준
-                </TableCell>
-                <TableCell className="text-xs text-right font-medium text-[#112220] dark:text-ghost-dark-ink tabular-nums">
-                  {formatCurrency(annualGross)}
-                </TableCell>
-                <TableCell className="text-xs text-right font-medium text-rose-500 tabular-nums">
-                  -{formatCurrency(annualTax)}
-                </TableCell>
-                <TableCell className="text-xs text-right font-bold text-emerald-600 dark:text-[#d1ff19] tabular-nums">
-                  {formatCurrency(annualNet)}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </div>
     </div>
   );
 };

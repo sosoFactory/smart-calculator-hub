@@ -137,36 +137,63 @@ export const CashFlowForm: React.FC<CashFlowFormProps> = ({ input, onChange, onR
 
         {/* 3. 과세 체계 */}
         <div>
-          <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base block mb-2">
-            과세 체계
-          </label>
+          <div className="flex items-center justify-between gap-1 mb-2">
+            <label className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base whitespace-nowrap">
+              과세 체계
+            </label>
+            <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums whitespace-nowrap">
+              {input.taxType === 'normal' && (
+                <>
+                  <span className="hidden sm:inline">일반과세 </span>
+                  <span>(15.4%)</span>
+                </>
+              )}
+              {input.taxType === 'isa' && (
+                <>
+                  <span className="hidden sm:inline">ISA 절세 </span>
+                  <span>(9.9%)</span>
+                </>
+              )}
+              {input.taxType === 'none' && (
+                <>
+                  <span className="hidden sm:inline">비과세 </span>
+                  <span>(0%)</span>
+                </>
+              )}
+            </span>
+          </div>
+
           <div className="grid grid-cols-3 gap-2">
-            {TAX_OPTIONS.map((opt) => {
-              const isSelected = input.taxType === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => updateField('taxType', opt.id)}
-                  className={`flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-xl border text-center transition-all ${
-                    isSelected
-                      ? 'border-[#112220] dark:border-[#d1ff19] bg-slate-100 dark:bg-ghost-dark-surface-elevated text-[#112220] dark:text-white font-bold ring-1 ring-[#112220] dark:ring-[#d1ff19]'
-                      : 'border-[#e5e7eb] dark:border-ghost-dark-hairline bg-slate-50/50 dark:bg-ghost-dark-surface-deep text-[#64748b] dark:text-ghost-dark-ink-soft hover:bg-slate-100/70 dark:hover:bg-ghost-dark-hover'
-                  }`}
-                >
-                  <span className="text-xs font-semibold">{opt.label}</span>
-                  <span
-                    className={`text-[11px] mt-0.5 ${
-                      isSelected
-                        ? 'text-[#112220] dark:text-[#d1ff19] font-bold'
-                        : 'text-slate-400 dark:text-ghost-dark-ink-mute'
-                    }`}
-                  >
-                    {opt.rateLabel}
-                  </span>
-                </button>
-              );
-            })}
+            {TAX_OPTIONS.map((opt) => (
+              <SelectableChip
+                key={opt.id}
+                isSelected={input.taxType === opt.id}
+                onClick={() => updateField('taxType', opt.id)}
+                className="h-auto py-2 text-xs sm:text-sm font-semibold justify-center text-center"
+              >
+                <span>{opt.label}</span>
+                <span className="text-[11px] opacity-75 ml-1 hidden xs:inline">({opt.rateLabel})</span>
+              </SelectableChip>
+            ))}
+          </div>
+
+          {/* 과세 방식 친절 안내 가이드 박스 */}
+          <div className="mt-2 text-xs text-[#64748b] dark:text-ghost-dark-ink-mute bg-slate-50 dark:bg-ghost-dark-surface-deep p-2.5 rounded-lg border border-slate-200/80 dark:border-ghost-dark-hairline leading-relaxed">
+            {input.taxType === 'normal' && (
+              <p>
+                <strong className="text-slate-800 dark:text-ghost-dark-ink-base font-semibold">일반과세 (15.4%):</strong> 금융상품 배당·이자 수익에 기본 부과되는 배당소득세(14%)와 지방소득세(1.4%)가 원천징수됩니다.
+              </p>
+            )}
+            {input.taxType === 'isa' && (
+              <p>
+                <strong className="text-slate-800 dark:text-ghost-dark-ink-base font-semibold">ISA 절세 (9.9% 분리과세):</strong> 개인종합자산관리계좌(ISA)로 순이익 200만~400만 원까지 비과세되며, 초과 수익은 종합과세 없이 9.9% 분리과세 혜택을 받습니다.
+              </p>
+            )}
+            {input.taxType === 'none' && (
+              <p>
+                <strong className="text-slate-800 dark:text-ghost-dark-ink-base font-semibold">비과세 (0%):</strong> 비과세 해외주식투자전용펀드, 비과세종합저축 등 관련 법령에 따라 소득세가 전혀 발생하지 않는 절세 상품입니다.
+              </p>
+            )}
           </div>
         </div>
       </div>
