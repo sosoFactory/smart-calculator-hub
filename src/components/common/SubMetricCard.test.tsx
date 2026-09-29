@@ -54,4 +54,18 @@ describe('SubMetricCard Component', () => {
     );
     expect(screen.getByText('27.5%')).toHaveClass('text-indigo-600');
   });
+
+  it('ensures label is not truncated with whitespace-nowrap and shrink-0', () => {
+    render(
+      <SubMetricCard
+        label="이자 소득세"
+        badge="15.4%"
+        value="5,720,153원"
+      />
+    );
+
+    const labelElement = screen.getByText('이자 소득세');
+    expect(labelElement).toHaveClass('whitespace-nowrap');
+    expect(labelElement).not.toHaveClass('truncate');
+  });
 });

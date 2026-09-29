@@ -49,8 +49,10 @@
   - 그리드: `grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3` (비교 모드 등 분할 뷰에서는 단일 열 리플로우 지원).
   - 카드 박스: `p-3.5 sm:p-4 rounded-xl bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline shadow-2xs space-y-1`.
 - **1행 (헤더)**:
-  - **좌측**: 아이콘(`w-3.5 h-3.5 shrink-0`) + 라벨(`text-[11px] font-bold uppercase tracking-wider text-ghost-ink-mute dark:text-ghost-dark-ink-mute`).
+  - **좌측**: 아이콘(`w-3.5 h-3.5 shrink-0`) + 라벨(`text-[11px] font-bold uppercase tracking-wider text-ghost-ink-mute dark:text-ghost-dark-ink-mute whitespace-nowrap shrink-0`).
+    - **타이틀 완전 표시 보장**: 정보의 핵심 식별자인 타이틀(라벨)은 어떠한 뷰포트에서도 `...` 말줄임 없이 100% 온전히 노출되어야 한다.
   - **우측**: 선택적 뱃지(`badge`, `badgeColor` - slate, rose, emerald, indigo, amber).
+    - **뱃지 간결화 원칙**: 뱃지는 2~5글자의 짧은 상태/태그(`15.4%`, `영업일`, `유급` 등)로 제한하며, 긴 금액이나 상세 문장은 1행 뱃지가 아닌 **3행 캡션**에 배치한다.
 - **2행 (메인 수치)**:
   - 굵은 볼드 타이포그래피 (`text-base sm:text-lg font-bold tabular-nums`).
   - **수치 색상 옵션 (`valueColor`)**:
@@ -62,7 +64,7 @@
   - **통화 표기 원칙**: `₩` 전치 기호를 지양하고 대한민국 표준인 **`N원` 후치 표기**로 일원화.
 - **3행 (하단 캡션)**:
   - 1줄 말줄임 텍스트 (`text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute truncate`).
-  - 한글 독음(예: N억 N만 원), 계산 공식, 부가 설명을 일관되게 최하단에 배치.
+  - 한글 독음(예: N억 N만 원), 계산 공식, 부가 설명 및 긴 부가 금액(예: `세전 37,143,848원`)을 일관되게 최하단에 배치.
 
 ### 2.4 숫자 및 금액 입력 컴포넌트 (`NumericInput` / `src/components/ui/numeric-input.tsx`)
 - **터치 높이**: 모바일 터치 접근성에 최적화된 높이 44px (`h-11`).

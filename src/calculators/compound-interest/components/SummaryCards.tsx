@@ -4,6 +4,7 @@ import {
   formatCurrency,
   formatKoreanUnit,
   formatMultiple,
+  formatNumberWithWon,
   formatPercent,
 } from '../../../utils/formatters';
 import { Wallet, PiggyBank, ArrowUpRight, ShieldAlert, Copy, Check } from 'lucide-react';
@@ -169,7 +170,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
           iconColor="slate"
           badge={formatKoreanUnit(result.totalPrincipal)}
           badgeColor="slate"
-          value={formatCurrency(result.totalPrincipal)}
+          value={formatNumberWithWon(result.totalPrincipal)}
           description={`원금 비중 ${principalRatio.toFixed(1)}%`}
         />
 
@@ -179,7 +180,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
           iconColor={isLoss ? 'rose' : 'emerald'}
           badge={formatPercent(result.netReturnRate, true)}
           badgeColor={isLoss ? 'rose' : 'emerald'}
-          value={formatCurrency(result.netInterest)}
+          value={formatNumberWithWon(result.netInterest)}
           valueColor={isLoss ? 'rose' : 'emerald'}
           description={isLoss ? '투자 원금 대비 손실' : `원금 대비 ${formatMultiple(result.principalMultiple)}`}
         />
@@ -188,11 +189,11 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
           label="이자 소득세"
           icon={ShieldAlert}
           iconColor="rose"
-          badge={`세전 ${formatCurrency(result.grossInterest)}`}
-          badgeColor="slate"
-          value={formatCurrency(result.taxAmount)}
+          badge="15.4%"
+          badgeColor="rose"
+          value={formatNumberWithWon(result.taxAmount)}
           valueColor="rose"
-          description="이자 과세율 15.4% 기준"
+          description={`세전 이자 ${formatNumberWithWon(result.grossInterest)} 기준`}
         />
       </div>
     </div>

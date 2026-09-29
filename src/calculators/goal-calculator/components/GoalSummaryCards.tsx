@@ -175,11 +175,9 @@ export const GoalSummaryCards: React.FC<GoalSummaryCardsProps> = ({ result }) =>
           label="예상 복리 수익"
           icon={TrendingUp}
           iconColor="text-emerald-500"
-          badge={`+${formatKoreanCurrency(totalInterest)}`}
-          badgeColor="emerald"
           value={`+${formatNumberWithWon(totalInterest)}`}
           valueColor="emerald"
-          description="복리 효과로 불어난 순이익"
+          description={`순이익 (+${formatKoreanCurrency(totalInterest)})`}
         />
 
         {/* 3) 이자/수익 기여도 */}
@@ -187,8 +185,6 @@ export const GoalSummaryCards: React.FC<GoalSummaryCardsProps> = ({ result }) =>
           label="이자/수익 기여도"
           icon={Percent}
           iconColor="text-indigo-500"
-          badge={`목표액의 ${interestRatio}%`}
-          badgeColor="indigo"
           value={`${interestRatio}%`}
           valueColor="indigo"
           description="전체 목표 자산 중 복리 이자 비중"

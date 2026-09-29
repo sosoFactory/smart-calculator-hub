@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CashFlowCalculationResult } from '../../../types/cashFlow';
-import { formatCurrency, formatKoreanCurrency } from '../../../utils/formatters';
+import { formatCurrency, formatKoreanCurrency, formatNumberWithWon } from '../../../utils/formatters';
 import { Flame, Coins, TrendingUp, AlertTriangle, Check, Copy, Percent } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
@@ -107,10 +107,8 @@ ${isComprehensiveTaxWarning ? '※ 연 금융소득 2,000만원 초과로 금융
           label="연간 세전 필요 수익"
           icon={TrendingUp}
           iconColor="emerald"
-          badge={`월 ${formatCurrency(monthlyGross)}`}
-          badgeColor="slate"
-          value={formatCurrency(annualGross)}
-          description={`한글 독음: ${formatKoreanCurrency(annualGross)}`}
+          value={formatNumberWithWon(annualGross)}
+          description={`월 ${formatNumberWithWon(monthlyGross)} (${formatKoreanCurrency(annualGross)})`}
         />
 
         <SubMetricCard
@@ -119,9 +117,9 @@ ${isComprehensiveTaxWarning ? '※ 연 금융소득 2,000만원 초과로 금융
           iconColor="rose"
           badge={`${taxRatePercent}%`}
           badgeColor="rose"
-          value={formatCurrency(annualTax)}
+          value={formatNumberWithWon(annualTax)}
           valueColor="rose"
-          description={`월 ${formatCurrency(monthlyTax)} (${formatKoreanCurrency(annualTax)})`}
+          description={`월 ${formatNumberWithWon(monthlyTax)} (${formatKoreanCurrency(annualTax)})`}
         />
 
         <SubMetricCard

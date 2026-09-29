@@ -58,16 +58,16 @@ export const SubMetricCard: React.FC<SubMetricCardProps> = ({
     >
       {/* 1행: 아이콘 + 소제목 (좌측) / 선택적 배지 (우측) */}
       <div className="flex items-center justify-between gap-1.5 text-ghost-ink-mute dark:text-ghost-dark-ink-mute min-w-0">
-        <div className="flex items-center gap-1.5 min-w-0">
+        <div className="flex items-center gap-1.5 shrink-0">
           {Icon && <Icon className={cn('w-3.5 h-3.5 shrink-0', iconColor)} />}
-          <span className="text-[11px] font-bold uppercase tracking-wider truncate">
+          <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
             {label}
           </span>
         </div>
         {badge && (
           <span
             className={cn(
-              'text-[10px] sm:text-[11px] tabular-nums shrink-0 whitespace-nowrap',
+              'text-[10px] sm:text-[11px] tabular-nums shrink-0 whitespace-nowrap ml-auto',
               BADGE_COLOR_CLASSES[badgeColor]
             )}
           >
