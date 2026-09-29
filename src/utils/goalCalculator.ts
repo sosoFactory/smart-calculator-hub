@@ -73,11 +73,62 @@ export function calculateGoalTarget(input: GoalInput): GoalCalculationResult {
 
   const totalContribution = monthlyContribution * totalMonths;
   const totalPrincipal = initialAmount + totalContribution;
-  const totalInterest = Math.max(0, targetAmount - totalPrincipal);
-  const interestRatio =
-    targetAmount > 0
-      ? Number(((totalInterest / targetAmount) * 100).toFixed(1))
-      : 0;
+
+  // 조기 달성 및 거치금 초과 성장 특수 케이스 처리
+  let earlyAchievement: GoalCalculationResult['earlyAchievement'] = undefined;
+  if (initialAmount > 0 && initialFutureValue >= targetAmount) {
+    let reachMonths = 0;
+    if (initialAmount >= targetAmount) {
+      reachMonths = 0;
+    } else if (netMonthlyRate > 0) {
+      // FV = PV * (1 + r)^m => m = ln(FV / PV) / ln(1 + r)
+      const m = Math.log(targetAmount / initialAmount) / Math.log(1 + netMonthlyRate);
+      reachMonths = Math.max(1, Math.ceil(m));
+    }
+
+    const savedMonths = Math.max(0, totalMonths - reachMonths);
+    const reachYears = Math.floor(reachMonths / 12);
+    const reachRemainingMonths = reachMonths % 12;
+    let reachYearsText = '';
+    if (reachYears > 0 && reachRemainingMonths > 0) {
+      reachYearsText = `${reachYears}년 ${reachRemainingMonths}개월`;
+    } else if (reachYears > 0) {
+      reachYearsText = `${reachYears}년`;
+    } else {
+      reachYearsText = `${reachRemainingMonths}개월`;
+    }
+
+    const savedYears = Math.floor(savedMonths / 12);
+    const savedRemainingMonths = savedMonths % 12;
+    let savedYearsText = '';
+    if (savedYears > 0 && savedRemainingMonths > 0) {
+      savedYearsText = `${savedYears}년 ${savedRemainingMonths}개월`;
+    } else if (savedYears > 0) {
+      savedYearsText = `${savedYears}년`;
+    } else {
+      savedYearsText = `${savedRemainingMonths}개월`;
+    }
+
+    // 안전 인출 가능액 (목표 기간 끝에 targetAmount만 남길 때 매월 인출 가능한 금액)
+    // PMT_withdraw = (initialFutureValue - targetAmount) * r / ((1 + r) * ((1 + r)^n - 1))
+    let safeMonthlyWithdrawal = 0;
+    const excessFutureValue = initialFutureValue - targetAmount;
+    if (excessFutureValue > 0 && netMonthlyRate > 0) {
+      const denom = (1 + netMonthlyRate) * (Math.pow(1 + netMonthlyRate, totalMonths) - 1);
+      if (denom > 0) {
+        safeMonthlyWithdrawal = Math.floor((excessFutureValue * netMonthlyRate) / denom);
+      }
+    }
+
+    earlyAchievement = {
+      isEarlyAchieved: reachMonths < totalMonths,
+      reachMonths,
+      reachYearsText,
+      savedMonths,
+      savedYearsText,
+      safeMonthlyWithdrawal,
+    };
+  }
 
   // 4. 연도별 자산 형성 흐름표 (Breakdown)
   const breakdown = [];
@@ -100,8 +151,12 @@ export function calculateGoalTarget(input: GoalInput): GoalCalculationResult {
     }
 
     const calculatedTotalAsset = Math.round(initialVal + contribFV);
-    // 마지막 연차는 반올림 오차 없이 최종 목표액(targetAmount)과 완전 일치하도록 보정
-    const totalAsset = year === targetYears ? targetAmount : calculatedTotalAsset;
+    // 월 적립이 있는 일반 케이스에서는 반올림 오차 보정을 위해 targetAmount와 일치시킴.
+    // 하지만 초기 자금만으로 목표를 초과 달성하는 케이스에서는 왜곡 없이 실제 복리 계산값(calculatedTotalAsset)을 온전히 보존!
+    const totalAsset =
+      monthlyContribution > 0 && year === targetYears
+        ? targetAmount
+        : calculatedTotalAsset;
     const accumPrincipal = initialAmount + accumContrib;
     const accumInterest = Math.max(0, totalAsset - accumPrincipal);
 
@@ -113,6 +168,14 @@ export function calculateGoalTarget(input: GoalInput): GoalCalculationResult {
       totalAsset,
     });
   }
+
+  const finalTotalAsset = breakdown.length > 0 ? breakdown[breakdown.length - 1].totalAsset : targetAmount;
+  const totalInterest = Math.max(0, finalTotalAsset - totalPrincipal);
+  const interestRatio =
+    finalTotalAsset > 0
+      ? Number(((totalInterest / finalTotalAsset) * 100).toFixed(1))
+      : 0;
+
 
   // 5. 대표 수익률 시나리오 대조 (예적금 3.5%, 인덱스 7.0%, 적극 10.0%)
   const benchmarkRates = [3.5, 7.0, 10.0];
@@ -156,8 +219,10 @@ export function calculateGoalTarget(input: GoalInput): GoalCalculationResult {
     interestRatio,
     breakdown,
     rateComparisons,
+    earlyAchievement,
   };
 }
+
 
 /**
  * 벤치마크 수익률 비교 연산을 위한 내부 목표 역산 계산 함수

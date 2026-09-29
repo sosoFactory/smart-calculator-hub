@@ -45,19 +45,38 @@ describe('calculateGoalTarget Tests', () => {
     expect(result.interestRatio).toBe(0);
   });
 
-  it('초기 목돈만으로 목표 자산을 초과 달성할 경우 월 적립액은 0원이어야 한다', () => {
+  it('초기 목돈만으로 목표 자산을 초과 달성할 경우 월 적립액 0원 및 조기 달성과 안전 인출액이 산출되어야 한다', () => {
+    // 사용자가 제시한 시나리오: 5억 목표, 10년, 15%, 초기 2억, ISA 9.9%
     const input: GoalInput = {
-      targetAmount: 100_000_000,
+      targetAmount: 500_000_000,
       targetYears: 10,
-      annualRate: 10,
-      initialAmount: 100_000_000, // 이미 1억 보유
-      taxType: 'exempt',
+      annualRate: 15.0,
+      initialAmount: 200_000_000,
+      taxType: 'isa',
     };
 
     const result = calculateGoalTarget(input);
     expect(result.monthlyContribution).toBe(0);
     expect(result.totalContribution).toBe(0);
+
+    // 조기 달성 객체 검증
+    expect(result.earlyAchievement).toBeDefined();
+    expect(result.earlyAchievement?.isEarlyAchieved).toBe(true);
+    // 2억이 5억 도달까지 약 82개월(6년 10개월) 소요
+    expect(result.earlyAchievement?.reachMonths).toBeGreaterThan(70);
+    expect(result.earlyAchievement?.reachMonths).toBeLessThan(90);
+    expect(result.earlyAchievement?.reachYearsText).toMatch(/\d+년/);
+    expect(result.earlyAchievement?.savedYearsText).toMatch(/\d+년/);
+
+    // 매월 안전 인출 가능액이 합리적으로 산출되어야 함 (약 100만원~150만원 사이)
+    expect(result.earlyAchievement?.safeMonthlyWithdrawal).toBeGreaterThan(1_000_000);
+    expect(result.earlyAchievement?.safeMonthlyWithdrawal).toBeLessThan(1_600_000);
+
+    // 10년차 최종 자산이 5억으로 강제 꺾이지 않고 7억 이상으로 온전히 유지되어야 함
+    expect(result.breakdown[9].totalAsset).toBeGreaterThan(700_000_000);
+    expect(result.breakdown[8].totalAsset).toBeLessThan(result.breakdown[9].totalAsset); // 9년차보다 10년차가 우상향!
   });
+
 
   it('비교 수익률 시나리오(3.5%, 7%, 10%)가 올바르게 산출되어야 한다', () => {
     const result = calculateGoalTarget(DEFAULT_GOAL_INPUT);

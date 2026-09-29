@@ -68,8 +68,13 @@ export const GoalApp: React.FC = () => {
         {/* 우측 결과 대시보드 & 시각화 영역 (lg: 7컬럼) */}
         <div className="lg:col-span-7 space-y-4 sm:space-y-5 w-full min-w-0">
           <GoalSummaryCards result={result} />
-          <GoalChartCard breakdown={result.breakdown} targetAmount={result.targetAmount} />
+          <GoalChartCard
+            breakdown={result.breakdown}
+            targetAmount={result.targetAmount}
+            earlyAchievement={result.earlyAchievement}
+          />
           <GoalRateComparisonCard comparisons={result.rateComparisons} currentRate={input.annualRate} />
+
           <GoalInfoCard />
         </div>
       </div>
