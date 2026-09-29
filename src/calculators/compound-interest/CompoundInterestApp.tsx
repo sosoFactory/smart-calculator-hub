@@ -231,10 +231,11 @@ export const CompoundInterestApp: React.FC<CompoundInterestAppProps> = () => {
               isComparisonMode && activeMobileTab === 'B' ? scenarioB.name : scenarioA.name
             }
           />
-
-          <CompoundInfoCard />
         </div>
       </div>
+
+      {/* 하단 금융 상식 안내 카드 (풀위드 단독 배치) */}
+      <CompoundInfoCard />
     </div>
   );
 };

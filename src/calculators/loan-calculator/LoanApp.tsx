@@ -109,11 +109,11 @@ export const LoanApp: React.FC = () => {
 
           {/* 4. 월별 상세 상환 스케줄표 (CSV 다운로드) */}
           <LoanScheduleTable schedule={currentResult.schedule} />
-
-          {/* 5. 대출 상식 및 유의사항 안내 카드 */}
-          <LoanInfoCard />
         </div>
       </div>
+
+      {/* 5. 대출 상식 및 유의사항 안내 카드 (풀위드 단독 배치) */}
+      <LoanInfoCard />
     </div>
   );
 };

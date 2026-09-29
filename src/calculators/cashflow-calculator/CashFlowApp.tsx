@@ -71,9 +71,11 @@ export const CashFlowApp: React.FC = () => {
           <CashFlowSummaryCards result={result} />
           <CashFlowCharts result={result} />
           <CashFlowTable result={result} />
-          <CashFlowInfoCard />
         </div>
       </div>
+
+      {/* 하단 파이어족 상식 안내 카드 (풀위드 단독 배치) */}
+      <CashFlowInfoCard />
     </div>
   );
 };

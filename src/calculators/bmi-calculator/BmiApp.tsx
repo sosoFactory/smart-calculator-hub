@@ -68,11 +68,11 @@ export const BmiApp: React.FC = () => {
 
           {/* 2. 비만도 6단계 스펙트럼 게이지 */}
           <BmiGaugeCard result={result} />
-
-          {/* 3. 건강 및 비만 관리 상식 안내 카드 */}
-          <BmiInfoCard />
         </div>
       </div>
+
+      {/* 3. 건강 및 비만 관리 상식 안내 카드 (풀위드 단독 배치) */}
+      <BmiInfoCard />
     </div>
   );
 };

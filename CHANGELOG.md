@@ -3,6 +3,17 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.49] - 2026-09-29
+
+### refactor: 전 계산기 하단 추가정보 카드(InfoCard) 풀위드 단독 배치 통일 및 Ghost 디자인 토큰 전면 정돈
+- **추가정보 카드(`InfoCard`) 레이아웃 일원화**:
+  - 2열 그리드(`lg:grid-cols-12`) 우측 7열 내부에 종속되어 있던 7개 계산기(`연복리`, `대출`, `연봉`, `목표자산`, `BMI`, `현금흐름`, `알바`)의 `InfoCard`를 그리드 바깥 최하단으로 이동.
+  - 날짜 계산기(`DateApp`), 단위 변환기, 환율 계산기와 동일하게 전 10대 계산기 하단 안내 카드를 단독 풀위드(`w-full`) 패널로 일관 배치.
+- **Ghost 디자인 시스템 시맨틱 토큰 전면 치환**:
+  - `InfoCard.tsx` 및 날짜 계산기 4종 컴포넌트(`DDayTab.tsx`, `DateDiffTab.tsx`, `AgeTab.tsx`, `DateCategoryTabs.tsx`)의 임의 대괄호 하드코딩(`text-[#112220]`, `border-[#e5e7eb]`, `text-[#64748b]`, `text-[#d1ff19]`, `bg-[#15171a]`, `rounded-[24px]` 등)을 `tailwind.config.js` 및 `ghost.design.md` 정식 토큰(`ghost-ink`, `ghost-hairline`, `ghost-ink-mute`, `ghost-lime`, `ghost-surface-elevated`, `rounded-ghost-xl`)으로 전수 치환.
+- **PRD 사양 최신화**:
+  - `PRD.md` Section 13.1에 전 계산기 최하단 풀위드 단독 배치 규격 및 임의 대괄호 클래스 배제 규칙 명문화.
+
 ## [1.9.48] - 2026-09-29
 
 ### 10번째 신규 계산기: '파이어 현금흐름 계산기(FIRE Cash Flow Calculator)' 출시

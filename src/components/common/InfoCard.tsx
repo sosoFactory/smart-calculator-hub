@@ -27,13 +27,13 @@ export const InfoCard: React.FC<InfoCardProps> = ({
   return (
     <div
       className={cn(
-        'p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-ghost-dark-surface border border-[#e5e7eb] dark:border-ghost-dark-hairline text-xs text-[#64748b] dark:text-ghost-dark-ink-soft shadow-2xs transition-colors',
+        'p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline text-xs text-ghost-ink-mute dark:text-ghost-dark-ink-soft shadow-2xs transition-colors',
         className
       )}
     >
       <div className="space-y-2 leading-relaxed">
-        <p className="font-bold text-[#112220] dark:text-ghost-dark-ink text-xs sm:text-sm pb-2 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline flex items-center gap-1.5">
-          <Info className="w-3.5 h-3.5 text-[#112220] dark:text-[#d1ff19] shrink-0" />
+        <p className="font-bold text-ghost-ink dark:text-ghost-dark-ink text-xs sm:text-sm pb-2 border-b border-ghost-hairline dark:border-ghost-dark-hairline flex items-center gap-1.5">
+          <Info className="w-3.5 h-3.5 text-ghost-ink dark:text-ghost-lime shrink-0" />
           <span>{title}</span>
         </p>
         <div className="space-y-1.5 pt-0.5">
@@ -44,7 +44,7 @@ export const InfoCard: React.FC<InfoCardProps> = ({
           ))}
         </div>
         {notice && (
-          <p className="pt-2 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline text-[#94a3b8] dark:text-ghost-dark-ink-mute text-[11px] leading-normal break-keep">
+          <p className="pt-2 border-t border-ghost-hairline dark:border-ghost-dark-hairline text-ghost-ink-stone dark:text-ghost-dark-ink-mute text-[11px] leading-normal break-keep">
             ※ <strong>안내 및 고지</strong>: {notice}
           </p>
         )}

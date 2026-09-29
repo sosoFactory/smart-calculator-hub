@@ -74,10 +74,11 @@ export const GoalApp: React.FC = () => {
             earlyAchievement={result.earlyAchievement}
           />
           <GoalRateComparisonCard comparisons={result.rateComparisons} currentRate={input.annualRate} />
-
-          <GoalInfoCard />
         </div>
       </div>
+
+      {/* 하단 목표자산 상식 안내 카드 (풀위드 단독 배치) */}
+      <GoalInfoCard />
     </div>
   );
 };

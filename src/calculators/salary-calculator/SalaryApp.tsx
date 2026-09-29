@@ -86,11 +86,11 @@ export const SalaryApp: React.FC = () => {
 
           {/* 3. 6대 공제 세부 명세표 (근로자/회사 탭) */}
           <DeductionBreakdownTable result={result} />
-
-          {/* 4. 급여 및 4대 보험 상식 안내 카드 */}
-          <SalaryInfoCard />
         </div>
       </div>
+
+      {/* 4. 급여 및 4대 보험 상식 안내 카드 (풀위드 단독 배치) */}
+      <SalaryInfoCard />
     </div>
   );
 };

@@ -87,11 +87,11 @@ export const PartTimeApp: React.FC = () => {
 
           {/* 3. 급여 및 유급시간 세부 명세표 (CSV 다운로드 지원) */}
           <PartTimeTable input={input} result={result} />
-
-          {/* 4. 근로기준법 및 주휴수당 상식 안내 카드 */}
-          <PartTimeInfoCard />
         </div>
       </div>
+
+      {/* 4. 근로기준법 및 주휴수당 상식 안내 카드 (풀위드 단독 배치) */}
+      <PartTimeInfoCard />
     </div>
   );
 };

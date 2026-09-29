@@ -636,6 +636,9 @@ src/
   - 기존 OS/브라우저별로 상이하고 투박했던 네이티브 `<input type="date">`를 전면 배제.
   - shadcn/ui 기반 `Calendar`(`react-day-picker`)와 `Popover`(`@radix-ui/react-popover`)를 결합한 통합 **`DatePicker`** 컴포넌트를 공통 적용.
   - 한국어 로케일(`ko`) 기본 적용(년·월·요일 국문 표기), 오늘 날짜 인디케이터, 선택 날짜 일렉트릭 라임 하이라이트 및 Ghost 다크 팝업 서피스 일체화.
+- **반응형 2열(12컬럼) 표준 레이아웃 적용 (PRD 2.3.2 규격 일치)**:
+  - **데스크톱 (>=1024px)**: `grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start`를 3대 서브 탭 전반에 적용하여, **[좌측 폼 5컬럼] : [우측 결과 대시보드 7컬럼]**의 균형 잡힌 2열 대칭 뷰 제공 (가로 100% 팽창 및 세로 스크롤 과다 방지).
+  - **모바일 (<1024px)**: 상단 폼 ➔ 하단 결과의 직관적인 단일 열 스택 흐름 유지.
 - **결과 대시보드 및 시각화 표준 (공통 컴포넌트 규격 준수)**:
   - Ghost 디자인 시스템의 메인 하이라이트 카드 + 일렉트릭 라임 뱃지 + 우상단 표준 원클릭 결과 복사.
   - 3단 서브 요약 지표 카드 및 주요 기념일/상세 정보 테이블.
@@ -1634,6 +1637,8 @@ export interface CashFlowCalculationResult {
 
 ### 13.1 목적 및 공통 설계 사양
 - 각 계산기 하단에 유용한 상식, 계산 공식, 세무 및 금융 유의사항을 압축 요약 제공하여 서비스 신뢰도와 검색엔진 SEO 가치를 동시에 확보.
+- **최하단 풀위드(Full-Width) 단독 배치 원칙**: 2열 그리드(`lg:grid-cols-12`)를 채택하는 계산기(`Compound`, `Loan`, `Salary`, `Goal`, `Bmi`, `CashFlow`, `PartTime`)라도 `InfoCard`는 우측 7열 내부에 종속되지 않고, 그리드 컨테이너 바깥 최하단에 단독 풀위드(`w-full`) 패널로 배치하여 시각적 안정감과 여유로운 가독성을 제공한다 (날짜 계산기 및 단위 변환기 표준과 일치).
+- **Ghost 디자인 시스템 토큰 엄격 준수**: 임의의 대괄호 헥스코드 하드코딩(`text-[#112220]`, `border-[#e5e7eb]`, `text-[#64748b]`, `text-[#d1ff19]`, `bg-[#15171a]`, `rounded-[24px]` 등)을 원천 배제하고, `tailwind.config.js` 및 `ghost.design.md`에 선언된 시맨틱 토큰(`ghost-ink`, `ghost-hairline`, `ghost-ink-mute`, `ghost-lime`, `ghost-surface-elevated`, `rounded-ghost-xl`)을 엄격 적용한다.
 - 가독성 높은 카드 형태 배치, 단정한 텍스트 및 표준 라인 아이콘 적용, 컬러 이모지 배제.
 
 ### 13.2 모듈별 핵심 콘텐츠 요약
