@@ -18,6 +18,11 @@ All AI coding assistants must follow this protocol. Read the applicable rule fil
 - **MANDATORY TDD SKILL FOR LOGIC, FORMULAS & UTILITIES**:
   - When implementing or modifying mathematical formulas, financial/medical/date calculation logic, business rules, or data transformation utilities, ALWAYS refer to and follow the `/tdd` agent skill (`.agents/skills/tdd/SKILL.md`).
   - Strictly enforce the Red-Green-Refactor cycle: write unit tests first before writing production code, verify test failures, implement code to pass tests, and ensure 100% test suite pass rate without regressions.
+- **STRICT SEMVER COMPLIANCE (`MAJOR.MINOR.PATCH`)**:
+  - Never mechanically increment patch numbers (`+0.0.1`) on feature work.
+  - New calculator module or major new feature (`feat`) MUST increment `MINOR` and reset `PATCH` to 0 (e.g., `1.14.0`).
+  - Bug fixes, refactoring, and UI polish (`fix`, `refactor`) increment `PATCH` (e.g., `1.14.1`).
+  - Always synchronize version across `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `CHANGELOG.md`, `README.md`, and `PRD.md`.
 - Analyze the request and relevant code before implementing feature work, spec changes, or bug fixes.
 - Update ./PRD.md before changing code when the request affects the product or behavior.
 - Ask the user when the PRD impact is unclear, and wait for explicit approval before implementation.
