@@ -11,6 +11,7 @@ export default {
         ghost: {
           lime: '#d1ff19',
           'lime-soft': '#bef264',
+          favorite: '#f59e0b',
           canvas: '#ffffff',
           surface: '#ffffff',
           'surface-deep': '#f8fafc',

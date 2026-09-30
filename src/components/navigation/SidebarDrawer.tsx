@@ -21,11 +21,13 @@ import {
   Coins,
   CalendarDays,
   Flame,
+  Star,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTitle } from '../ui/sheet';
 import { Button } from '../ui/button';
 import { siteConfig } from '../../config/site';
 import { PWAInstallButton } from '../pwa/PWAInstallButton';
+import { useFavorites } from '../../hooks/useFavorites';
 
 interface SidebarDrawerProps {
   activeId: CalculatorId;
@@ -73,6 +75,11 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
   };
 
   const categories: CalculatorCategory[] = ['finance', 'lifestyle', 'global'];
+  const { favorites } = useFavorites();
+
+  const favoriteCalculators = CALCULATORS_LIST.filter(
+    (calc) => favorites.includes(calc.id) && calc.status !== 'coming-soon'
+  ).sort(compareCalculatorsKorean);
 
   const menuContent = (
     <div className="flex flex-col h-full bg-white dark:bg-ghost-dark-surface-drawer text-[#112220] dark:text-ghost-dark-ink transition-colors duration-200">
@@ -104,36 +111,80 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
 
       {/* 메뉴 목록 */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-        {/* 최상단 대시보드 홈 메뉴 */}
-        <div className="space-y-1">
-          <div className="px-2.5 mb-1.5 text-[11px] font-bold text-[#64748b] dark:text-ghost-dark-ink-mute uppercase tracking-wider">
-            대시보드
+        {/* 즐겨찾기가 있을 때: 대시보드 대신 즐겨찾기 메뉴 섹션 출력 / 없을 때: 대시보드 홈 메뉴 출력 */}
+        {favoriteCalculators.length > 0 ? (
+          <div className="space-y-1">
+            <div className="flex items-center justify-between px-2.5 mb-1.5">
+              <span className="text-[11px] font-bold text-ghost-favorite uppercase tracking-wider flex items-center gap-1.5">
+                <Star className="w-3.5 h-3.5 text-ghost-favorite fill-ghost-favorite" />
+                즐겨찾기
+              </span>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-ghost-favorite/10 text-ghost-favorite tabular-nums">
+                {favoriteCalculators.length}
+              </span>
+            </div>
+            {favoriteCalculators.map((item) => {
+              const isActive = activeId === item.id;
+              return (
+                <Button
+                  key={`fav-${item.id}`}
+                  asChild
+                  variant="ghost"
+                  className={`w-full h-auto justify-between px-3 py-2.5 rounded-md text-left font-normal transition-colors ${
+                    isActive
+                      ? 'bg-slate-100 dark:bg-ghost-dark-hover text-[#112220] dark:text-white font-bold border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
+                      : 'text-[#334155] dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-white font-medium'
+                  }`}
+                >
+                  <Link
+                    to={`/${item.id}`}
+                    onClick={() => {
+                      onSelect(item.id);
+                      onCloseMobile();
+                    }}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      {renderIcon(item.id, isActive)}
+                      <span className="text-xs sm:text-sm truncate pt-[0.5px] leading-normal font-medium">
+                        {item.shortName}
+                      </span>
+                    </div>
+                  </Link>
+                </Button>
+              );
+            })}
           </div>
-          <Button
-            asChild
-            variant="ghost"
-            className={`w-full h-auto justify-between px-3 py-2.5 rounded-md text-left font-normal transition-colors ${
-              activeId === 'home'
-                ? 'bg-slate-100 dark:bg-ghost-dark-hover text-[#112220] dark:text-white font-bold border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
-                : 'text-[#334155] dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-white font-medium'
-            }`}
-          >
-            <Link
-              to="/"
-              onClick={() => {
-                onSelect('home');
-                onCloseMobile();
-              }}
+        ) : (
+          <div className="space-y-1">
+            <div className="px-2.5 mb-1.5 text-[11px] font-bold text-[#64748b] dark:text-ghost-dark-ink-mute uppercase tracking-wider">
+              대시보드
+            </div>
+            <Button
+              asChild
+              variant="ghost"
+              className={`w-full h-auto justify-between px-3 py-2.5 rounded-md text-left font-normal transition-colors ${
+                activeId === 'home'
+                  ? 'bg-slate-100 dark:bg-ghost-dark-hover text-[#112220] dark:text-white font-bold border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
+                  : 'text-[#334155] dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-white font-medium'
+              }`}
             >
-              <div className="flex items-center gap-2.5 min-w-0">
-                {renderIcon('home', activeId === 'home')}
-                <span className="text-xs sm:text-sm truncate pt-[0.5px] leading-normal font-semibold">
-                  홈 (대시보드)
-                </span>
-              </div>
-            </Link>
-          </Button>
-        </div>
+              <Link
+                to="/"
+                onClick={() => {
+                  onSelect('home');
+                  onCloseMobile();
+                }}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  {renderIcon('home', activeId === 'home')}
+                  <span className="text-xs sm:text-sm truncate pt-[0.5px] leading-normal font-semibold">
+                    홈 (대시보드)
+                  </span>
+                </div>
+              </Link>
+            </Button>
+          </div>
+        )}
         {categories.map((cat) => {
           // 출시 예정(coming-soon) 항목은 메뉴 목록에서 제외하고 가나다 순 동적 정렬
           const items = CALCULATORS_LIST

@@ -97,6 +97,20 @@
   - 컬러 이모지를 배제하고 단정한 흑백 모노크롬 라인 아이콘 적용.
   - 2~4개 핵심 안내 블록을 반응형 그리드로 배열하여 시각적 여유 제공.
 
+### 2.9 즐겨찾기 토글 버튼 및 자주 쓰는 계산기 퀵 섹션 (`StarButton` & `FavoritesSection`)
+- **원터치 즐겨찾기 별 버튼 (`Star`)**:
+  - **터치 영역 및 크기**: 모바일 터치 접근성을 위해 최소 32x32px(`h-8 w-8`) 터치 타겟 확보.
+  - **시각적 상태 및 인터랙션**:
+    - **활성(즐겨찾기 됨)**: `text-ghost-favorite fill-ghost-favorite` 정식 앰버 골드 솔리드 필.
+    - **비활성(미등록)**: `text-ghost-ink-stone dark:text-ghost-dark-ink-stone hover:text-ghost-ink-soft dark:hover:text-ghost-dark-ink-mute`.
+    - **호버 및 탭 피드백**: 부드러운 스케일 애니메이션(`transition-transform active:scale-90 hover:scale-110`).
+  - **이벤트 전파 방지**: 카드 클릭 링크 이동(`Link`)과 충돌하지 않도록 `e.preventDefault()`, `e.stopPropagation()` 필수 적용.
+- **홈 화면 상단 `자주 쓰는 계산기` 퀵 섹션**:
+  - **조건부 렌더링**: 등록된 즐겨찾기가 1개 이상 있을 때만 카테고리 탭 칩 및 일반 카드 목록보다 **더 상단**에 우선 노출.
+  - **헤더 계층**:
+    - `⭐ 자주 쓰는 계산기` 제목 + 등록 개수 라임 캡슐 뱃지(`text-xs px-2 py-0.5 rounded-full bg-ghost-lime/20 text-ghost-ink dark:text-ghost-lime font-bold`).
+  - **그리드 레이아웃**: 모바일 2열(`grid-cols-2`), 데스크톱 3열(`grid-cols-3`) 대칭 카드 배치.
+
 ---
 
 ## 3. UI 구현 시 금지 및 주의사항 (Do & Don't)

@@ -100,4 +100,41 @@ describe('HomeApp Compact Dashboard Tests', () => {
     expect(writeTextMock).toHaveBeenCalledWith('https://soso-calculator.vercel.app');
     expect(await screen.findByText('복사 완료!')).toBeInTheDocument();
   });
+
+  it('별 아이콘 클릭 시 라우팅 이동 없이 즐겨찾기가 토글되고 자주 쓰는 계산기 섹션 및 필터 칩이 노출되어야 한다', () => {
+    window.localStorage.clear();
+    renderHomeApp();
+
+    // 초기에는 자주 쓰는 계산기 섹션 및 즐겨찾기 칩이 없음
+    expect(screen.queryByText('자주 쓰는 계산기')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '⭐ 즐겨찾기' })).not.toBeInTheDocument();
+
+    // 대출이자 계산기 카드의 즐겨찾기 버튼 클릭
+    const starBtn = screen.getByRole('button', { name: '대출이자 계산기 즐겨찾기 추가' });
+    fireEvent.click(starBtn);
+
+    // 카드 이동(navigate)은 호출되지 않아야 함
+    expect(mockNavigate).not.toHaveBeenCalled();
+
+    // 자주 쓰는 계산기 섹션이 상단에 노출되고 즐겨찾기 카운트 1 확인
+    expect(screen.getByText('자주 쓰는 계산기')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '⭐ 즐겨찾기' })).toBeInTheDocument();
+
+    // ⭐ 즐겨찾기 카테고리 칩 클릭 시 필터링 확인
+    const favChip = screen.getByRole('button', { name: '⭐ 즐겨찾기' });
+    fireEvent.click(favChip);
+
+    // 대출이자 계산기만 노출되고 다른 계산기는 노출되지 않음
+    expect(screen.getAllByText('대출이자 계산기').length).toBeGreaterThan(0);
+    expect(screen.queryByText('연복리 계산기')).not.toBeInTheDocument();
+
+    // 다시 별 아이콘 클릭 시 즐겨찾기 해제
+    const unstarBtn = screen.getAllByRole('button', { name: '대출이자 계산기 즐겨찾기 해제' })[0];
+    fireEvent.click(unstarBtn);
+
+    // 전체 탭으로 복귀 시 자주 쓰는 계산기 섹션 사라짐
+    const allChip = screen.getByRole('button', { name: '전체' });
+    fireEvent.click(allChip);
+    expect(screen.queryByText('자주 쓰는 계산기')).not.toBeInTheDocument();
+  });
 });
