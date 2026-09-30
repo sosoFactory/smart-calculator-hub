@@ -1,78 +1,86 @@
 # Agent Execution Protocol
 
-All AI coding assistants must follow this protocol. Read the applicable rule file before beginning work in that domain.
+All AI coding assistants must strictly follow this protocol. Always consult applicable domain rules in `rules/`, design specifications, and agent skills before implementation.
 
-## 1. Absolute Core Rules (CRITICAL - HIGHEST PRIORITY)
+---
 
-- **NEVER MODIFY CODE OR EXECUTE WRITE TOOLS WITHOUT EXPLICIT USER INSTRUCTION**:
-  - Only edit files, create files, or run modifying commands when the user explicitly instructs you to do so (e.g., "작업해", "수정해줘", "진행해", "fix this", "implement this").
-  - When the user asks a question, expresses doubt, or reports an observation/issue (e.g., "~왜 이래?", "~뜨는데?", "why does this happen?"), **PROVIDE ONLY AN EXPLANATION AND TEXT ANSWER**. Never touch the code or make tool calls to edit files.
-- **EXPLAIN AND PROPOSE FIRST, AWAIT CONFIRMATION**:
-  - Clearly explain the cause and the proposed solution first. Do NOT start implementing until the user explicitly approves.
-- **NEVER PUSH AUTOMATICALLY UPON COMMIT**:
-  - Commit locally only after explicit approval. Never run `git push` unless the user explicitly requests a push.
-- **STRICT ADHERENCE TO PRD, UI/UX GUIDE, GHOST DESIGN SYSTEM & SHADCN SKILL**:
-  - Before writing or modifying any UI, always thoroughly refer to and comply with `./PRD.md` (functional logic & component architecture), `./ui-ux.md` (component layout, visual hierarchy & interaction specs), `./ghost.design.md` (base typography, colors & shadow tokens), and the `/shadcn` agent skill (`.agents/skills/shadcn/SKILL.md`).
-  - Mandatory reuse of existing common components (`Tabs`, `FormHeader`, `SelectableChip`, `SegmentedControl`, `NumericInput`, `DatePicker`, `Calendar`, `Popover`, `InfoCard`, `SummaryCards`, `SubMetricCard`) instead of writing duplicate inline tags.
-  - Never write raw Tailwind classes or inline styles into `./PRD.md`; keep PRD focused on functional logic and component architecture, and place UI/UX/layout specifications in `./ui-ux.md`.
-- **MANDATORY TDD SKILL FOR LOGIC, FORMULAS & UTILITIES**:
-  - When implementing or modifying mathematical formulas, financial/medical/date calculation logic, business rules, or data transformation utilities, ALWAYS refer to and follow the `/tdd` agent skill (`.agents/skills/tdd/SKILL.md`).
-  - Strictly enforce the Red-Green-Refactor cycle: write unit tests first before writing production code, verify test failures, implement code to pass tests, and ensure 100% test suite pass rate without regressions.
-- **STRICT SEMVER COMPLIANCE (`MAJOR.MINOR.PATCH`)**:
-  - Never mechanically increment patch numbers (`+0.0.1`) on feature work.
-  - New calculator module or major new feature (`feat`) MUST increment `MINOR` and reset `PATCH` to 0 (e.g., `1.14.0`).
-  - Bug fixes, refactoring, and UI polish (`fix`, `refactor`) increment `PATCH` (e.g., `1.14.1`).
+## 1. Core Principles
+
+### 1.1 Deliberate & Thorough Execution (Anti-Lazy Protocol)
+- **Deep Thinking over Shortcuts**:
+  - Think deeply about the root cause, systemic architecture, and user intent before acting.
+  - Strictly prohibit superficial hacks, lazy regex/script workarounds, and hasty, unverified edits.
+  - Approach every task with craftsmanship and thoroughness, even for a single-line change.
+- **Ask When Unclear — No Guessing**:
+  - Whenever requirements, user intent, naming conventions, or architectural impacts are ambiguous, **NEVER GUESS OR ASSUME ARBITRARILY**.
+  - Always proactively ask the user for clarification before executing or writing code.
+- **No Scope Truncation or Deception**:
+  - Never arbitrarily narrow down the instructed task scope (e.g., modifying only a few recent entries while claiming the whole file is updated).
+  - When asked to summarize documentation, synthesize key functional changes with substance rather than deleting content and leaving only hollow headers.
+- **Documentation Integrity**:
+  - Keep project documentation in clean Markdown, use readable names, and log detailed, structured errors.
+
+### 1.2 Safety & Authority (Write Permission Control)
+- **Strict Read-Only Mode for Questions and Observations**:
+  - When the user asks a question, expresses doubt, or reports an issue/observation (e.g., "~왜 이래?", "~뜨는데?", "why does this happen?"), **PROVIDE ONLY AN EXPLANATION AND TEXT ANSWER**.
+  - NEVER call write tools, modify code, or run modifying shell commands without explicit user instruction (e.g., "작업해", "수정해줘", "진행해", "fix this", "implement this").
+  - Always explain the diagnosis and proposed solution first, and await explicit user confirmation.
+- **Never Push Automatically upon Commit**:
+  - Make commits locally only after user review and approval.
+  - NEVER run `git push` automatically. Push to remote only when the user explicitly requests it.
+
+### 1.3 Engineering & Quality Standards
+- **Mandatory TDD for Logic & Utilities**:
+  - When implementing or modifying mathematical formulas, financial/medical/date calculation logic, business rules, or utilities, strictly apply the `/tdd` skill (`.agents/skills/tdd/SKILL.md`).
+  - Strictly enforce the Red-Green-Refactor cycle: write unit tests first before writing production code, verify test failures, implement code to pass tests, and ensure 100% test suite pass rate (`npm test -- --run`) without regressions.
+- **Strict Semantic Versioning (`MAJOR.MINOR.PATCH`)**:
+  - New calculator modules or major features (`feat`) MUST increment `MINOR` and reset `PATCH` to 0.
+  - Bug fixes, refactoring, and UI polish (`fix`, `refactor`) increment `PATCH`.
   - Always synchronize version across `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `CHANGELOG.md`, `README.md`, and `PRD.md`.
-- Analyze the request and relevant code before implementing feature work, spec changes, or bug fixes.
-- Update ./PRD.md before changing code when the request affects the product or behavior.
-- Ask the user when the PRD impact is unclear, and wait for explicit approval before implementation.
-- Follow [rules/language-markdown.md](rules/language-markdown.md) for user-facing responses, generated documentation, and source comments.
-- Follow [rules/security.md](rules/security.md) for sensitive data and destructive operations.
-- Follow [rules/git-workflow.md](rules/git-workflow.md) for commits and releases.
-- Keep project documentation in Markdown, use readable names, and log detailed errors.
+- **Design System Single Source of Truth**:
+  - Before writing or modifying UI, always comply with `./ui-ux.md` (component layout & interaction) and `./ghost.design.md` (typography & color tokens), utilizing skills `.agents/skills/shadcn/SKILL.md` and `.agents/skills/frontend-design/SKILL.md`.
+  - Mandatory reuse of standard components defined in `./ui-ux.md` instead of writing duplicate inline tags.
+  - Never write raw Tailwind classes or inline styles into `./PRD.md`; keep PRD focused on functional logic and component architecture, and place UI/UX/layout specifications in `./ui-ux.md`.
 
-## 2. Workflow
+### 1.4 Domain Governance & Rules
+- Consult domain rules before performing specialized tasks:
+  - [rules/language-markdown.md](rules/language-markdown.md): Standards for user-facing responses, generated documentation, and source comments.
+  - [rules/security.md](rules/security.md): Handling sensitive data, environment configurations, and destructive operations.
+  - [rules/git-workflow.md](rules/git-workflow.md): Commit messages, branching, and release conventions.
+  - [rules/frontend-mobile.md](rules/frontend-mobile.md): Mobile-first viewport standards and screen validation flows.
+- For external libraries, frameworks, SDKs, or APIs, check official documentation and Context7 tools first. Do not guess unknown behaviors.
 
-### Step 1: Analyze
+---
 
-- Classify the request as a feature, bug fix, or spec change.
-- Review the relevant code, data structures, and dependencies.
-- For external libraries, frameworks, SDKs, APIs, CLIs, or configuration systems, check official documentation or Context7-style MCP tools first.
-- Do not guess unknown behavior. Validate API usage, versions, and recommended patterns against authoritative references and examples.
+## 2. Standard Workflow
 
-### Step 2: Update the PRD
+1. **Step 1: Analyze**
+   - Classify request (feature, bug fix, refactoring, docs) and inspect relevant code, data structures, and dependencies.
+   - Validate API usage and recommended patterns against authoritative documentation.
+2. **Step 2: Propose & Update PRD**
+   - When requirements, data structures, business logic, or behaviors change, update `./PRD.md` before touching code.
+   - Clearly explain the diagnosis and proposed solution to the user.
+3. **Step 3: Await Confirmation**
+   - Wait for explicit user approval before touching any code or making file edits.
+4. **Step 4: Implement & Verify**
+   - Implement according to the approved PRD using TDD.
+   - Validate with all unit tests (`npm test -- --run`) and production build checks (`npm run build`).
+5. **Step 5: Review & Local Commit**
+   - Share change summary with the user and commit locally only after confirmation. Never push automatically.
 
-- Update ./PRD.md before touching code when the request changes requirements, data structures, business logic, or expected behavior.
-
-### Step 3: Get User Approval
-
-- Share the updated PRD with the user and wait for approval.
-- Do not begin implementation until the user explicitly approves.
-
-### Step 4: Implement and Verify
-
-- Implement according to the approved PRD.
-- For calculation algorithms, formulas, and utility logic, strictly apply the `/tdd` skill (`.agents/skills/tdd/SKILL.md`) test-first approach.
-- For frontend work, read [rules/frontend-mobile.md](rules/frontend-mobile.md) and validate the screen and UX flow before backend integration.
-- Batch jobs, ETL tasks, internal schedulers, CLI-only tools, and pure backend services may follow an API- or logic-first approach.
-- Validate with all unit tests (`npm test -- --run`) and production build checks (`npm run build`) before finalizing.
-
-
-### Step 5: Final Review and Commit
-
-- Share the change summary and scope with the user.
-- Commit only after final confirmation.
-- Apply [rules/git-workflow.md](rules/git-workflow.md) for commit and versioning details.
+---
 
 ## 3. Rule Priority
 
-- The core rules in this file apply to every task.
-- If a detailed rule conflicts with a task requirement, surface the conflict and confirm the intended behavior before proceeding.
+- The core rules in this protocol apply to every task.
+- If a detailed rule conflicts with a task requirement, surface the conflict and confirm the intended behavior with the user before proceeding.
 
-## 4. Mandatory SEO Checklist (Definition of Done for New Calculators / Pages)
+---
 
-Whenever adding a new calculator, page, or modifying routes, the following SEO requirements MUST be satisfied before finalizing the task:
-1. **Sitemap Registration**: Add the new canonical endpoint (`<loc>`, `<changefreq>`, and `<priority>`) to `public/sitemap.xml`.
-2. **Dynamic Metadata & Structured Data**: Add route configuration in `src/components/common/PageMetaUpdater.tsx` (`PAGE_SEO_DATA`) specifying unique `title`, `description`, `keywords`, and JSON-LD `applicationCategory`.
-3. **Semantic Crawling & Internal Linking**: Ensure all navigation links (dashboard cards in `HomeApp.tsx`, sidebar drawer menu in `SidebarDrawer.tsx`, and footer navigation) render semantic `<Link>` / `<a href>` elements so search engine crawlers can index the complete site graph without relying on JavaScript `onClick` handlers.
-4. **Verification**: Verify that the dynamic canonical tag correctly updates upon route transition and prevents duplicate URL penalties.
+## 4. Definition of Done for New Calculators / Pages
+
+Whenever adding a new calculator, page, or route, the following must be satisfied before completion:
+1. **Sitemap Registration**: Add canonical endpoint (`<loc>`, `<changefreq>`, `<priority>`) to `public/sitemap.xml`.
+2. **SEO Metadata & Structured Data**: Register route in `src/components/common/PageMetaUpdater.tsx` (`PAGE_SEO_DATA`) with unique `title`, `description`, `keywords`, and JSON-LD schema.
+3. **Semantic Crawling & Linking**: Ensure home cards (`HomeApp.tsx`), sidebar (`SidebarDrawer.tsx`), and footer render semantic `<Link>` / `<a href>` elements.
+4. **Canonical Tag Verification**: Ensure the dynamic canonical tag updates correctly upon route transition.
