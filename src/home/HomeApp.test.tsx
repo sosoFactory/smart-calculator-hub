@@ -118,29 +118,17 @@ describe('HomeApp Compact Dashboard Tests', () => {
     // 카드 이동(navigate)은 호출되지 않아야 함
     expect(mockNavigate).not.toHaveBeenCalled();
 
-    // 상단 분리 섹션 헤더는 여전히 없고, 대출이자 계산기가 목록의 맨 앞(index 0)으로 Pin-to-Top 정렬됨
+    // 상단 분리 섹션 헤더 및 즐겨찾기 탭은 없으며, 대출이자 계산기가 목록의 맨 앞(index 0)으로 Pin-to-Top 정렬됨
     expect(screen.queryByText('자주 쓰는 계산기')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '⭐ 즐겨찾기' })).not.toBeInTheDocument();
     const updatedHeadings = screen.getAllByRole('heading', { level: 3 });
     expect(updatedHeadings[0]).toHaveTextContent('대출이자 계산기');
-
-    // ⭐ 즐겨찾기 카테고리 칩이 노출됨
-    const favChip = screen.getByRole('button', { name: '⭐ 즐겨찾기' });
-    expect(favChip).toBeInTheDocument();
-
-    // ⭐ 즐겨찾기 카테고리 칩 클릭 시 필터링 확인
-    fireEvent.click(favChip);
-    expect(screen.getByText('대출이자 계산기')).toBeInTheDocument();
-    expect(screen.queryByText('연복리 계산기')).not.toBeInTheDocument();
-    expect(screen.queryByText('날짜·디데이')).not.toBeInTheDocument();
 
     // 다시 별 아이콘 클릭 시 즐겨찾기 해제
     const unstarBtn = screen.getByRole('button', { name: '대출이자 계산기 즐겨찾기 해제' });
     fireEvent.click(unstarBtn);
 
-    // 전체 탭으로 복귀 시 즐겨찾기 칩 사라지고 원래 가나다순 복귀
-    const allChip = screen.getByRole('button', { name: '전체' });
-    fireEvent.click(allChip);
-    expect(screen.queryByRole('button', { name: '⭐ 즐겨찾기' })).not.toBeInTheDocument();
+    // 원래 가나다순으로 복귀
     const restoredHeadings = screen.getAllByRole('heading', { level: 3 });
     expect(restoredHeadings[0]).toHaveTextContent('날짜·디데이');
   });

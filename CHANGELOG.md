@@ -3,6 +3,35 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.14.2] - 2026-09-30
+
+### refactor: Ghost 디자인 시스템 기준 전역 모노크롬 잉크 계층 일원화 및 인라인 헥스·다색상 아이콘 파편화 제거
+- **홈 계산기 카드 아이콘 에디토리얼 모노크롬화 (`src/home/HomeApp.tsx`)**:
+  - 기존 10색 무지개 컬러(에메랄드, 인디고, 바이올렛, 앰버, 로즈, 오렌지 등) 아이콘의 SaaS 템플릿 클리셰를 전면 배제하고, 차분하고 정돈된 Ghost 모노크롬 잉크(`text-ghost-ink-soft dark:text-ghost-dark-ink-soft group-hover:text-ghost-ink`)로 일원화.
+  - 아이콘 배경 컨테이너도 `ghost-surface-deep` 및 `ghost-hairline` 토큰으로 단일화.
+- **인라인 헥스코드 및 Slate 팔레트 파편화 전면 제거 (`HomeApp.tsx`, `SidebarDrawer.tsx`, `GlobalHeader.tsx`)**:
+  - 무분별하게 혼용되던 `#112220`, `#15171a`, `#334155`, `#64748b`, `#94a3b8`, `#e5e7eb` 및 `text-slate-400/500/600`을 `ghost-ink`, `ghost-ink-soft`, `ghost-ink-mute`, `ghost-ink-stone`, `ghost-hairline` 시맨틱 토큰으로 100% 교체.
+- **Electric Lime 볼티지 스코핑 통제**:
+  - 홈 카드 하단 액션 링크 및 카테고리 선택 칩에 불필요하게 산발 적용되던 라임 하이라이트를 절제된 모노크롬 잉크-베이스(`ghost-ink-base`) 스타일로 환원.
+- **전역 버전 v1.14.2 동기화**:
+  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `README.md`, `PRD.md` 버전 일치 완료.
+
+## [1.14.1] - 2026-09-30
+
+### refactor: 홈 즐겨찾기 카테고리 탭 제거 및 별 아이콘 순수 모노크롬 솔리드(Pure Monochrome Solid) 적용
+- **홈 대시보드 즐겨찾기 카테고리 탭 제거 (`src/home/HomeApp.tsx`)**:
+  - 즐겨찾기 등록 시 동적으로 추가되던 `⭐ 즐겨찾기` 탭 칩을 완전히 제거하여 4대 표준 카테고리(`전체`, `금융 & 자산`, `생활 & 측정`, `통화 & 글로벌`) 체계로 일원화.
+  - 별도 탭 뎁스 없이 단일 카드 그리드 내에서 즐겨찾기 카드가 맨 앞으로 오는 **Pin-to-Top 다중 정렬**을 단독 표준으로 확립.
+- **별 아이콘 순수 모노크롬 솔리드 필 적용 (`HomeApp.tsx`, `GlobalHeader.tsx`, `SidebarDrawer.tsx`)**:
+  - 알록달록한 유채색(노랑, 라임 등)을 배제하고 Ghost 디자인 시스템 본연의 **순수 흑백 모노크롬 솔리드 필** 적용.
+  - 활성 상태: `text-ghost-ink dark:text-ghost-dark-ink fill-ghost-ink dark:fill-ghost-dark-ink` (라이트 모드 칠흑 솔리드, 다크 모드 순백 솔리드).
+  - 비활성 상태: `text-ghost-ink-stone dark:text-ghost-dark-ink-stone hover:text-ghost-ink dark:hover:text-ghost-dark-ink`.
+  - 사이드바 드로어 카운트 뱃지도 모노크롬 서피스(`bg-slate-100 dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink`)로 정돈.
+- **문서 및 단위 테스트 동기화**:
+  - `PRD.md`, `ui-ux.md`에 모노크롬 솔리드 사양 동기화.
+  - `HomeApp.test.tsx`: 탭 제거 및 모노크롬 Pin-to-Top 정렬 인터랙션 검증 테스트 업데이트.
+  - 전역 버전 `v1.14.1` 동기화 (`package.json`, `site.ts`, `site.test.ts`, `README.md`, `PRD.md`).
+
 ## [1.14.0] - 2026-09-30
 
 ### chore: SemVer(시맨틱 버저닝) 체계 정상화 및 10대 계산기·즐겨찾기 릴리즈 동기화

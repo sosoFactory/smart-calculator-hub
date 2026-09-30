@@ -43,7 +43,11 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
   onCloseMobile,
 }) => {
   const renderIcon = (id: CalculatorId, isActive: boolean) => {
-    const cls = `w-4 h-4 shrink-0 ${isActive ? 'text-[#112220] dark:text-white' : 'text-[#64748b] dark:text-ghost-dark-ink-mute'}`;
+    const cls = `w-4 h-4 shrink-0 transition-colors ${
+      isActive
+        ? 'text-ghost-ink dark:text-ghost-dark-ink'
+        : 'text-ghost-ink-mute dark:text-ghost-dark-ink-mute'
+    }`;
     switch (id) {
       case 'home':
         return <LayoutDashboard className={cls} />;
@@ -82,7 +86,7 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
   ).sort(compareCalculatorsKorean);
 
   const menuContent = (
-    <div className="flex flex-col h-full bg-white dark:bg-ghost-dark-surface-drawer text-[#112220] dark:text-ghost-dark-ink transition-colors duration-200">
+    <div className="flex flex-col h-full bg-white dark:bg-ghost-dark-surface-drawer text-ghost-ink dark:text-ghost-dark-ink transition-colors duration-200">
       {/* 헤더 로고 영역 (클릭 시 홈으로 이동) */}
       <Link
         to="/"
@@ -90,7 +94,7 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
           onSelect('home');
           onCloseMobile();
         }}
-        className="h-16 px-4 border-b border-[#e5e7eb] dark:border-ghost-dark-hairline flex items-center shrink-0 cursor-pointer group hover:bg-slate-50/80 dark:hover:bg-ghost-dark-hover transition-colors no-underline text-inherit"
+        className="h-16 px-4 border-b border-ghost-hairline dark:border-ghost-dark-hairline flex items-center shrink-0 cursor-pointer group hover:bg-ghost-surface-deep/80 dark:hover:bg-ghost-dark-hover transition-colors no-underline text-inherit"
       >
         <div className="flex items-center gap-2.5 min-w-0">
           <img
@@ -99,10 +103,10 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
             className="w-8 h-8 shrink-0 object-contain group-hover:scale-105 transition-transform"
           />
           <div className="flex flex-col justify-center min-w-0">
-            <span className="font-bold text-[15px] tracking-tight text-[#112220] dark:text-ghost-dark-ink block leading-snug truncate pt-[1px]">
+            <span className="font-bold text-[15px] tracking-tight text-ghost-ink dark:text-ghost-dark-ink block leading-snug truncate pt-[1px]">
               {siteConfig.name}
             </span>
-            <span className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute font-medium block leading-normal tracking-tight truncate">
+            <span className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute font-medium block leading-normal tracking-tight truncate">
               {siteConfig.nameEn}
             </span>
           </div>
@@ -115,11 +119,11 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
         {favoriteCalculators.length > 0 ? (
           <div className="space-y-1">
             <div className="flex items-center justify-between px-2.5 mb-1.5">
-              <span className="text-[11px] font-bold text-ghost-favorite uppercase tracking-wider flex items-center gap-1.5">
-                <Star className="w-3.5 h-3.5 text-ghost-favorite fill-ghost-favorite" />
+              <span className="text-[11px] font-bold text-ghost-ink-mute dark:text-ghost-dark-ink-mute uppercase tracking-wider flex items-center gap-1.5">
+                <Star className="w-3.5 h-3.5 text-ghost-ink dark:text-ghost-dark-ink fill-ghost-ink dark:fill-ghost-dark-ink" />
                 즐겨찾기
               </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-ghost-favorite/10 text-ghost-favorite tabular-nums">
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-ghost-surface-deep dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink tabular-nums border border-ghost-hairline dark:border-ghost-dark-hairline-soft">
                 {favoriteCalculators.length}
               </span>
             </div>
@@ -132,8 +136,8 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
                   variant="ghost"
                   className={`w-full h-auto justify-between px-3 py-2.5 rounded-md text-left font-normal transition-colors ${
                     isActive
-                      ? 'bg-slate-100 dark:bg-ghost-dark-hover text-[#112220] dark:text-white font-bold border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
-                      : 'text-[#334155] dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-white font-medium'
+                      ? 'bg-ghost-surface-deep dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink font-bold border border-ghost-hairline dark:border-ghost-dark-hairline-soft hover:bg-ghost-surface-deep dark:hover:bg-ghost-dark-surface-elevated'
+                      : 'text-ghost-ink-soft dark:text-ghost-dark-ink-soft hover:bg-ghost-hover dark:hover:bg-ghost-dark-hover hover:text-ghost-ink dark:hover:text-ghost-dark-ink font-medium'
                   }`}
                 >
                   <Link
@@ -156,7 +160,7 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
           </div>
         ) : (
           <div className="space-y-1">
-            <div className="px-2.5 mb-1.5 text-[11px] font-bold text-[#64748b] dark:text-ghost-dark-ink-mute uppercase tracking-wider">
+            <div className="px-2.5 mb-1.5 text-[11px] font-bold text-ghost-ink-mute dark:text-ghost-dark-ink-mute uppercase tracking-wider">
               대시보드
             </div>
             <Button
@@ -164,8 +168,8 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
               variant="ghost"
               className={`w-full h-auto justify-between px-3 py-2.5 rounded-md text-left font-normal transition-colors ${
                 activeId === 'home'
-                  ? 'bg-slate-100 dark:bg-ghost-dark-hover text-[#112220] dark:text-white font-bold border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
-                  : 'text-[#334155] dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-white font-medium'
+                  ? 'bg-ghost-surface-deep dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink font-bold border border-ghost-hairline dark:border-ghost-dark-hairline-soft hover:bg-ghost-surface-deep dark:hover:bg-ghost-dark-surface-elevated'
+                  : 'text-ghost-ink-soft dark:text-ghost-dark-ink-soft hover:bg-ghost-hover dark:hover:bg-ghost-dark-hover hover:text-ghost-ink dark:hover:text-ghost-dark-ink font-medium'
               }`}
             >
               <Link
@@ -194,7 +198,7 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
 
           return (
             <div key={cat} className="space-y-1">
-              <div className="px-2.5 mb-1.5 text-[11px] font-bold text-[#64748b] dark:text-ghost-dark-ink-mute uppercase tracking-wider">
+              <div className="px-2.5 mb-1.5 text-[11px] font-bold text-ghost-ink-mute dark:text-ghost-dark-ink-mute uppercase tracking-wider">
                 {CATEGORY_NAMES[cat]}
               </div>
 
@@ -209,10 +213,10 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
                     variant="ghost"
                     className={`w-full h-auto justify-between px-3 py-2.5 rounded-md text-left font-normal transition-colors ${
                       isActive
-                        ? 'bg-slate-100 dark:bg-ghost-dark-hover text-[#112220] dark:text-white font-bold border border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-100 dark:hover:bg-ghost-dark-hover'
+                        ? 'bg-ghost-surface-deep dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink font-bold border border-ghost-hairline dark:border-ghost-dark-hairline-soft hover:bg-ghost-surface-deep dark:hover:bg-ghost-dark-surface-elevated'
                         : isComingSoon
-                        ? 'text-[#94a3b8] dark:text-ghost-dark-ink-stone hover:bg-slate-50 dark:hover:bg-ghost-dark-hover'
-                        : 'text-[#334155] dark:text-ghost-dark-ink-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover hover:text-[#112220] dark:hover:text-white font-medium'
+                        ? 'text-ghost-ink-stone dark:text-ghost-dark-ink-stone hover:bg-ghost-hover dark:hover:bg-ghost-dark-hover'
+                        : 'text-ghost-ink-soft dark:text-ghost-dark-ink-soft hover:bg-ghost-hover dark:hover:bg-ghost-dark-hover hover:text-ghost-ink dark:hover:text-ghost-dark-ink font-medium'
                     }`}
                   >
                     <Link
@@ -243,8 +247,8 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
       </div>
 
       {/* 하단 버전 및 카피라이트 푸터 */}
-      <footer className="p-3 mt-3 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline bg-slate-50/50 dark:bg-ghost-dark-canvas/60 text-center">
-        <p className="text-[11px] text-[#94a3b8] dark:text-ghost-dark-ink-stone font-medium">
+      <footer className="p-3 mt-3 border-t border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface-deep/50 dark:bg-ghost-dark-canvas/60 text-center">
+        <p className="text-[11px] text-ghost-ink-stone dark:text-ghost-dark-ink-stone font-medium">
           {siteConfig.copyright} • {siteConfig.shortName} v{siteConfig.version}
         </p>
       </footer>
@@ -254,13 +258,13 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
   return (
     <>
       {/* 1. 데스크톱 고정 사이드바 */}
-      <aside className="hidden lg:block w-64 shrink-0 border-r border-[#e5e7eb] dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface-drawer min-h-screen sticky top-0 h-screen z-20 transition-colors duration-200">
+      <aside className="hidden lg:block w-64 shrink-0 border-r border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface-drawer min-h-screen sticky top-0 h-screen z-20 transition-colors duration-200">
         {menuContent}
       </aside>
 
       {/* 2. 모바일 shadcn Sheet 드로어 */}
       <Sheet open={isOpenMobile} onOpenChange={(open) => !open && onCloseMobile()}>
-        <SheetContent side="left" className="w-4/5 max-w-xs p-0 border-r border-[#e5e7eb] dark:border-ghost-dark-hairline dark:bg-ghost-dark-surface-drawer">
+        <SheetContent side="left" className="w-4/5 max-w-xs p-0 border-r border-ghost-hairline dark:border-ghost-dark-hairline dark:bg-ghost-dark-surface-drawer">
           <SheetTitle className="sr-only">전체 계산기 메뉴</SheetTitle>
           {menuContent}
         </SheetContent>

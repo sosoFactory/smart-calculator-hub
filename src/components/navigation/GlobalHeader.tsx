@@ -27,7 +27,7 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
   const isFav = isFavorite(currentCalculator.id);
 
   return (
-    <header className="bg-white/95 dark:bg-ghost-dark-canvas/90 backdrop-blur-md border-b border-[#e5e7eb] dark:border-ghost-dark-hairline fixed top-0 left-0 right-0 lg:left-64 z-30 h-16 flex items-center shrink-0 transition-colors duration-200">
+    <header className="bg-white/95 dark:bg-ghost-dark-canvas/90 backdrop-blur-md border-b border-ghost-hairline dark:border-ghost-dark-hairline fixed top-0 left-0 right-0 lg:left-64 z-30 h-16 flex items-center shrink-0 transition-colors duration-200">
       <div className="w-full px-4 sm:px-6 flex items-center justify-between gap-2">
         {/* 좌측: 모바일 햄버거 메뉴 버튼 + 계산기 타이틀 + 즐겨찾기 버튼 */}
         <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1 mr-2">
@@ -51,13 +51,13 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
 
           <div className="min-w-0 flex-1">
             {/* Ghost Signature: 12px Uppercase Eyebrow */}
-            <div className="text-[11px] font-bold text-[#112220] dark:text-ghost-dark-ink-soft uppercase tracking-widest leading-normal mb-0.5 flex items-center gap-1.5">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#d1ff19]" />
+            <div className="text-[11px] font-bold text-ghost-ink dark:text-ghost-dark-ink-soft uppercase tracking-widest leading-normal mb-0.5 flex items-center gap-1.5">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-ghost-lime" />
               <span className="pt-[0.5px] truncate">{siteConfig.nameEn}</span>
             </div>
 
             <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-              <h1 className="text-sm sm:text-base md:text-lg font-bold text-[#112220] dark:text-ghost-dark-ink truncate tracking-tight leading-tight">
+              <h1 className="text-sm sm:text-base md:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink truncate tracking-tight leading-tight">
                 {currentCalculator.name}
               </h1>
               {currentCalculator.id !== 'home' && (
@@ -72,8 +72,8 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
                       <Star
                         className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${
                           isFav
-                            ? 'text-ghost-favorite fill-ghost-favorite'
-                            : 'text-ghost-ink-stone dark:text-ghost-dark-ink-stone hover:text-ghost-favorite'
+                            ? 'text-ghost-ink dark:text-ghost-dark-ink fill-ghost-ink dark:fill-ghost-dark-ink'
+                            : 'text-ghost-ink-stone dark:text-ghost-dark-ink-stone hover:text-ghost-ink dark:hover:text-ghost-dark-ink'
                         }`}
                       />
                     </button>
