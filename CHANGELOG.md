@@ -3,6 +3,23 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.9.52] - 2026-09-30
+
+### fix: 안드로이드 설치형 PWA(WebAPK) 백그라운드 복귀 시 서비스 워커 자동 업데이트 감지 및 Vercel no-cache 헤더 적용
+- **안드로이드 PWA(WebAPK) 환경 서비스 워커 캐시 및 업데이트 감지 정상화**:
+  - **Vercel HTTP 무효화 헤더 강제 (`vercel.json`)**:
+    - `/sw.js` 및 `/workbox-*.js` 파일에 대해 `Cache-Control: no-cache, no-store, must-revalidate`, `Pragma: no-cache`, `Expires: 0`을 지정하여 안드로이드 크롬/웹뷰가 HTTP 캐시에서 이전 버전 서비스 워커를 재사용하는 현상 차단.
+  - **모바일 백그라운드 상주 및 복귀(`visibilitychange`, `focus`) 리스너 연동 (`PWAUpdateToast.tsx`)**:
+    - 앱이 백그라운드에 머물다 포그라운드로 복귀(`visibilityState === 'visible'`)할 때마다 `reg.update()`를 트리거하고 이미 대기 중인 워커(`reg.waiting`)를 즉시 검사하여 업데이트 토스트를 확실하게 노출.
+  - **네이티브 `updatefound` 및 워커 `statechange` 감지**:
+    - 새로운 서비스 워커 다운로드 완료(`state === 'installed'`) 시점을 실시간 포착하여 `needRefresh` 상태로 즉시 전환.
+  - **서비스 워커 활성화 후 안전 리로드 (`controllerchange`)**:
+    - 사용자가 "지금 업데이트" 클릭 시 새 서비스 워커로의 제어권 이전(`controllerchange`) 완료 즉시 1회 안전 리로드 보장.
+- **문서 체계 및 사양 전면 동기화**:
+  - `PRD.md`: Section 15 "PWA 수명주기 및 모바일 서비스 워커 업데이트 규격" 신설 및 목차(TOC) 11.13/15 반영, 버전(v1.9.52) 및 `ui-ux.md` 참조 동기화.
+  - `README.md`: 8대 ➔ 10대 핵심 계산기(날짜·디데이 `/date`, 파이어 현금흐름 `/cashflow`) 완비 테이블 정비, 버전 배지(`1.9.52`) 및 단위 테스트 배지(`194 Passed`) 최신화.
+  - `TODO.md`: 10대 계산기 현황 최신화, 11대 SEO 엔드포인트 수치 반영, v1.9.41~v1.9.52 완료 이력 기록.
+
 ## [1.9.51] - 2026-09-29
 
 ### fix: 서브 요약 지표 카드(SubMetricCard) 타이틀 말줄임(...) 원천 방지 및 뱃지·캡션 데이터 배치 최적화
