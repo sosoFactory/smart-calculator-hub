@@ -104,7 +104,7 @@ export const HomeApp: React.FC = () => {
     }
   };
 
-  // 카테고리 필터링 및 동적 가나다 정렬 (미출시 제외 & 즐겨찾기 지원)
+  // 카테고리 필터링 및 즐겨찾기 최우선(Pin-to-Top) + 가나다 다중 정렬 (미출시 제외)
   const filteredCalculators = useMemo(() => {
     const activeList = CALCULATORS_LIST.filter((calc) => calc.status !== 'coming-soon');
     if (selectedCategory === 'favorites') {
@@ -115,7 +115,13 @@ export const HomeApp: React.FC = () => {
         ? activeList
         : activeList.filter((calc) => calc.category === selectedCategory);
 
-    return [...list].sort(compareCalculatorsKorean);
+    return [...list].sort((a, b) => {
+      const aFav = favorites.includes(a.id);
+      const bFav = favorites.includes(b.id);
+      if (aFav && !bFav) return -1;
+      if (!aFav && bFav) return 1;
+      return compareCalculatorsKorean(a, b);
+    });
   }, [selectedCategory, favorites]);
 
   const categories: { key: string; label: string }[] = useMemo(() => [
@@ -126,13 +132,13 @@ export const HomeApp: React.FC = () => {
     { key: 'global', label: '통화 & 글로벌' },
   ], [favoriteCalculators.length]);
 
-  const renderCalculatorCard = (item: CalculatorItem, isFavSection?: boolean) => {
+  const renderCalculatorCard = (item: CalculatorItem) => {
     const isComingSoon = item.status === 'coming-soon';
     const isFav = isFavorite(item.id);
 
     return (
       <Link
-        key={isFavSection ? `fav-${item.id}` : item.id}
+        key={item.id}
         to={`/${item.id}`}
         onClick={() => navigate(`/${item.id}`)}
         className={`group relative flex flex-col justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200 cursor-pointer text-left no-underline ${
@@ -219,27 +225,6 @@ export const HomeApp: React.FC = () => {
 
   return (
     <div className="w-full pb-8 sm:pb-12 space-y-4 sm:space-y-6">
-      {/* 0. 즐겨찾기 등록 항목이 있을 때: 최상단 자주 쓰는 계산기 퀵 섹션 (다른 카드보다 상단에 우선 출력) */}
-      {favoriteCalculators.length > 0 && selectedCategory === 'all' && (
-        <section className="space-y-2.5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <Star className="w-4 h-4 text-ghost-favorite fill-ghost-favorite" />
-              <h2 className="text-sm sm:text-base font-bold text-[#112220] dark:text-ghost-dark-ink tracking-tight">
-                자주 쓰는 계산기
-              </h2>
-              <span className="text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full bg-ghost-lime/20 text-ghost-ink dark:text-ghost-lime font-bold tabular-nums">
-                {favoriteCalculators.length}
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3.5">
-            {favoriteCalculators.map((item) => renderCalculatorCard(item, true))}
-          </div>
-        </section>
-      )}
-
       {/* 1. 카테고리 퀵 탭 칩 섹션 (본문 타이틀 완전 배제 및 상단 고정 헤더 일원화) */}
       <section className="pt-0.5 sm:pt-1">
         <div className="flex items-center justify-start flex-wrap gap-1.5">
@@ -265,10 +250,10 @@ export const HomeApp: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. 모바일 2열 콤팩트 카드 그리드 (스크롤 최소화 핏) */}
+      {/* 2. 모바일 2열 콤팩트 카드 그리드 (즐겨찾기 Pin-to-Top 우선 정렬 & 스크롤 최소화 핏) */}
       <section>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3.5">
-          {filteredCalculators.map((item: CalculatorItem) => renderCalculatorCard(item, false))}
+          {filteredCalculators.map((item: CalculatorItem) => renderCalculatorCard(item))}
         </div>
       </section>
 
