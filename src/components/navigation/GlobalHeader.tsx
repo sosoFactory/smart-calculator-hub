@@ -66,14 +66,12 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
                     <button
                       type="button"
                       onClick={() => toggleFavorite(currentCalculator.id)}
-                      className="p-1 rounded-md text-ghost-ink-stone hover:text-ghost-ink-soft dark:text-ghost-dark-ink-stone dark:hover:text-ghost-dark-ink transition-transform active:scale-90 shrink-0"
+                      className="p-1 rounded-md text-ghost-ink dark:text-ghost-dark-ink transition-transform active:scale-90 shrink-0"
                       aria-label={isFav ? `${currentCalculator.shortName} 즐겨찾기 해제` : `${currentCalculator.shortName} 즐겨찾기 추가`}
                     >
                       <Star
-                        className={`w-4 h-4 sm:w-4.5 sm:h-4.5 ${
-                          isFav
-                            ? 'text-ghost-ink dark:text-ghost-dark-ink fill-ghost-ink dark:fill-ghost-dark-ink'
-                            : 'text-ghost-ink-stone dark:text-ghost-dark-ink-stone hover:text-ghost-ink dark:hover:text-ghost-dark-ink'
+                        className={`w-4 h-4 sm:w-4.5 sm:h-4.5 text-ghost-ink dark:text-ghost-dark-ink transition-colors ${
+                          isFav ? 'fill-current' : 'fill-none'
                         }`}
                       />
                     </button>

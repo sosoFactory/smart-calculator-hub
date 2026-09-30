@@ -3,6 +3,20 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.14.3] - 2026-09-30
+
+### refactor: 즐겨찾기 별 아이콘 색상 클래스 100% 단일화 및 fill-current/fill-none 상태 제어
+- **별(즐겨찾기) 아이콘 색상 단일화 (`HomeApp.tsx`, `GlobalHeader.tsx`, `SidebarDrawer.tsx`)**:
+  - 활성/비활성 여부와 무관하게 모든 별 아이콘의 기본 색상 클래스를 `text-ghost-ink dark:text-ghost-dark-ink`로 100% 동일하게 통일.
+  - 활성 상태: `fill-current` (단일 잉크 칠흑/순백 솔리드).
+  - 비활성 상태: `fill-none` (동일한 잉크 색상의 외곽선 라인).
+  - 사이드바 섹션 별 아이콘도 `fill-current`로 일원화.
+- **UI/UX 가이드 문서 동기화 (`ui-ux.md`, `PRD.md`)**:
+  - 2.9 및 2.10 섹션에 단일 색상 및 `fill-current`/`fill-none` 제어 규격 명문화.
+  - Do & Don't 테이블에 별 아이콘 색상 분기 금지 및 에디토리얼 모노크롬 카드 아이콘 규칙 추가.
+- **전역 버전 v1.14.3 동기화**:
+  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `README.md`, `PRD.md` 버전 일치 완료.
+
 ## [1.14.2] - 2026-09-30
 
 ### refactor: Ghost 디자인 시스템 기준 전역 모노크롬 잉크 계층 일원화 및 인라인 헥스·다색상 아이콘 파편화 제거

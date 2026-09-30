@@ -1,6 +1,6 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.14.2  
+> **버전**: v1.14.3  
 > **최종 갱신일**: 2026-09-30  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
@@ -350,9 +350,9 @@ src/
      - **홈 화면 계산기 카드**: 전체 계산기 카드 우상단에 별 모양 북마크 버튼(`Star`) 배치.
        - 클릭 시 카드 페이지 이동(`Link`)을 차단(`e.preventDefault()`, `e.stopPropagation()`)하고 즉각 즐겨찾기 상태를 토글.
      - **글로벌 헤더 (`GlobalHeader`)**: 각 계산기 화면 상단 헤더의 계산기 타이틀 우측에 별 모양 버튼을 배치하여, 사용자가 계산기를 이용하는 중에도 1터치로 즐겨찾기 등록/해제 가능.
-     - **시각적 스타일링**: 컬러(노랑/라임 등)를 배제한 **순수 흑백 모노크롬 솔리드 필** 적용.
-       - **활성(즐겨찾기 됨)**: 선과 면이 채워진 솔리드 별 아이콘 (`text-ghost-ink fill-ghost-ink dark:text-ghost-dark-ink dark:fill-ghost-dark-ink`).
-       - **비활성(미등록)**: 얇은 외곽선 라인 아이콘 (`text-ghost-ink-stone dark:text-ghost-dark-ink-stone hover:text-ghost-ink dark:hover:text-ghost-dark-ink`).
+     - **시각적 스타일링**: 컬러(노랑/라임 등)를 배제하고 활성/비활성 색상을 	ext-ghost-ink dark:text-ghost-dark-ink로 100% 동일하게 통일하며, **오직 채움(ill-current)과 비움(ill-none)**으로만 상태를 구분.
+       - **활성(즐겨찾기 됨)**: 선과 면이 채워진 솔리드 별 아이콘 (	ext-ghost-ink dark:text-ghost-dark-ink fill-current).
+       - **비활성(미등록)**: 동일한 색상의 외곽선 라인 아이콘 (	ext-ghost-ink dark:text-ghost-dark-ink fill-none).
      - **데이터 영속성 및 동기화**: `LocalStorage` (`smart_calc_favorites`) 기반 100% 로컬 저장. 전역 커스텀 훅 `useFavorites`를 통해 홈 대시보드, 사이드바 드로어, 상단 헤더 간 상태를 실시간 동기화.
   3. **글로벌 헤더 일원화 타이틀 원칙 (본문 중복 타이틀 완전 배제)**:
      - 기존 계산기 모듈들과 완벽한 일관성을 유지하기 위해, 본문 내부의 `<h1>` 페이지 타이틀을 전면 배제.

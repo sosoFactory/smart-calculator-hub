@@ -100,14 +100,28 @@
 ### 2.9 즐겨찾기 토글 버튼 및 카드 그리드 우선 정렬 (`StarButton` & `Pin-to-Top`)
 - **원터치 즐겨찾기 별 버튼 (`Star`)**:
   - **터치 영역 및 크기**: 모바일 터치 접근성을 위해 최소 32x32px(`h-8 w-8`) 터치 타겟 확보.
-  - **시각적 상태 및 인터랙션 (Pure Monochrome Solid)**:
-    - **활성(즐겨찾기 됨)**: `text-ghost-ink dark:text-ghost-dark-ink fill-ghost-ink dark:fill-ghost-dark-ink` 순수 흑백 모노크롬 솔리드 필.
-    - **비활성(미등록)**: `text-ghost-ink-stone dark:text-ghost-dark-ink-stone hover:text-ghost-ink dark:hover:text-ghost-dark-ink`.
+  - **시각적 상태 및 인터랙션 (Pure Monochrome Fill/Stroke)**:
+    - **색상 통일**: 활성/비활성 여부와 무관하게 모든 별 아이콘의 텍스트 색상 클래스는 **`text-ghost-ink dark:text-ghost-dark-ink`로 100% 동일하게 통일**.
+    - **활성(즐겨찾기 등록)**: `fill-current` (단일 잉크 색상으로 속이 꽉 찬 솔리드 별).
+    - **비활성(미등록)**: `fill-none` (동일한 잉크 색상의 외곽선 라인만 있는 빈 별).
     - **호버 및 탭 피드백**: 부드러운 스케일 애니메이션(`transition-transform active:scale-90 hover:scale-110`).
   - **이벤트 전파 방지**: 카드 클릭 링크 이동(`Link`)과 충돌하지 않도록 `e.preventDefault()`, `e.stopPropagation()` 필수 적용.
 - **홈 화면 단일 그리드 내 즐겨찾기 우선 정렬 (Pin-to-Top)**:
   - 상단 별도 분리 섹션 및 중복 탭을 제거하고, 단일 카드 그리드에서 즐겨찾기 등록 카드가 **맨 앞(1순위)**으로 자동 재배치되고, 동일 그룹 내에서는 한국어 가나다순(2순위)으로 정렬.
-  - 중복 카드 노출과 불필요한 탭 뎁스를 없애고 뷰포트 내 수직 스크롤과 시각적 인지 부하를 최소화.
+### 2.10 홈 대시보드 계산기 카드 컴포넌트 (`CalculatorCard` / `src/home/HomeApp.tsx`)
+- **컨테이너 레이아웃**:
+  - `bg-white dark:bg-ghost-dark-surface border border-ghost-hairline dark:border-ghost-dark-hairline rounded-xl sm:rounded-2xl p-3 sm:p-4 hover:border-ghost-hairline-soft dark:hover:border-ghost-dark-hairline-dark hover:shadow-sm transition-all duration-200`.
+- **에디토리얼 모노크롬 아이콘**:
+  - 10색 무지개 컬러의 SaaS 템플릿 클리셰를 전면 배제.
+  - 아이콘 박스: `bg-ghost-surface-deep dark:bg-ghost-dark-surface-elevated border border-ghost-hairline dark:border-ghost-dark-hairline-soft rounded-lg sm:rounded-xl`.
+  - 아이콘 잉크: `text-ghost-ink-soft dark:text-ghost-dark-ink-soft group-hover:text-ghost-ink dark:group-hover:text-ghost-dark-ink transition-all duration-200 group-hover:scale-110`.
+- **단일 색상 즐겨찾기 별 버튼**:
+  - 활성/비활성 색상 클래스: `text-ghost-ink dark:text-ghost-dark-ink` 100% 고정.
+  - 활성: `fill-current` (단일 잉크 칠흑/순백 솔리드).
+  - 비활성: `fill-none` (단일 잉크 외곽선 라인).
+- **미니 액션 라인**:
+  - `border-t border-ghost-hairline/60 dark:border-ghost-dark-hairline flex items-center justify-between text-[11px] sm:text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink`.
+  - 불필요한 라임 하이라이트를 배제하고 차분한 모노크롬 잉크 톤으로 절제 유지.
 
 ---
 
@@ -116,6 +130,8 @@
 | 항목 | Do (권장) | Don't (금지) |
 | :--- | :--- | :--- |
 | **디자인 토큰** | `text-ghost-ink`, `border-ghost-hairline`, `text-ghost-lime` 등 정식 시맨틱 클래스 사용 | `text-[#112220]`, `border-[#e5e7eb]`, `bg-[#15171a]` 등 임의 대괄호 헥스코드 하드코딩 |
+| **별(즐겨찾기) 아이콘** | 활성/비활성 모두 `text-ghost-ink dark:text-ghost-dark-ink` 단일 색상으로 고정하고 `fill-current` / `fill-none`으로만 구분 | 활성은 `text-ghost-ink`, 비활성은 `text-ghost-ink-stone` 등으로 색상 클래스를 다르게 분기하는 행위 |
+| **카드 아이콘 컬러** | 단정한 에디토리얼 모노크롬(`text-ghost-ink-soft group-hover:text-ghost-ink`) | 카드마다 에메랄드, 인디고, 바이올렛, 앰버 등 10색 무지개색 난립 |
 | **공통 컴포넌트** | `SubMetricCard`, `FormHeader`, `NumericInput`, `InfoCard` 필수 재사용 | 인라인 중복 div 태그 작성, 독자적 레이아웃 생성 |
 | **서브 카드 계층** | 1행(아이콘+라벨/배지) ➔ 2행(메인 수치) ➔ 3행(보조 설명/독음) 엄격 준수 | 아이콘을 우측에 배치하거나 독음을 상단에 배치하는 행 역전 |
 | **통화 표기** | `137,340,520원` (대한민국 표준 후치 `원`) | `₩137,340,520` (외국식 전치 통화 기호 표기) |

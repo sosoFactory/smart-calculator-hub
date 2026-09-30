@@ -120,7 +120,7 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
           <div className="space-y-1">
             <div className="flex items-center justify-between px-2.5 mb-1.5">
               <span className="text-[11px] font-bold text-ghost-ink-mute dark:text-ghost-dark-ink-mute uppercase tracking-wider flex items-center gap-1.5">
-                <Star className="w-3.5 h-3.5 text-ghost-ink dark:text-ghost-dark-ink fill-ghost-ink dark:fill-ghost-dark-ink" />
+                <Star className="w-3.5 h-3.5 text-ghost-ink dark:text-ghost-dark-ink fill-current" />
                 즐겨찾기
               </span>
               <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-ghost-surface-deep dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink tabular-nums border border-ghost-hairline dark:border-ghost-dark-hairline-soft">
