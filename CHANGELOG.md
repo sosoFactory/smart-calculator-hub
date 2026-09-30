@@ -5,89 +5,36 @@
 
 ## [1.14.3] - 2026-09-30
 
-### refactor: 즐겨찾기 별 아이콘 색상 클래스 100% 단일화 및 fill-current/fill-none 상태 제어
-- **별(즐겨찾기) 아이콘 색상 단일화 (`HomeApp.tsx`, `GlobalHeader.tsx`, `SidebarDrawer.tsx`)**:
-  - 활성/비활성 여부와 무관하게 모든 별 아이콘의 기본 색상 클래스를 `text-ghost-ink dark:text-ghost-dark-ink`로 100% 동일하게 통일.
-  - 활성 상태: `fill-current` (단일 잉크 칠흑/순백 솔리드).
-  - 비활성 상태: `fill-none` (동일한 잉크 색상의 외곽선 라인).
-  - 사이드바 섹션 별 아이콘도 `fill-current`로 일원화.
-- **UI/UX 가이드 문서 동기화 (`ui-ux.md`, `PRD.md`)**:
-  - 2.9 및 2.10 섹션에 단일 색상 및 `fill-current`/`fill-none` 제어 규격 명문화.
-  - Do & Don't 테이블에 별 아이콘 색상 분기 금지 및 에디토리얼 모노크롬 카드 아이콘 규칙 추가.
-- **전역 버전 v1.14.3 동기화**:
-  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `README.md`, `PRD.md` 버전 일치 완료.
+### Fixed
+- 즐겨찾기 별 아이콘 색상 클래스 단일화 및 채움(솔리드)/비움(외곽선) 상태 구분 일원화.
 
 ## [1.14.2] - 2026-09-30
 
-### refactor: Ghost 디자인 시스템 기준 전역 모노크롬 잉크 계층 일원화 및 인라인 헥스·다색상 아이콘 파편화 제거
-- **홈 계산기 카드 아이콘 에디토리얼 모노크롬화 (`src/home/HomeApp.tsx`)**:
-  - 기존 10색 무지개 컬러(에메랄드, 인디고, 바이올렛, 앰버, 로즈, 오렌지 등) 아이콘의 SaaS 템플릿 클리셰를 전면 배제하고, 차분하고 정돈된 Ghost 모노크롬 잉크(`text-ghost-ink-soft dark:text-ghost-dark-ink-soft group-hover:text-ghost-ink`)로 일원화.
-  - 아이콘 배경 컨테이너도 `ghost-surface-deep` 및 `ghost-hairline` 토큰으로 단일화.
-- **인라인 헥스코드 및 Slate 팔레트 파편화 전면 제거 (`HomeApp.tsx`, `SidebarDrawer.tsx`, `GlobalHeader.tsx`)**:
-  - 무분별하게 혼용되던 `#112220`, `#15171a`, `#334155`, `#64748b`, `#94a3b8`, `#e5e7eb` 및 `text-slate-400/500/600`을 `ghost-ink`, `ghost-ink-soft`, `ghost-ink-mute`, `ghost-ink-stone`, `ghost-hairline` 시맨틱 토큰으로 100% 교체.
-- **Electric Lime 볼티지 스코핑 통제**:
-  - 홈 카드 하단 액션 링크 및 카테고리 선택 칩에 불필요하게 산발 적용되던 라임 하이라이트를 절제된 모노크롬 잉크-베이스(`ghost-ink-base`) 스타일로 환원.
-- **전역 버전 v1.14.2 동기화**:
-  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `README.md`, `PRD.md` 버전 일치 완료.
+### Changed
+- Ghost 디자인 시스템 기준 전역 모노크롬 잉크 계층 일원화 및 카드 아이콘 다색상 난립 배제.
+- 하드코딩 헥스코드 제거 및 과도한 라임 하이라이트 절제.
 
 ## [1.14.1] - 2026-09-30
 
-### refactor: 홈 즐겨찾기 카테고리 탭 제거 및 별 아이콘 순수 모노크롬 솔리드(Pure Monochrome Solid) 적용
-- **홈 대시보드 즐겨찾기 카테고리 탭 제거 (`src/home/HomeApp.tsx`)**:
-  - 즐겨찾기 등록 시 동적으로 추가되던 `⭐ 즐겨찾기` 탭 칩을 완전히 제거하여 4대 표준 카테고리(`전체`, `금융 & 자산`, `생활 & 측정`, `통화 & 글로벌`) 체계로 일원화.
-  - 별도 탭 뎁스 없이 단일 카드 그리드 내에서 즐겨찾기 카드가 맨 앞으로 오는 **Pin-to-Top 다중 정렬**을 단독 표준으로 확립.
-- **별 아이콘 순수 모노크롬 솔리드 필 적용 (`HomeApp.tsx`, `GlobalHeader.tsx`, `SidebarDrawer.tsx`)**:
-  - 알록달록한 유채색(노랑, 라임 등)을 배제하고 Ghost 디자인 시스템 본연의 **순수 흑백 모노크롬 솔리드 필** 적용.
-  - 활성 상태: `text-ghost-ink dark:text-ghost-dark-ink fill-ghost-ink dark:fill-ghost-dark-ink` (라이트 모드 칠흑 솔리드, 다크 모드 순백 솔리드).
-  - 비활성 상태: `text-ghost-ink-stone dark:text-ghost-dark-ink-stone hover:text-ghost-ink dark:hover:text-ghost-dark-ink`.
-  - 사이드바 드로어 카운트 뱃지도 모노크롬 서피스(`bg-slate-100 dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink`)로 정돈.
-- **문서 및 단위 테스트 동기화**:
-  - `PRD.md`, `ui-ux.md`에 모노크롬 솔리드 사양 동기화.
-  - `HomeApp.test.tsx`: 탭 제거 및 모노크롬 Pin-to-Top 정렬 인터랙션 검증 테스트 업데이트.
-  - 전역 버전 `v1.14.1` 동기화 (`package.json`, `site.ts`, `site.test.ts`, `README.md`, `PRD.md`).
+### Refactor
+- 홈 대시보드 중복 즐겨찾기 탭 제거 및 단일 그리드 최우선 정렬(Pin-to-Top) 단독 표준화.
+- 즐겨찾기 별 아이콘 순수 모노크롬 적용.
 
 ## [1.14.0] - 2026-09-30
 
-### chore: SemVer(시맨틱 버저닝) 체계 정상화 및 10대 계산기·즐겨찾기 릴리즈 동기화
-- **시맨틱 버저닝(SemVer) 체계 정상화 (`rules/git-workflow.md`, `GEMINI.md`)**:
-  - `v1.9.0`(연봉 계산기) 이후 추가된 5개 주요 기능 모듈의 마이너 버전 누락을 바로잡고 정식 SemVer 체계로 정규화:
-    - `v1.10.0`: 목표 자산 역산 계산기 (`/goal`)
-    - `v1.11.0`: 알바 급여 & 주휴수당 계산기 (`/part-time`)
-    - `v1.12.0`: 날짜 & 디데이 계산기 (`/date`)
-    - `v1.13.0`: 파이어 현금흐름 계산기 (`/cashflow`)
-    - `v1.14.0`: 자주 쓰는 계산기(즐겨찾기) 기능 신설 및 홈 대시보드 Pin-to-Top 정렬 완성
-  - 향후 신규 계산기 및 대형 기능 추가 시 `MINOR` 증가(`feat`), 버그 수정 및 리팩토링 시 `PATCH` 증가(`fix`, `refactor`) 규칙 강제 명문화.
-- **전역 버전 일괄 동기화**:
-  - `package.json`, `src/config/site.ts`, `src/config/site.test.ts`, `README.md`, `PRD.md` 버전을 `v1.14.0`으로 100% 일치 동기화.
+### Added
+- 자주 쓰는 계산기(즐겨찾기) 기능 신설 (홈 카드/헤더 원터치 토글 및 사이드바 바로가기 연동).
+- SemVer 버전 체계 정규화.
 
 ## [1.9.54] - 2026-09-30
 
-### refactor: 홈 대시보드 자주 쓰는 계산기 단일 그리드 맨 앞 우선 정렬(Pin-to-Top) 적용 및 별도 상단 섹션 제거
-- **홈 대시보드 복잡도 완화 및 스크롤 최적화 (`src/home/HomeApp.tsx`)**:
-  - 상단에 중복 분리되어 노출되던 `⭐ 자주 쓰는 계산기` 별도 퀵 섹션 헤더 및 중복 그리드를 제거하여 시각적 잡음과 수직 스크롤 부하를 해소.
-  - 단일 카드 그리드에서 즐겨찾기(별표) 등록 카드가 맨 앞(1순위)으로 자동 배치되는 **Pin-to-Top 다중 정렬**(`isFavorite` ➔ 한국어 가나다순) 적용.
-  - 즐겨찾기가 1개 이상 존재할 때 상단 카테고리 퀵 탭에 `⭐ 즐겨찾기` 칩이 동적으로 유지되어 모아보기 뷰 지원.
-- **문서 및 단위 테스트 최신화**:
-  - `PRD.md` (Section 2.6) 및 `ui-ux.md` (Section 2.9): 단일 그리드 Pin-to-Top 정렬 규격 동기화.
-  - `src/home/HomeApp.test.tsx`: 분리 섹션 제거 및 Pin-to-Top 우선 정렬 인터랙션 검증 테스트 업데이트.
+### Refactor
+- 홈 대시보드 즐겨찾기 단일 그리드 최우선 정렬(Pin-to-Top) 적용 및 별도 상단 섹션 제거.
 
 ## [1.9.53] - 2026-09-30
 
-### feat: 자주 쓰는 계산기(즐겨찾기) 기능 신설 (홈 최상단 퀵 섹션, 사이드바 대시보드 대체, 헤더/카드 별 토글)
-- **메인 홈 대시보드 (`HomeApp.tsx`)**:
-  - 즐겨찾기가 1개 이상 존재할 때, 카테고리 칩 및 일반 카드 목록보다 **더 상단**에 `⭐ 자주 쓰는 계산기` 퀵 섹션을 카운트 뱃지와 함께 우선 노출.
-  - 카테고리 퀵 탭 목록에 `⭐ 즐겨찾기` 필터 옵션을 추가하여 모아보기 지원.
-  - 모든 계산기 카드의 우상단에 별 모양 북마크 버튼(`Star`)을 배치하고, 카드 링크 이동 방지(`e.preventDefault()`, `e.stopPropagation()`) 처리.
-- **좌측 사이드바 드로어 (`SidebarDrawer.tsx`)**:
-  - 사용자가 즐겨찾기를 등록했을 때 기본 `대시보드` 메뉴 대신 **`⭐ 즐겨찾기`** 섹션을 동적으로 치환 출력 (가나다 순 1터치 빠른 이동).
-  - 즐겨찾기가 0개일 때는 기존과 동일하게 `대시보드` ➔ `홈 (대시보드)` 메뉴 유지.
-- **계산기 상세 화면 상단 고정 헤더 (`GlobalHeader.tsx`)**:
-  - 각 계산기 화면 이용 중에도 홈으로 나가지 않고 원터치로 북마크할 수 있도록 계산기 타이틀 우측에 인터랙티브 별 버튼(`Star`) 배치.
-- **디자인 토큰 및 데이터 영속화**:
-  - `tailwind.config.js`: 임의 대괄호 헥스코드 하드코딩 대신 정식 앰버 골드 시맨틱 토큰 `ghost.favorite` (`#f59e0b`) 등록.
-  - `src/hooks/useFavorites.ts`: `LocalStorage` (`smart_calc_favorites`) 기반 100% 로컬 저장 및 `CustomEvent`를 통한 전 컴포넌트 실시간 반응형 동기화 커스텀 훅 신설.
-- **TDD 단위 테스트 및 무결점 검증**:
-  - `useFavorites.test.ts`, `SidebarDrawer.test.tsx`, `GlobalHeader.test.tsx`, `HomeApp.test.tsx` 포함 총 36개 테스트 파일, **206개 테스트 100% 통과**.
+### Feat
+- 자주 쓰는 계산기(즐겨찾기) 기능 신설 및 로컬 스토리지 연동.
 
 ## [1.9.52] - 2026-09-30
 
