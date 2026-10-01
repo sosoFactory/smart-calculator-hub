@@ -8,6 +8,7 @@ import {
   convertPxToRem,
   convertRemToPx,
   getTailwindSpacingHint,
+  convertPxToCssUnits,
   // 색상 변환
   hexToRgb,
   rgbToHex,
@@ -16,6 +17,7 @@ import {
   hexToHsl,
   getContrastRatio,
   isValidHex,
+  sanitizeHexInput,
 } from './devToolsCalculator';
 
 describe('DevTools: 진수 변환 (Base Converter)', () => {
@@ -168,5 +170,34 @@ describe('DevTools: 색상 코드 변환 (Color Converter)', () => {
     // 동일 색상 간 명암비는 1:1
     const sameRatio = getContrastRatio('#ffffff', '#ffffff');
     expect(sameRatio).toBeCloseTo(1, 0);
+  });
+
+  it('sanitizeHexInput: # 접두사 및 잘못된 문자를 안전하게 정제해야 한다', () => {
+    expect(sanitizeHexInput('#d1ff19')).toBe('d1ff19');
+    expect(sanitizeHexInput('###D1FF19')).toBe('D1FF19');
+    expect(sanitizeHexInput('d1ff19abc')).toBe('d1ff19'); // max 6 chars
+    expect(sanitizeHexInput('hello#world')).toBe('ed'); // non-hex filtered
+    expect(sanitizeHexInput('')).toBe('');
+  });
+});
+
+describe('DevTools: 실무 핵심 CSS 단위 일괄 변환 (CSS Units)', () => {
+  it('16px 기준 실무 핵심 CSS 단위(rem, em, percent, pt, tailwind)로 정확하게 일괄 변환해야 한다', () => {
+    const res = convertPxToCssUnits(16, 16);
+    expect(res.px).toBe(16);
+    expect(res.rem).toBe(1);
+    expect(res.em).toBe(1);
+    expect(res.percent).toBe(100);
+    expect(res.pt).toBe(12);
+    expect(res.tailwind).toBe('4 (16px / 1rem)');
+  });
+
+  it('24px 기준 및 루트 폰트 크기 변경 시 비례하여 환산되어야 한다', () => {
+    const res = convertPxToCssUnits(24, 16);
+    expect(res.rem).toBe(1.5);
+    expect(res.em).toBe(1.5);
+    expect(res.percent).toBe(150);
+    expect(res.pt).toBe(18);
+    expect(res.tailwind).toBe('6 (24px / 1.5rem)');
   });
 });

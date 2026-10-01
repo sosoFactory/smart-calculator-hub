@@ -13,7 +13,7 @@ describe('DevToolsApp Component', () => {
 
     // 탭 내비게이션 확인
     expect(screen.getByRole('tab', { name: /진수 변환/i })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /CSS 단위 환산/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /CSS 단위 변환/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /색상 코드 변환/i })).toBeInTheDocument();
 
     // 기본 BaseTab 콘텐츠 렌더링 확인 (10진수 기본값 255)
@@ -26,18 +26,24 @@ describe('DevToolsApp Component', () => {
     expect(screen.getByText(/개발자 상식 & 실무 가이드/i)).toBeInTheDocument();
   });
 
-  it('switches to CSS Unit tab and renders px/rem conversion elements', () => {
+  it('switches to CSS Unit tab and renders px/rem conversion elements and core unit cards', () => {
     render(<DevToolsApp />);
 
-    // CSS 단위 환산 탭 클릭
-    const cssTab = screen.getByRole('tab', { name: /CSS 단위 환산/i });
+    // CSS 단위 변환 탭 클릭
+    const cssTab = screen.getByRole('tab', { name: /CSS 단위 변환/i });
     fireEvent.click(cssTab);
 
     // CSS 탭 전용 요소 확인
     expect(screen.getByText('픽셀 (PX)')).toBeInTheDocument();
-    expect(screen.getByText('렘 (REM / EM)')).toBeInTheDocument();
-    expect(screen.getByText('Tailwind Spacing')).toBeInTheDocument();
+    expect(screen.getByText('렘 (REM)')).toBeInTheDocument();
     expect(screen.getByText('실무 빈출 크기 빠른 선택')).toBeInTheDocument();
+
+    // 실무 핵심 CSS 단위 일괄 변환 카드 확인
+    expect(screen.getByText('실무 핵심 CSS 단위 일괄 변환')).toBeInTheDocument();
+    expect(screen.getByText('부모 상대 단위 (EM)')).toBeInTheDocument();
+    expect(screen.getByText('백분율 (%)')).toBeInTheDocument();
+    expect(screen.getByText('인쇄 포인트 (PT)')).toBeInTheDocument();
+    expect(screen.getByText('Tailwind Spacing')).toBeInTheDocument();
   });
 
   it('switches to Color tab and renders color codes and WCAG contrast check', () => {
@@ -60,6 +66,6 @@ describe('DevToolsApp Component', () => {
     render(<DevToolsApp />);
 
     expect(screen.getByText('픽셀 (PX)')).toBeInTheDocument();
-    expect(screen.getByText('렘 (REM / EM)')).toBeInTheDocument();
+    expect(screen.getByText('렘 (REM)')).toBeInTheDocument();
   });
 });

@@ -150,6 +150,38 @@ export function getTailwindSpacingHint(rem: number): string | null {
   return TAILWIND_SPACING_MAP[key] ?? null;
 }
 
+export interface CssUnitsResult {
+  px: number;
+  rem: number;
+  em: number;
+  percent: number;
+  pt: number;
+  tailwind: string | null;
+}
+
+/**
+ * 픽셀(px) 값을 실무 핵심 CSS 단위(rem, em, percent, pt, tailwind)로 일괄 환산
+ */
+export function convertPxToCssUnits(
+  px: number,
+  rootFontSize = 16
+): CssUnitsResult {
+  const rem = convertPxToRem(px, rootFontSize);
+  const em = rem;
+  const percent = rootFontSize > 0 ? Math.round((px / rootFontSize) * 10000) / 100 : 0;
+  const pt = Math.round((px * 0.75) * 100) / 100;
+  const tailwind = getTailwindSpacingHint(rem);
+
+  return {
+    px,
+    rem,
+    em,
+    percent,
+    pt,
+    tailwind,
+  };
+}
+
 // -------------------------------------------------------------
 // 3. 색상 코드 변환 (Color Converter)
 // -------------------------------------------------------------
@@ -172,6 +204,15 @@ export interface HslColor {
 export function isValidHex(hex: string): boolean {
   const clean = hex.startsWith('#') ? hex.slice(1) : hex;
   return /^[0-9a-fA-F]{3}$|^[0-9a-fA-F]{6}$/.test(clean);
+}
+
+/**
+ * 사용자 입력 문자열에서 '#' 및 공백/특수문자를 제거하고 최대 6자리 16진수로 정제
+ */
+export function sanitizeHexInput(value: string): string {
+  if (!value) return '';
+  const clean = value.replace(/^#+/, '').replace(/[^0-9a-fA-F]/g, '');
+  return clean.slice(0, 6);
 }
 
 /**

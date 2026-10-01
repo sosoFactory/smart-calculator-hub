@@ -1,5 +1,5 @@
 import React, { useState, useId } from 'react';
-import { Copy, Check, Palette, Eye, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { Copy, Check, Palette, Eye, ShieldCheck, ShieldAlert, Pipette } from 'lucide-react';
 import {
   hexToRgb,
   rgbToHex,
@@ -7,27 +7,30 @@ import {
   hslToRgb,
   hexToHsl,
   isValidHex,
+  sanitizeHexInput,
   getContrastRatio,
   RgbColor,
   HslColor,
 } from '../../../utils/devToolsCalculator';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
+import { Input } from '../../../components/ui/input';
 
 export const ColorTab: React.FC = () => {
   const hexInputId = useId();
   const rgbInputId = useId();
   const hslInputId = useId();
 
-  // 기본값: Ghost Electric Lime (#d1ff19)
-  const [hex, setHex] = useState<string>('#d1ff19');
+  // 기본값: Ghost Electric Lime (D1FF19)
+  const [hexInput, setHexInput] = useState<string>('D1FF19');
   const [rgb, setRgb] = useState<RgbColor>(() => hexToRgb('#d1ff19'));
   const [hsl, setHsl] = useState<HslColor>(() => hexToHsl('#d1ff19'));
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   const handleHexChange = (newHex: string) => {
-    setHex(newHex);
-    if (isValidHex(newHex)) {
-      const formattedHex = newHex.startsWith('#') ? newHex : `#${newHex}`;
+    const sanitized = sanitizeHexInput(newHex);
+    setHexInput(sanitized);
+    if (isValidHex(sanitized)) {
+      const formattedHex = `#${sanitized}`;
       const newRgb = hexToRgb(formattedHex);
       const newHsl = rgbToHsl(newRgb.r, newRgb.g, newRgb.b);
       setRgb(newRgb);
@@ -39,8 +42,8 @@ export const ColorTab: React.FC = () => {
     const clamped = Math.min(255, Math.max(0, val));
     const newRgb = { ...rgb, [channel]: clamped };
     setRgb(newRgb);
-    const newHex = rgbToHex(newRgb.r, newRgb.g, newRgb.b);
-    setHex(newHex);
+    const newHex = rgbToHex(newRgb.r, newRgb.g, newRgb.b).replace(/^#/, '');
+    setHexInput(newHex.toUpperCase());
     setHsl(rgbToHsl(newRgb.r, newRgb.g, newRgb.b));
   };
 
@@ -51,7 +54,8 @@ export const ColorTab: React.FC = () => {
     setHsl(newHsl);
     const newRgb = hslToRgb(newHsl.h, newHsl.s, newHsl.l);
     setRgb(newRgb);
-    setHex(rgbToHex(newRgb.r, newRgb.g, newRgb.b));
+    const newHex = rgbToHex(newRgb.r, newRgb.g, newRgb.b).replace(/^#/, '');
+    setHexInput(newHex.toUpperCase());
   };
 
   const handleCopy = async (text: string, key: string) => {
@@ -67,7 +71,7 @@ export const ColorTab: React.FC = () => {
     }
   };
 
-  const currentValidHex = isValidHex(hex) ? (hex.startsWith('#') ? hex : `#${hex}`) : '#000000';
+  const currentValidHex = isValidHex(hexInput) ? `#${hexInput}` : '#000000';
   const contrastWithWhite = getContrastRatio(currentValidHex, '#ffffff');
   const contrastWithBlack = getContrastRatio(currentValidHex, '#000000');
   const isWhiteTextBetter = contrastWithWhite >= contrastWithBlack;
@@ -79,82 +83,63 @@ export const ColorTab: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 대형 컬러 프리뷰 스와치 카드 */}
-      <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface space-y-4">
+      {/* 1. 대형 컬러 프리뷰 스와치 카드 */}
+      <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface space-y-3">
         <div
-          className="w-full h-24 sm:h-28 rounded-xl border border-black/10 dark:border-white/10 flex items-center justify-between px-4 sm:px-6 transition-colors shadow-inner"
+          className="w-full h-28 sm:h-32 rounded-xl border border-black/10 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:px-6 gap-3 transition-colors shadow-inner"
           style={{ backgroundColor: currentValidHex }}
         >
-          <span
-            className="text-base sm:text-lg font-bold font-mono tracking-tight drop-shadow-sm"
-            style={{ color: isWhiteTextBetter ? '#ffffff' : '#000000' }}
-          >
-            {currentValidHex.toUpperCase()}
-          </span>
-
-          <div className="flex items-center gap-2">
-            <span
-              className="text-xs font-semibold px-2.5 py-1 rounded-full backdrop-blur-md bg-white/20 dark:bg-black/20 shadow-sm"
+          <div className="space-y-0.5">
+            <span className="text-[11px] font-semibold uppercase tracking-wider block opacity-75"
               style={{ color: isWhiteTextBetter ? '#ffffff' : '#000000' }}
             >
-              대비율 {bestContrastRatio}:1 ({passesWcagAA ? 'WCAG AA 적합' : '대비 낮음'})
+              현재 선택 색상
+            </span>
+            <span
+              className="text-lg sm:text-2xl font-bold font-mono tracking-tight drop-shadow-sm"
+              style={{ color: isWhiteTextBetter ? '#ffffff' : '#000000' }}
+            >
+              {currentValidHex.toUpperCase()}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* 네이티브 컬러 피커 트리거 버튼 */}
+            <label
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold backdrop-blur-md bg-white/40 dark:bg-black/40 hover:bg-white/60 dark:hover:bg-black/60 cursor-pointer shadow-xs border border-white/20 transition-all active:scale-95"
+              style={{ color: isWhiteTextBetter ? '#ffffff' : '#000000' }}
+            >
+              <Pipette className="w-3.5 h-3.5 shrink-0" />
+              <span>컬러 피커</span>
+              <input
+                type="color"
+                value={currentValidHex}
+                onChange={(e) => handleHexChange(e.target.value)}
+                className="sr-only"
+                aria-label="색상 직접 선택 (컬러 피커)"
+              />
+            </label>
+
+            {/* WCAG 명암비 배지 */}
+            <span
+              className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg backdrop-blur-md bg-white/25 dark:bg-black/25 shadow-xs border border-white/10"
+              style={{ color: isWhiteTextBetter ? '#ffffff' : '#000000' }}
+            >
+              {passesWcagAA ? (
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              ) : (
+                <ShieldAlert className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+              )}
+              <span>{bestContrastRatio}:1 ({passesWcagAA ? 'WCAG AA 적합' : '대비 낮음'})</span>
             </span>
           </div>
         </div>
-
-        {/* 3대 포맷 원클릭 복사 바 */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <button
-            type="button"
-            onClick={() => handleCopy(currentValidHex.toUpperCase(), 'hex-copy')}
-            className="p-2.5 rounded-lg border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated flex items-center justify-between hover:bg-ghost-hover transition-colors"
-          >
-            <span className="text-xs font-mono font-bold text-ghost-ink dark:text-ghost-dark-ink truncate">
-              {currentValidHex.toUpperCase()}
-            </span>
-            {copiedKey === 'hex-copy' ? (
-              <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            ) : (
-              <Copy className="w-3.5 h-3.5 text-ghost-ink-mute shrink-0" />
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleCopy(rgbCssString, 'rgb-copy')}
-            className="p-2.5 rounded-lg border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated flex items-center justify-between hover:bg-ghost-hover transition-colors"
-          >
-            <span className="text-xs font-mono font-bold text-ghost-ink dark:text-ghost-dark-ink truncate">
-              {rgbCssString}
-            </span>
-            {copiedKey === 'rgb-copy' ? (
-              <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            ) : (
-              <Copy className="w-3.5 h-3.5 text-ghost-ink-mute shrink-0" />
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleCopy(hslCssString, 'hsl-copy')}
-            className="p-2.5 rounded-lg border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated flex items-center justify-between hover:bg-ghost-hover transition-colors"
-          >
-            <span className="text-xs font-mono font-bold text-ghost-ink dark:text-ghost-dark-ink truncate">
-              {hslCssString}
-            </span>
-            {copiedKey === 'hsl-copy' ? (
-              <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            ) : (
-              <Copy className="w-3.5 h-3.5 text-ghost-ink-mute shrink-0" />
-            )}
-          </button>
-        </div>
       </div>
 
-      {/* HEX / RGB / HSL 세부 입력 영역 */}
+      {/* 2. HEX / RGB / HSL 세부 입력 영역 (BaseTab과 동일하게 상단 라벨+복사, 하단 Input 컴포넌트 일원화) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-        {/* HEX 입력 */}
-        <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface space-y-2">
+        {/* HEX 입력 카드 */}
+        <div className="p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface space-y-2">
           <div className="flex items-center justify-between">
             <label
               htmlFor={hexInputId}
@@ -162,46 +147,84 @@ export const ColorTab: React.FC = () => {
             >
               HEX 색상 코드
             </label>
-            <input
-              type="color"
-              value={currentValidHex}
+            <button
+              type="button"
+              onClick={() => handleCopy(currentValidHex.toUpperCase(), 'hex-copy')}
+              className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
+              aria-label="HEX 코드 복사"
+            >
+              {copiedKey === 'hex-copy' ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>복사</span>
+                </>
+              )}
+            </button>
+          </div>
+          <div className="relative flex items-center">
+            <span className="absolute left-3 text-sm font-mono font-bold text-ghost-ink-mute dark:text-ghost-dark-ink-mute select-none pointer-events-none">
+              #
+            </span>
+            <Input
+              id={hexInputId}
+              type="text"
+              value={hexInput}
               onChange={(e) => handleHexChange(e.target.value)}
-              className="w-5 h-5 rounded cursor-pointer border-0 bg-transparent p-0"
-              title="네이티브 컬러 피커 열기"
+              placeholder="FFFFFF"
+              maxLength={6}
+              spellCheck={false}
+              autoComplete="off"
+              className="h-11 font-mono text-sm sm:text-base font-bold pl-7 sm:pl-8 uppercase tracking-wider"
             />
           </div>
-          <input
-            id={hexInputId}
-            type="text"
-            value={hex}
-            onChange={(e) => handleHexChange(e.target.value)}
-            placeholder="#ffffff"
-            maxLength={7}
-            className="w-full h-11 rounded-lg border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink font-mono text-sm font-bold px-3 focus:outline-none focus:ring-1 focus:ring-ghost-ink uppercase"
-          />
         </div>
 
-        {/* RGB 슬라이더/인풋 */}
-        <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface space-y-2">
-          <label
-            htmlFor={rgbInputId}
-            className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink block cursor-pointer"
-          >
-            RGB 채널 (0 ~ 255)
-          </label>
+        {/* RGB 채널 카드 */}
+        <div className="p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface space-y-2">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor={rgbInputId}
+              className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink cursor-pointer"
+            >
+              RGB 채널 (0 ~ 255)
+            </label>
+            <button
+              type="button"
+              onClick={() => handleCopy(rgbCssString, 'rgb-copy')}
+              className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
+              aria-label="RGB CSS 코드 복사"
+            >
+              {copiedKey === 'rgb-copy' ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>복사</span>
+                </>
+              )}
+            </button>
+          </div>
           <div className="grid grid-cols-3 gap-1.5" id={rgbInputId}>
             {(['r', 'g', 'b'] as const).map((ch) => (
               <div key={ch} className="relative">
-                <input
+                <Input
                   type="number"
                   min={0}
                   max={255}
                   value={rgb[ch]}
                   onChange={(e) => handleRgbChange(ch, Number(e.target.value))}
-                  className="w-full h-11 text-center rounded-lg border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink font-mono text-xs sm:text-sm font-bold focus:outline-none focus:ring-1 focus:ring-ghost-ink"
+                  className="h-11 text-center font-mono text-xs sm:text-sm font-bold pr-5"
                   aria-label={`RGB ${ch.toUpperCase()} 채널`}
                 />
-                <span className="absolute bottom-1 right-1.5 text-[9px] font-bold text-ghost-ink-mute uppercase">
+                <span className="absolute bottom-1 right-1.5 text-[9px] font-bold text-ghost-ink-mute uppercase select-none pointer-events-none">
                   {ch}
                 </span>
               </div>
@@ -209,27 +232,47 @@ export const ColorTab: React.FC = () => {
           </div>
         </div>
 
-        {/* HSL 슬라이더/인풋 */}
-        <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface space-y-2">
-          <label
-            htmlFor={hslInputId}
-            className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink block cursor-pointer"
-          >
-            HSL (색상·채도·명도)
-          </label>
+        {/* HSL 채널 카드 */}
+        <div className="p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface space-y-2">
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor={hslInputId}
+              className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink cursor-pointer"
+            >
+              HSL (색상·채도·명도)
+            </label>
+            <button
+              type="button"
+              onClick={() => handleCopy(hslCssString, 'hsl-copy')}
+              className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
+              aria-label="HSL CSS 코드 복사"
+            >
+              {copiedKey === 'hsl-copy' ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>복사</span>
+                </>
+              )}
+            </button>
+          </div>
           <div className="grid grid-cols-3 gap-1.5" id={hslInputId}>
             {(['h', 's', 'l'] as const).map((ch) => (
               <div key={ch} className="relative">
-                <input
+                <Input
                   type="number"
                   min={0}
                   max={ch === 'h' ? 360 : 100}
                   value={hsl[ch]}
                   onChange={(e) => handleHslChange(ch, Number(e.target.value))}
-                  className="w-full h-11 text-center rounded-lg border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink font-mono text-xs sm:text-sm font-bold focus:outline-none focus:ring-1 focus:ring-ghost-ink"
+                  className="h-11 text-center font-mono text-xs sm:text-sm font-bold pr-5"
                   aria-label={`HSL ${ch.toUpperCase()} 채널`}
                 />
-                <span className="absolute bottom-1 right-1.5 text-[9px] font-bold text-ghost-ink-mute uppercase">
+                <span className="absolute bottom-1 right-1.5 text-[9px] font-bold text-ghost-ink-mute uppercase select-none pointer-events-none">
                   {ch === 'h' ? '°' : '%'}
                 </span>
               </div>
@@ -238,7 +281,7 @@ export const ColorTab: React.FC = () => {
         </div>
       </div>
 
-      {/* 3단 서브 요약 지표 (SubMetricCard) */}
+      {/* 3. 3단 서브 요약 지표 (SubMetricCard 표준 준수) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
         <SubMetricCard
           icon={Palette}

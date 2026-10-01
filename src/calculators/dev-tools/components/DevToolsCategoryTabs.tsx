@@ -10,7 +10,7 @@ export interface DevToolsTabItem {
 
 export const DEV_TOOLS_TABS: DevToolsTabItem[] = [
   { id: 'base', label: '진수 변환' },
-  { id: 'css', label: 'CSS 단위 환산' },
+  { id: 'css', label: 'CSS 단위 변환' },
   { id: 'color', label: '색상 코드 변환' },
 ];
 

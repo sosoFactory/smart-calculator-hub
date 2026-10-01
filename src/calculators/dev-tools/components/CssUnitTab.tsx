@@ -1,11 +1,18 @@
 import React, { useState, useId } from 'react';
-import { Copy, Check, Sliders, Type, MoveRight } from 'lucide-react';
+import { Copy, Check, Type, Layers } from 'lucide-react';
 import {
   convertPxToRem,
   convertRemToPx,
-  getTailwindSpacingHint,
+  convertPxToCssUnits,
 } from '../../../utils/devToolsCalculator';
-import { SubMetricCard } from '../../../components/common/SubMetricCard';
+import { Input } from '../../../components/ui/input';
+import { Button } from '../../../components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from '../../../components/ui/tooltip';
 
 const COMMON_PRESETS = [4, 8, 12, 14, 16, 20, 24, 32, 40, 48, 64];
 
@@ -48,185 +55,282 @@ export const CssUnitTab: React.FC = () => {
     }
   };
 
-  const tailwindHint = getTailwindSpacingHint(remValue);
-  const ptValue = Math.round((pxValue * 0.75) * 100) / 100;
+  const numericPx = Number.isNaN(Number(pxValue)) ? 0 : Number(pxValue);
+  const allUnits = convertPxToCssUnits(numericPx, rootFontSize);
+
+  const unitCards = [
+    {
+      id: 'em',
+      name: '부모 상대 단위 (EM)',
+      symbol: 'em',
+      value: `${allUnits.em}`,
+      unitSuffix: 'em',
+      copyText: `${allUnits.em}em`,
+      desc: '부모 요소 폰트 크기 기준 상대 비율',
+    },
+    {
+      id: 'percent',
+      name: '백분율 (%)',
+      symbol: '%',
+      value: `${allUnits.percent}`,
+      unitSuffix: '%',
+      copyText: `${allUnits.percent}%`,
+      desc: `기준 폰트(${rootFontSize}px = 100%) 대비 백분율`,
+    },
+    {
+      id: 'pt',
+      name: '인쇄 포인트 (PT)',
+      symbol: 'pt',
+      value: `${allUnits.pt}`,
+      unitSuffix: 'pt',
+      copyText: `${allUnits.pt}pt`,
+      desc: '1pt = 0.75px (1/72 inch 인쇄·그래픽 표준)',
+    },
+    {
+      id: 'tailwind',
+      name: 'Tailwind Spacing',
+      symbol: 'class',
+      value: allUnits.tailwind ? allUnits.tailwind.split(' ')[0] : `[${allUnits.rem}rem]`,
+      unitSuffix: '',
+      copyText: allUnits.tailwind ? allUnits.tailwind.split(' ')[0] : `[${allUnits.rem}rem]`,
+      desc: allUnits.tailwind ? `스페이싱: ${allUnits.tailwind}` : `임의 클래스 [${allUnits.rem}rem]`,
+    },
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* 루트 기준 폰트 크기 설정 바 */}
-      <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <Type className="w-4 h-4 text-ghost-ink-mute dark:text-ghost-dark-ink-mute" />
-          <span className="text-xs sm:text-sm font-semibold text-ghost-ink dark:text-ghost-dark-ink">
-            루트(HTML) 기준 폰트 크기
-          </span>
+    <TooltipProvider delayDuration={150}>
+      <div className="space-y-6">
+        {/* 루트 기준 폰트 크기 설정 바 */}
+        <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Type className="w-4 h-4 text-ghost-ink-mute dark:text-ghost-dark-ink-mute" />
+            <span className="text-xs sm:text-sm font-semibold text-ghost-ink dark:text-ghost-dark-ink">
+              루트(HTML) 기준 폰트 크기
+            </span>
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="flex items-center gap-1">
+              {[14, 16, 18].map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() => handleRootChange(size)}
+                  className={`px-2.5 py-1 text-xs font-semibold rounded-md border transition-all ${
+                    rootFontSize === size
+                      ? 'bg-ghost-ink-base dark:bg-ghost-dark-surface-elevated text-white dark:text-ghost-dark-ink border-transparent'
+                      : 'bg-ghost-surface dark:bg-ghost-dark-surface border-ghost-hairline dark:border-ghost-dark-hairline text-ghost-ink-soft dark:text-ghost-dark-ink-mute hover:bg-ghost-hover'
+                  }`}
+                >
+                  {size}px
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-1.5 ml-auto sm:ml-2">
+              <label htmlFor={rootFontInputId} className="sr-only">
+                루트 폰트 크기 입력
+              </label>
+              <Input
+                id={rootFontInputId}
+                type="number"
+                value={rootFontSize || ''}
+                onChange={(e) => handleRootChange(Number(e.target.value))}
+                min={1}
+                max={64}
+                className="w-16 h-8 text-center text-xs font-bold"
+              />
+              <span className="text-xs text-ghost-ink-mute dark:text-ghost-dark-ink-mute">px</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <div className="flex items-center gap-1">
-            {[14, 16, 18].map((size) => (
+
+        {/* px ↔ rem 대형 인터랙티브 변환 카드 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          {/* PX 입력 */}
+          <div className="p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface">
+            <div className="flex items-center justify-between mb-2">
+              <label
+                htmlFor={pxInputId}
+                className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink cursor-pointer"
+              >
+                픽셀 (PX)
+              </label>
               <button
-                key={size}
                 type="button"
-                onClick={() => handleRootChange(size)}
+                onClick={() => handleCopy(`${pxValue}px`, 'px')}
+                className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
+              >
+                {copiedKey === 'px' ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>값 복사</span>
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="relative flex items-center">
+              <Input
+                id={pxInputId}
+                type="number"
+                value={pxValue || ''}
+                onChange={(e) => handlePxChange(Number(e.target.value))}
+                step="any"
+                className="h-12 font-mono text-lg sm:text-xl font-bold pr-10"
+              />
+              <span className="absolute right-3 text-xs font-semibold text-ghost-ink-mute dark:text-ghost-dark-ink-mute select-none">
+                px
+              </span>
+            </div>
+          </div>
+
+          {/* REM 입력 */}
+          <div className="p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface">
+            <div className="flex items-center justify-between mb-2">
+              <label
+                htmlFor={remInputId}
+                className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink cursor-pointer"
+              >
+                렘 (REM)
+              </label>
+              <button
+                type="button"
+                onClick={() => handleCopy(`${remValue}rem`, 'rem')}
+                className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
+              >
+                {copiedKey === 'rem' ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>값 복사</span>
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="relative flex items-center">
+              <Input
+                id={remInputId}
+                type="number"
+                value={remValue || ''}
+                onChange={(e) => handleRemChange(Number(e.target.value))}
+                step="any"
+                className="h-12 font-mono text-lg sm:text-xl font-bold pr-12"
+              />
+              <span className="absolute right-3 text-xs font-semibold text-ghost-ink-mute dark:text-ghost-dark-ink-mute select-none">
+                rem
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 실무 빈출 픽셀 프리셋 퀵 칩 */}
+        <div className="space-y-2">
+          <span className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink block">
+            실무 빈출 크기 빠른 선택
+          </span>
+          <div className="flex items-center flex-wrap gap-1.5">
+            {COMMON_PRESETS.map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => handlePxChange(p)}
                 className={`px-2.5 py-1 text-xs font-semibold rounded-md border transition-all ${
-                  rootFontSize === size
+                  pxValue === p
                     ? 'bg-ghost-ink-base dark:bg-ghost-dark-surface-elevated text-white dark:text-ghost-dark-ink border-transparent'
-                    : 'bg-ghost-surface dark:bg-ghost-dark-surface border-ghost-hairline dark:border-ghost-dark-hairline text-ghost-ink-soft dark:text-ghost-dark-ink-mute hover:bg-ghost-hover'
+                    : 'bg-white dark:bg-ghost-dark-surface border-ghost-hairline dark:border-ghost-dark-hairline text-ghost-ink-soft dark:text-ghost-dark-ink-mute hover:bg-ghost-hover'
                 }`}
               >
-                {size}px
+                {p}px
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-1.5 ml-auto sm:ml-2">
-            <label htmlFor={rootFontInputId} className="sr-only">
-              루트 폰트 크기 입력
-            </label>
-            <input
-              id={rootFontInputId}
-              type="number"
-              value={rootFontSize || ''}
-              onChange={(e) => handleRootChange(Number(e.target.value))}
-              min={1}
-              max={64}
-              className="w-16 h-8 text-center text-xs font-bold rounded-md border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink focus:outline-none focus:ring-1 focus:ring-ghost-ink"
-            />
-            <span className="text-xs text-ghost-ink-mute dark:text-ghost-dark-ink-mute">px</span>
-          </div>
         </div>
-      </div>
 
-      {/* px ↔ rem 대형 인터랙티브 변환 카드 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-        {/* PX 입력 */}
-        <div className="p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface">
-          <div className="flex items-center justify-between mb-2">
-            <label
-              htmlFor={pxInputId}
-              className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink cursor-pointer"
-            >
-              픽셀 (PX)
-            </label>
-            <button
-              type="button"
-              onClick={() => handleCopy(`${pxValue}px`, 'px')}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
-            >
-              {copiedKey === 'px' ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>값 복사</span>
-                </>
-              )}
-            </button>
-          </div>
-          <div className="relative flex items-center">
-            <input
-              id={pxInputId}
-              type="number"
-              value={pxValue || ''}
-              onChange={(e) => handlePxChange(Number(e.target.value))}
-              step="any"
-              className="w-full h-12 rounded-lg border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink font-mono text-lg sm:text-xl font-bold px-3 pr-10 focus:outline-none focus:ring-1 focus:ring-ghost-ink"
-            />
-            <span className="absolute right-3 text-xs font-semibold text-ghost-ink-mute dark:text-ghost-dark-ink-mute select-none">
-              px
+        {/* 실무 핵심 단위 일괄 변환 카드 (단일 통합 그리드) */}
+        <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface space-y-4">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Layers className="w-4 h-4 text-ghost-ink-mute dark:text-ghost-dark-ink-mute" />
+              <h3 className="text-sm sm:text-base font-bold text-ghost-ink dark:text-ghost-dark-ink">
+                실무 핵심 CSS 단위 일괄 변환
+              </h3>
+            </div>
+            <span className="text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-soft bg-ghost-surface dark:bg-ghost-dark-surface-elevated px-2.5 py-1 rounded-full shrink-0">
+              기준: {pxValue}px ({remValue}rem)
             </span>
           </div>
-        </div>
 
-        {/* REM 입력 */}
-        <div className="p-4 rounded-xl sm:rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-white dark:bg-ghost-dark-surface">
-          <div className="flex items-center justify-between mb-2">
-            <label
-              htmlFor={remInputId}
-              className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink cursor-pointer"
-            >
-              렘 (REM / EM)
-            </label>
-            <button
-              type="button"
-              onClick={() => handleCopy(`${remValue}rem`, 'rem')}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
-            >
-              {copiedKey === 'rem' ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>값 복사</span>
-                </>
-              )}
-            </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+            {unitCards.map((card) => {
+              const isCopied = copiedKey === card.id;
+
+              return (
+                <div
+                  key={card.id}
+                  className="p-3.5 rounded-xl border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface/50 dark:bg-ghost-dark-surface-deep flex flex-col justify-between hover:border-ghost-hairline-strong transition-all"
+                >
+                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                    <div className="min-w-0">
+                      <span className="text-xs font-bold text-ghost-ink dark:text-ghost-dark-ink block truncate">
+                        {card.name}
+                      </span>
+                      <span className="text-[10px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute">
+                        {card.symbol}
+                      </span>
+                    </div>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleCopy(card.copyText, card.id)}
+                          className="h-7 w-7 text-ghost-ink-mute hover:text-ghost-ink dark:hover:text-white hover:bg-slate-100 dark:hover:bg-ghost-dark-hover rounded-md shrink-0"
+                          aria-label={`${card.name} 복사`}
+                        >
+                          {isCopied ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5" />
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="left">
+                        {isCopied ? '복사 완료!' : `${card.copyText} 복사`}
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+
+                  <div className="mt-1 flex items-baseline justify-between gap-1 overflow-x-auto">
+                    <span className="font-extrabold text-base sm:text-lg text-ghost-ink dark:text-ghost-dark-ink tracking-tight truncate font-mono">
+                      {card.value}
+                    </span>
+                    {card.unitSuffix && (
+                      <span className="text-xs font-semibold text-ghost-ink-mute dark:text-ghost-dark-ink-mute shrink-0">
+                        {card.unitSuffix}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-2 pt-2 border-t border-ghost-hairline dark:border-ghost-dark-hairline min-h-[20px]">
+                    <p className="text-[10px] text-ghost-ink-mute dark:text-ghost-dark-ink-stone truncate">
+                      {card.desc}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div className="relative flex items-center">
-            <input
-              id={remInputId}
-              type="number"
-              value={remValue || ''}
-              onChange={(e) => handleRemChange(Number(e.target.value))}
-              step="any"
-              className="w-full h-12 rounded-lg border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink font-mono text-lg sm:text-xl font-bold px-3 pr-12 focus:outline-none focus:ring-1 focus:ring-ghost-ink"
-            />
-            <span className="absolute right-3 text-xs font-semibold text-ghost-ink-mute dark:text-ghost-dark-ink-mute select-none">
-              rem
-            </span>
-          </div>
         </div>
       </div>
-
-      {/* 실무 빈출 픽셀 프리셋 퀵 칩 */}
-      <div className="space-y-2">
-        <span className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink block">
-          실무 빈출 크기 빠른 선택
-        </span>
-        <div className="flex items-center flex-wrap gap-1.5">
-          {COMMON_PRESETS.map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => handlePxChange(p)}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-md border transition-all ${
-                pxValue === p
-                  ? 'bg-ghost-ink-base dark:bg-ghost-dark-surface-elevated text-white dark:text-ghost-dark-ink border-transparent'
-                  : 'bg-white dark:bg-ghost-dark-surface border-ghost-hairline dark:border-ghost-dark-hairline text-ghost-ink-soft dark:text-ghost-dark-ink-mute hover:bg-ghost-hover'
-              }`}
-            >
-              {p}px
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 3단 서브 요약 지표 (SubMetricCard) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-        <SubMetricCard
-          icon={Type}
-          label="루트 기준 크기"
-          value={`${rootFontSize}px`}
-          description="1rem = 100% 폰트 비율"
-        />
-        <SubMetricCard
-          icon={Sliders}
-          label="인쇄 포인트 (PT)"
-          value={`${ptValue}pt`}
-          description="1pt = 1/72 inch 기준"
-        />
-        <SubMetricCard
-          icon={MoveRight}
-          label="Tailwind Spacing"
-          value={tailwindHint ? `클래스 ${tailwindHint.split(' ')[0]}` : '커스텀 값'}
-          description={tailwindHint ? `스페이싱 척도: ${tailwindHint}` : `arbitrary [${remValue}rem]`}
-        />
-      </div>
-    </div>
+    </TooltipProvider>
   );
 };

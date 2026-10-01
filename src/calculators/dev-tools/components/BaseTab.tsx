@@ -7,6 +7,7 @@ import {
   BaseConversionResult,
 } from '../../../utils/devToolsCalculator';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
+import { Input } from '../../../components/ui/input';
 
 export const BaseTab: React.FC = () => {
   const binaryInputId = useId();
@@ -142,7 +143,7 @@ export const BaseTab: React.FC = () => {
                     {b.prefix}
                   </span>
                 )}
-                <input
+                <Input
                   id={b.id}
                   type="text"
                   value={b.value}
@@ -150,7 +151,7 @@ export const BaseTab: React.FC = () => {
                   placeholder={b.placeholder}
                   spellCheck={false}
                   autoComplete="off"
-                  className={`w-full h-11 rounded-lg border border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface dark:bg-ghost-dark-surface-elevated text-ghost-ink dark:text-ghost-dark-ink font-mono text-sm sm:text-base font-semibold transition-colors focus:outline-none focus:ring-1 focus:ring-ghost-ink dark:focus:ring-ghost-dark-ink ${
+                  className={`h-11 font-mono text-sm sm:text-base font-semibold ${
                     b.prefix ? 'pl-8 pr-3' : 'px-3'
                   }`}
                 />
