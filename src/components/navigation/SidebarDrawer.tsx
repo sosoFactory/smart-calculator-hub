@@ -22,6 +22,7 @@ import {
   CalendarDays,
   Flame,
   Star,
+  CodeXml,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTitle } from '../ui/sheet';
 import { Button } from '../ui/button';
@@ -73,6 +74,8 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
         return <Flame className={cls} />;
       case 'date':
         return <CalendarDays className={cls} />;
+      case 'devtools':
+        return <CodeXml className={cls} />;
       default:
         return <Calculator className={cls} />;
     }

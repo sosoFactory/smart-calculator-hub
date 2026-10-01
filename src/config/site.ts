@@ -6,7 +6,7 @@ export const siteConfig = {
   shortNameEn: 'Smart Calculator',
   
   // 사이트 설명
-  description: '연복리, 목표 자산 역산, 파이어 현금흐름, 대출이자, 연봉 실수령액, 알바 주휴수당, 날짜·디데이, 실시간 환율, 단위 변환, BMI 비만도 등 일상과 금융 생활을 위한 스마트 멀티 계산기 플랫폼',
+  description: '연복리, 목표 자산 역산, 파이어 현금흐름, 대출이자, 연봉 실수령액, 알바 주휴수당, 날짜·디데이, 개발자 도구, 실시간 환율, 단위 변환, BMI 비만도 등 일상과 금융 생활을 위한 스마트 멀티 계산기 플랫폼',
   
   // 공식 운영 도메인 URL
   url: 'https://soso-calculator.vercel.app',
@@ -16,7 +16,7 @@ export const siteConfig = {
   copyright: '© sosoFactory',
   
   // 버전 정보
-  version: '1.14.4',
+  version: '1.15.0',
   
   // 링크
   links: {

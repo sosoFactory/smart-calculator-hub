@@ -3,6 +3,16 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.15.0] - 2026-10-01
+
+### Added
+- 신규 11번째 계산기 모듈 **개발자 도구 (Dev Tools, `/devtools`)** 공식 론칭:
+  - **진수 변환기 (`BaseTab`)**: 2진수(0b)·8진수(0o)·10진수·16진수(0x) 실시간 양방향 변환, BigInt 기반 고밀도 비트 무결성 보장, 4비트 Nibble 단위 가독성 포맷팅, 원클릭 클립보드 복사.
+  - **CSS 단위 환산기 (`CssUnitTab`)**: 루트(HTML) 폰트 크기 변경(14/16/18px 프리셋 및 커스텀), px ↔ rem/em 실시간 상호 환산, Tailwind CSS spacing 클래스 힌트 제공, 인쇄 포인트(pt) 지표 산출, 실무 빈출 픽셀 프리셋 칩.
+  - **색상 코드 변환기 (`ColorTab`)**: 대형 컬러 스와치 프리뷰, 네이티브 컬러 피커 연동, HEX·RGB·HSL 상호 자동 변환 및 동기화, WCAG AA 가독성 명암비(4.5:1 이상) 실시간 검증 및 텍스트 색상 추천.
+  - **개발자 상식 패널 (`DevToolsInfoCard`)**: 컴퓨터 진법 체계(Nibble/Byte), CSS rem vs em 설계 가이드, RGB/HSL 디지털 색상 모델 및 웹 접근성 지침.
+  - Definition of Done 완료: 라우팅 연동, SEO 메타데이터/JSON-LD 구조화 데이터 등록, `sitemap.xml` 등재, 사이드바/홈 시맨틱 링크 연결.
+
 ## [1.14.4] - 2026-10-01
 
 ### Fixed

@@ -88,6 +88,8 @@ export const PageMetaUpdater: React.FC = () => {
             ? 'FinanceApplication'
             : currentCalculator.id === 'bmi'
             ? 'HealthAndFitnessApplication'
+            : currentCalculator.id === 'devtools'
+            ? 'DeveloperApplication'
             : 'UtilitiesApplication',
         operatingSystem: 'All',
         offers: {

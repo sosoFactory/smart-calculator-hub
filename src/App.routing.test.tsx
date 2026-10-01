@@ -120,5 +120,17 @@ describe('Seam 2-1: React Router Navigation and Routing', () => {
     expect(await screen.findByText('현금흐름 역산 조건', {}, { timeout: 10000 })).toBeInTheDocument();
     expect(await screen.findByText('필요 총 은퇴 원금', {}, { timeout: 10000 })).toBeInTheDocument();
   }, 15000);
+
+  it('/devtools 경로에서는 개발자 도구 화면이 렌더링되어야 한다', async () => {
+    render(
+      <MemoryRouter initialEntries={['/devtools']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    expect(screen.getAllByText('개발자 도구').length).toBeGreaterThanOrEqual(1);
+    expect(await screen.findByText('진수 변환', {}, { timeout: 10000 })).toBeInTheDocument();
+    expect(await screen.findByText('2진수 (Binary)', {}, { timeout: 10000 })).toBeInTheDocument();
+  }, 15000);
 });
 

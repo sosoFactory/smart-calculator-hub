@@ -24,6 +24,7 @@ import {
   CalendarDays,
   Flame,
   Star,
+  CodeXml,
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
@@ -93,6 +94,8 @@ export const HomeApp: React.FC = () => {
         return <Flame className={iconCls} />;
       case 'date':
         return <CalendarDays className={iconCls} />;
+      case 'devtools':
+        return <CodeXml className={iconCls} />;
       default:
         return <Calculator className={iconCls} />;
     }

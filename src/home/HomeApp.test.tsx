@@ -29,12 +29,13 @@ describe('HomeApp Compact Dashboard Tests', () => {
       </MemoryRouter>
     );
 
-  it('헤더와 10대 활성 계산기 카드가 렌더링되고 배당금 카드는 노출되지 않아야 한다', () => {
+  it('헤더와 11대 활성 계산기 카드가 렌더링되고 배당금 카드는 노출되지 않아야 한다', () => {
     renderHomeApp();
 
     expect(screen.getByRole('button', { name: '전체' })).toBeInTheDocument();
 
-    // 10대 활성 계산기 shortName 노출 확인
+    // 11대 활성 계산기 shortName 노출 확인
+    expect(screen.getByText('개발자 도구')).toBeInTheDocument();
     expect(screen.getByText('날짜·디데이')).toBeInTheDocument();
     expect(screen.getByText('단위 변환기')).toBeInTheDocument();
     expect(screen.getByText('대출이자 계산기')).toBeInTheDocument();
@@ -56,6 +57,7 @@ describe('HomeApp Compact Dashboard Tests', () => {
     const lifestyleChip = screen.getByRole('button', { name: '생활 & 측정' });
     fireEvent.click(lifestyleChip);
 
+    expect(screen.getByText('개발자 도구')).toBeInTheDocument();
     expect(screen.getByText('단위 변환기')).toBeInTheDocument();
     expect(screen.getByText('BMI 계산기')).toBeInTheDocument();
     expect(screen.getByText('날짜·디데이')).toBeInTheDocument();
@@ -110,9 +112,9 @@ describe('HomeApp Compact Dashboard Tests', () => {
     window.localStorage.clear();
     renderHomeApp();
 
-    // 초기 상태: 첫 번째 카드는 가나다순 첫 번째인 '날짜·디데이', 별도 섹션 헤더 및 즐겨찾기 칩 없음
+    // 초기 상태: 첫 번째 카드는 가나다순 첫 번째인 '개발자 도구', 별도 섹션 헤더 및 즐겨찾기 칩 없음
     const initialHeadings = screen.getAllByRole('heading', { level: 3 });
-    expect(initialHeadings[0]).toHaveTextContent('날짜·디데이');
+    expect(initialHeadings[0]).toHaveTextContent('개발자 도구');
     expect(screen.queryByText('자주 쓰는 계산기')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '⭐ 즐겨찾기' })).not.toBeInTheDocument();
 
@@ -135,7 +137,7 @@ describe('HomeApp Compact Dashboard Tests', () => {
 
     // 원래 가나다순으로 복귀
     const restoredHeadings = screen.getAllByRole('heading', { level: 3 });
-    expect(restoredHeadings[0]).toHaveTextContent('날짜·디데이');
+    expect(restoredHeadings[0]).toHaveTextContent('개발자 도구');
   });
 
   it('별 아이콘에 브라우저 기본 title 속성을 배제하고 Tooltip이 적용되어야 한다', async () => {

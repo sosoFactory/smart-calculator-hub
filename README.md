@@ -11,13 +11,13 @@
 
   <p>
     <a href="https://soso-calculator.vercel.app"><img src="https://img.shields.io/badge/Web_Beta-soso--calculator.vercel.app-d1ff19?style=flat-square&logo=vercel&logoColor=black&labelColor=15171a" alt="웹 베타 서비스" /></a>
-    <img src="https://img.shields.io/badge/version-1.14.4-d1ff19?style=flat-square&labelColor=15171a" alt="Version" />
+    <img src="https://img.shields.io/badge/version-1.15.0-d1ff19?style=flat-square&labelColor=15171a" alt="Version" />
     <img src="https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=black&labelColor=15171a" alt="React 18" />
     <img src="https://img.shields.io/badge/TypeScript-5.5-3178c6?style=flat-square&logo=typescript&logoColor=white&labelColor=15171a" alt="TypeScript" />
     <img src="https://img.shields.io/badge/Vite-5.4-646cff?style=flat-square&logo=vite&logoColor=white&labelColor=15171a" alt="Vite" />
     <img src="https://img.shields.io/badge/TailwindCSS-3.4-38bdf8?style=flat-square&logo=tailwindcss&logoColor=white&labelColor=15171a" alt="Tailwind CSS" />
     <img src="https://img.shields.io/badge/PWA-Ready-10b981?style=flat-square&logo=pwa&logoColor=white&labelColor=15171a" alt="PWA" />
-    <img src="https://img.shields.io/badge/Tests-207%20Passed-success?style=flat-square&logo=vitest&logoColor=white&labelColor=15171a" alt="Tests" />
+    <img src="https://img.shields.io/badge/Tests-Passed-success?style=flat-square&logo=vitest&logoColor=white&labelColor=15171a" alt="Tests" />
   </p>
 
 </div>
@@ -33,7 +33,7 @@
 
 ---
 
-## 🛠️ 10대 핵심 계산기 모듈
+## 🛠️ 11대 핵심 계산기 모듈
  
 | 모듈명 | 주요 기능 및 특징 | 지원 세부 기능 |
 | :--- | :--- | :--- |
@@ -47,6 +47,7 @@
 | 💱 **[실시간 환율](https://soso-calculator.vercel.app/exchange)** | 주요 6대 통화(USD, JPY, EUR 등) 실시간 환율 및 환전 우대율 | 국내 관행 역산 표기(0달러/0엔 방지), 은행별 매매기준율/스프레드 우대 계산, 퀵 프리셋 칩 |
 | 📅 **[날짜 & 디데이](https://soso-calculator.vercel.app/date)** | 디데이, 날짜 간격, 날짜 계산, 만 나이 4대 생활 일정 도구 | 평일/근무일수 판정, 양력/음력 띠/별자리, 하이브리드 날짜 입력기(숫자 키패드 + 달력) |
 | 🪙 **[파이어 현금흐름](https://soso-calculator.vercel.app/cashflow)** | 조기 은퇴(FIRE) 목표 자산 및 세후 월 인출 현금흐름 시뮬레이션 | 4% 룰 안전인출률, 일반/린/팻/바리스타 4대 파이어 유형, 연도별 자산 추이 차트 & 고갈 시점 분석 |
+| 💻 **[개발자 도구](https://soso-calculator.vercel.app/devtools)** | 진수 변환, CSS 단위 환산, 색상 코드 변환 3대 도구 | 2·8·10·16진법 실시간 양방향 변환, px ↔ rem/em 환산 및 Tailwind 힌트, HEX·RGB·HSL 상호 변환 및 WCAG AA 명암비 |
  
 ---
  

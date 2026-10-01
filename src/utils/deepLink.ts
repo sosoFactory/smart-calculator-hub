@@ -7,6 +7,7 @@ import { BmiInput, Gender } from '../types/bmi';
 import { UnitCategory } from '../types/unit';
 import { DateTabType, DateCalcOp, DateCalcUnit } from '../types/date';
 import { CashFlowInput, CashFlowTaxType } from '../types/cashFlow';
+import { DevToolsTabType } from '../types/devTools';
 
 /**
  * 브라우저 히스토리 스택을 오염시키지 않고 주소창 URL 쿼리를 실시간 갱신
@@ -568,6 +569,35 @@ export const decodeCashFlowQuery = (search: string): Partial<CashFlowInput> | nu
   }
   if (taxStr && ['normal', 'isa', 'none'].includes(taxStr)) {
     result.taxType = taxStr;
+  }
+
+  return Object.keys(result).length > 0 ? result : null;
+};
+
+// ==========================================
+// 11. 개발자 도구 (/devtools)
+// ==========================================
+
+export interface DevToolsDeepLinkParams {
+  tab?: DevToolsTabType;
+}
+
+export const encodeDevToolsQuery = (params: DevToolsDeepLinkParams): string => {
+  const p = new URLSearchParams();
+  if (params.tab) p.set('tab', params.tab);
+  return p.toString();
+};
+
+export const decodeDevToolsQuery = (search: string): DevToolsDeepLinkParams | null => {
+  if (!search) return null;
+  const p = new URLSearchParams(search);
+  const tab = p.get('tab') as DevToolsTabType | null;
+
+  if (!tab) return null;
+
+  const result: DevToolsDeepLinkParams = {};
+  if (['base', 'css', 'color'].includes(tab)) {
+    result.tab = tab;
   }
 
   return Object.keys(result).length > 0 ? result : null;

@@ -10,7 +10,8 @@ export type CalculatorId =
   | 'dividend'
   | 'goal'
   | 'cashflow'
-  | 'date';
+  | 'date'
+  | 'devtools';
 
 export type CalculatorCategory = 'finance' | 'lifestyle' | 'global';
 
@@ -50,6 +51,15 @@ export const compareCalculatorsKorean = (a: CalculatorItem, b: CalculatorItem): 
 
 export const CALCULATORS_LIST: CalculatorItem[] = [
   // 전체 가나다(ㄱ~ㅎ) 순 정렬 (각 카테고리 내부에서도 자동으로 가나다순 유지)
+  {
+    id: 'devtools',
+    name: '개발자 도구 (프로그래머 변환기)',
+    shortName: '개발자 도구',
+    description: '2·8·10·16진수 진법 변환, CSS px·rem 단위 환산, HEX·RGB·HSL 색상 코드 변환',
+    category: 'lifestyle',
+    status: 'active',
+    keywords: ['개발자', '개발자도구', 'devtools', '진수', '2진수', '16진수', '진법', 'rem', 'px', 'em', 'css', '색상', 'hex', 'rgb', 'hsl'],
+  },
   {
     id: 'date',
     name: '날짜 & 디데이 계산기',
