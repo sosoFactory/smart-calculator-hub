@@ -9,6 +9,8 @@
 // 1. 진수 변환 (Base Converter)
 // -------------------------------------------------------------
 
+export type SupportedRadix = 2 | 8 | 10 | 16;
+
 export interface BaseConversionResult {
   bin: string;
   oct: string;
@@ -17,9 +19,28 @@ export interface BaseConversionResult {
 }
 
 /**
+ * 진법별 표준 프로그래밍 접두사(0b, 0o, 0x)를 포함한 코드 문자열 생성
+ */
+export function formatRadixWithPrefix(value: string, radix: SupportedRadix): string {
+  if (!value) return '';
+  switch (radix) {
+    case 2:
+      return `0b${value}`;
+    case 8:
+      return `0o${value}`;
+    case 10:
+      return value;
+    case 16:
+      return `0x${value}`;
+    default:
+      return value;
+  }
+}
+
+/**
  * 진법별 입력 문자열 유효성 검증
  */
-export function isValidBaseInput(value: string, base: number): boolean {
+export function isValidBaseInput(value: string, base: SupportedRadix): boolean {
   if (!value) return true;
   const clean = value.trim();
   switch (base) {
@@ -39,7 +60,7 @@ export function isValidBaseInput(value: string, base: number): boolean {
 /**
  * 임의 진법의 입력을 2, 8, 10, 16진수로 일괄 변환 (BigInt 지원으로 대형 비트 연산 무결성 보장)
  */
-export function convertBase(value: string, fromBase: number): BaseConversionResult {
+export function convertBase(value: string, fromBase: SupportedRadix): BaseConversionResult {
   const clean = value.trim();
   if (!clean) {
     return { bin: '', oct: '', dec: '', hex: '' };

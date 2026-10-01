@@ -14,6 +14,7 @@ import {
 } from '../../../utils/devToolsCalculator';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
 import { Input } from '../../../components/ui/input';
+import { useClipboard } from '../../../hooks/useClipboard';
 
 export const ColorTab: React.FC = () => {
   const hexInputId = useId();
@@ -24,7 +25,7 @@ export const ColorTab: React.FC = () => {
   const [hexInput, setHexInput] = useState<string>('D1FF19');
   const [rgb, setRgb] = useState<RgbColor>(() => hexToRgb('#d1ff19'));
   const [hsl, setHsl] = useState<HslColor>(() => hexToHsl('#d1ff19'));
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const { copy, isCopied } = useClipboard();
 
   const handleHexChange = (newHex: string) => {
     const sanitized = sanitizeHexInput(newHex);
@@ -56,19 +57,6 @@ export const ColorTab: React.FC = () => {
     setRgb(newRgb);
     const newHex = rgbToHex(newRgb.r, newRgb.g, newRgb.b).replace(/^#/, '');
     setHexInput(newHex.toUpperCase());
-  };
-
-  const handleCopy = async (text: string, key: string) => {
-    if (!text) return;
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(text);
-        setCopiedKey(key);
-        setTimeout(() => setCopiedKey(null), 1500);
-      }
-    } catch {
-      // fallback
-    }
   };
 
   const currentValidHex = isValidHex(hexInput) ? `#${hexInput}` : '#000000';
@@ -149,11 +137,11 @@ export const ColorTab: React.FC = () => {
             </label>
             <button
               type="button"
-              onClick={() => handleCopy(currentValidHex.toUpperCase(), 'hex-copy')}
+              onClick={() => copy(currentValidHex.toUpperCase(), 'hex-copy')}
               className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
               aria-label="HEX 코드 복사"
             >
-              {copiedKey === 'hex-copy' ? (
+              {isCopied('hex-copy') ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                   <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
@@ -195,11 +183,11 @@ export const ColorTab: React.FC = () => {
             </label>
             <button
               type="button"
-              onClick={() => handleCopy(rgbCssString, 'rgb-copy')}
+              onClick={() => copy(rgbCssString, 'rgb-copy')}
               className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
               aria-label="RGB CSS 코드 복사"
             >
-              {copiedKey === 'rgb-copy' ? (
+              {isCopied('rgb-copy') ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                   <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
@@ -243,11 +231,11 @@ export const ColorTab: React.FC = () => {
             </label>
             <button
               type="button"
-              onClick={() => handleCopy(hslCssString, 'hsl-copy')}
+              onClick={() => copy(hslCssString, 'hsl-copy')}
               className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
               aria-label="HSL CSS 코드 복사"
             >
-              {copiedKey === 'hsl-copy' ? (
+              {isCopied('hsl-copy') ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                   <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>

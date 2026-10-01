@@ -5,6 +5,8 @@ import {
   convertRemToPx,
   convertPxToCssUnits,
 } from '../../../utils/devToolsCalculator';
+import { useClipboard } from '../../../hooks/useClipboard';
+import { SelectableChip } from '../../../components/ui/selectable-chip';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import {
@@ -24,7 +26,7 @@ export const CssUnitTab: React.FC = () => {
   const [rootFontSize, setRootFontSize] = useState<number>(16);
   const [pxValue, setPxValue] = useState<number>(16);
   const [remValue, setRemValue] = useState<number>(1);
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const { copy, isCopied } = useClipboard();
 
   const handlePxChange = (px: number) => {
     setPxValue(px);
@@ -40,19 +42,6 @@ export const CssUnitTab: React.FC = () => {
     const validRoot = Math.max(1, root);
     setRootFontSize(validRoot);
     setRemValue(convertPxToRem(pxValue, validRoot));
-  };
-
-  const handleCopy = async (text: string, key: string) => {
-    if (!text) return;
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(text);
-        setCopiedKey(key);
-        setTimeout(() => setCopiedKey(null), 1500);
-      }
-    } catch {
-      // fallback
-    }
   };
 
   const numericPx = Number.isNaN(Number(pxValue)) ? 0 : Number(pxValue);
@@ -109,20 +98,15 @@ export const CssUnitTab: React.FC = () => {
             </span>
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               {[14, 16, 18].map((size) => (
-                <button
+                <SelectableChip
                   key={size}
-                  type="button"
+                  isSelected={rootFontSize === size}
                   onClick={() => handleRootChange(size)}
-                  className={`px-2.5 py-1 text-xs font-semibold rounded-md border transition-all ${
-                    rootFontSize === size
-                      ? 'bg-ghost-ink-base dark:bg-ghost-dark-surface-elevated text-white dark:text-ghost-dark-ink border-transparent'
-                      : 'bg-ghost-surface dark:bg-ghost-dark-surface border-ghost-hairline dark:border-ghost-dark-hairline text-ghost-ink-soft dark:text-ghost-dark-ink-mute hover:bg-ghost-hover'
-                  }`}
                 >
                   {size}px
-                </button>
+                </SelectableChip>
               ))}
             </div>
             <div className="flex items-center gap-1.5 ml-auto sm:ml-2">
@@ -156,10 +140,10 @@ export const CssUnitTab: React.FC = () => {
               </label>
               <button
                 type="button"
-                onClick={() => handleCopy(`${pxValue}px`, 'px')}
+                onClick={() => copy(`${pxValue}px`, 'px')}
                 className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
               >
-                {copiedKey === 'px' ? (
+                {isCopied('px') ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
@@ -198,10 +182,10 @@ export const CssUnitTab: React.FC = () => {
               </label>
               <button
                 type="button"
-                onClick={() => handleCopy(`${remValue}rem`, 'rem')}
+                onClick={() => copy(`${remValue}rem`, 'rem')}
                 className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors"
               >
-                {copiedKey === 'rem' ? (
+                {isCopied('rem') ? (
                   <>
                     <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
@@ -237,18 +221,13 @@ export const CssUnitTab: React.FC = () => {
           </span>
           <div className="flex items-center flex-wrap gap-1.5">
             {COMMON_PRESETS.map((p) => (
-              <button
+              <SelectableChip
                 key={p}
-                type="button"
+                isSelected={pxValue === p}
                 onClick={() => handlePxChange(p)}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-md border transition-all ${
-                  pxValue === p
-                    ? 'bg-ghost-ink-base dark:bg-ghost-dark-surface-elevated text-white dark:text-ghost-dark-ink border-transparent'
-                    : 'bg-white dark:bg-ghost-dark-surface border-ghost-hairline dark:border-ghost-dark-hairline text-ghost-ink-soft dark:text-ghost-dark-ink-mute hover:bg-ghost-hover'
-                }`}
               >
                 {p}px
-              </button>
+              </SelectableChip>
             ))}
           </div>
         </div>
@@ -269,7 +248,7 @@ export const CssUnitTab: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
             {unitCards.map((card) => {
-              const isCopied = copiedKey === card.id;
+              const copied = isCopied(card.id);
 
               return (
                 <div
@@ -292,11 +271,11 @@ export const CssUnitTab: React.FC = () => {
                           type="button"
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleCopy(card.copyText, card.id)}
+                          onClick={() => copy(card.copyText, card.id)}
                           className="h-7 w-7 text-ghost-ink-mute hover:text-ghost-ink dark:hover:text-white hover:bg-slate-100 dark:hover:bg-ghost-dark-hover rounded-md shrink-0"
                           aria-label={`${card.name} 복사`}
                         >
-                          {isCopied ? (
+                          {copied ? (
                             <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                           ) : (
                             <Copy className="w-3.5 h-3.5" />
@@ -304,7 +283,7 @@ export const CssUnitTab: React.FC = () => {
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent side="left">
-                        {isCopied ? '복사 완료!' : `${card.copyText} 복사`}
+                        {copied ? '복사 완료!' : `${card.copyText} 복사`}
                       </TooltipContent>
                     </Tooltip>
                   </div>

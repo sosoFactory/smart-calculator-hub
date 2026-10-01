@@ -4,6 +4,7 @@ import {
   convertBase,
   formatBinaryNibbles,
   isValidBaseInput,
+  formatRadixWithPrefix,
   // CSS 단위 변환
   convertPxToRem,
   convertRemToPx,
@@ -21,6 +22,13 @@ import {
 } from './devToolsCalculator';
 
 describe('DevTools: 진수 변환 (Base Converter)', () => {
+  it('formatRadixWithPrefix: 진법별 프로그래밍 접두사를 올바르게 부여해야 한다', () => {
+    expect(formatRadixWithPrefix('ff', 16)).toBe('0xff');
+    expect(formatRadixWithPrefix('1111', 2)).toBe('0b1111');
+    expect(formatRadixWithPrefix('377', 8)).toBe('0o377');
+    expect(formatRadixWithPrefix('255', 10)).toBe('255');
+    expect(formatRadixWithPrefix('', 16)).toBe('');
+  });
   it('10진수 입력을 2진수, 8진수, 16진수로 정확하게 변환해야 한다', () => {
     const result = convertBase('255', 10);
     expect(result.bin).toBe('11111111');

@@ -1,6 +1,6 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.15.1  
+> **버전**: v1.15.2  
 > **최종 갱신일**: 2026-10-01  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
@@ -718,26 +718,27 @@ src/
 
 ### 3.11 [개발/도구] 개발자 도구 (`DevToolsApp` - 구현 완료, /devtools)
 - **도입 배경 및 목적**:
-  - 소프트웨어 개발자, 웹 퍼블리셔, 디자이너가 실무에서 가장 빈번하게 사용하는 3대 유틸리티(진법 변환, CSS 단위 환산, 색상 코드 변환)를 별도의 외부 사이트나 무거운 툴 없이 하나의 미니멀 인터페이스 안에서 원스톱으로 신속하게 처리.
-- **핵심 3대 탭 구성**:
+  - 소프트웨어 개발자, 웹 퍼블리셔, 디자이너가 실무에서 가장 빈번하게 사용하는 3대 유틸리티(진법 변환, CSS 단위 변환, 색상 코드 변환)를 별도의 외부 사이트나 무거운 툴 없이 하나의 미니멀 인터페이스 안에서 원스톱으로 신속하게 처리.
+- **핵심 3대 탭 구성 및 상세 기능**:
   1. **진수 변환기 탭 (`BaseTab.tsx`)**:
      - **4대 주요 진법 실시간 양방향 변환**: 2진수(Binary, 0b), 8진수(Octal, 0o), 10진수(Decimal), 16진수(Hexadecimal, 0x).
      - **어느 입력창이든 타이핑 즉시 나머지 3개 진법 동기화**: 입력된 진법의 유효 문자(2진수는 0-1, 16진수는 0-9, a-f) 엄격 검증 및 유효하지 않은 입력 즉각 차단.
-     - **비트 및 바이트 구조 시각화**: 8-bit(1 Byte), 16-bit, 32-bit 단위 4비트(Nibble) 공백 그룹화 가독성 지원.
-     - **원클릭 복사**: 각 진법별 값 및 접두사(0x, 0b, 0o) 포함 복사 버튼 제공.
+     - **비트 및 바이트 구조 시각화 & 팝카운트(Popcount)**: 8-bit(1 Byte), 16-bit, 32-bit 단위 4비트(Nibble) 공백 그룹화 가독성 지원 및 세트된 1의 개수(Popcount)와 비트 밀도(%) 서브 메트릭 표시.
+     - **원클릭 클립보드 복사 (표준 접두사 기본 포함)**: 복사 버튼 클릭 시 코드에 즉시 붙여넣을 수 있도록 각 진법의 표준 접두사(16진수 0x, 2진수 0b, 8진수 0o)를 자동으로 포함하여 복사(10진수는 순수 수치), 1.5초 시각적 피드백 제공.
   2. **CSS 단위 변환기 탭 (`CssUnitTab.tsx`)**:
-     - **px ↔ rem ↔ em 상호 환산**: 루트 기준 폰트 크기(기본값 16px, 자유 변경 가능)를 기준으로 입력한 `px` 값을 `rem`으로, 또는 `rem` 값을 `px`로 즉시 상호 환산.
-      - **실무 핵심 4대 단위 일괄 변환 (단일 통합 카드)**: 임의적인 뷰포트 단위(vw/vh) 및 화면 해상도 왜곡이 있는 물리 단위(in/mm)를 배제하고, 실무에서 100% 신뢰할 수 있는 4대 단위(`em`, `%`, `pt`, `Tailwind Spacing`)를 카드 그리드로 일괄 변환하여 원클릭 복사 지원.
-     - **Tailwind CSS 클래스 힌트**: 환산된 rem/px 값에 대응하는 Tailwind 스페이싱 클래스(예: `16px = 1rem = w-4, p-4`) 자동 안내.
+     - **px ↔ rem 상호 환산**: 루트 기준 폰트 크기(기본값 16px, 자유 변경 가능)를 기준으로 입력한 `px` 값을 `rem`으로, 또는 `rem` 값을 `px`로 즉시 상호 환산.
+     - **루트 폰트 및 실무 빈출 픽셀 프리셋 칩 (`SelectableChip`)**: 14/16/18px 루트 폰트 칩 및 4~64px 실무 빈출 픽셀 프리셋 칩 1터치 즉시 적용.
+     - **실무 핵심 4대 단위 일괄 변환 (단일 통합 카드)**: 임의적인 뷰포트 단위(vw/vh) 및 화면 해상도 왜곡이 있는 물리 단위(in/mm)를 배제하고, 실무에서 100% 신뢰할 수 있는 4대 단위(`em`, `%`, `pt`, `Tailwind Spacing`)를 반응형 카드 그리드로 일괄 변환하여 원클릭 복사 지원.
+     - **Tailwind CSS 클래스 힌트**: 환산된 rem/px 값에 대응하는 Tailwind 스페이싱 클래스(예: `16px = 1rem = w-4, p-4` 또는 arbitrary `[1rem]`) 자동 안내.
   3. **색상 코드 변환기 탭 (`ColorTab.tsx`)**:
      - **HEX ↔ RGB ↔ HSL 상호 변환**:
         - 3자리/6자리 HEX 코드(`#ffffff`), RGB(`rgb(255, 255, 255)`), HSL(`hsl(0, 0%, 100%)`) 간 완전한 상호 변환.
         - **`#` 고정 프리픽스 및 스마트 파싱**: 입력창 내 `#`를 고정 노출하고, `#`가 포함된 코드를 붙여넣어도 16진수 문자만 정제(`sanitizeHexInput`)하여 반영. 복사 시에는 표준 `#` 포함 코드로 복사.
-     - **실시간 컬러 스와치 프리뷰 및 명암비 표시**: 현재 색상 스와치 프리뷰 및 WCAG AA 기준 텍스트 명암비 안내.
+     - **대형 컬러 스와치 프리뷰 & 네이티브 컬러 피커 연동**: 현재 색상 스와치 프리뷰, 네이티브 OS 컬러 피커(`<input type="color">`) 스포이트 연동 및 WCAG AA 기준 텍스트 명암비(4.5:1 이상) 실시간 검증.
      - **원클릭 CSS 코드 복사**: `HEX`, `rgb(...)`, `hsl(...)` 원클릭 클립보드 복사.
-- **UI/UX 구조**:
-  - `FormHeader`: "개발자 도구", "진수·CSS 단위·색상 코드 원스톱 변환기" 헤더 및 3대 탭 세그먼트(`SegmentedControl`).
-  - 결과 대시보드: 서브 요약 지표(`SubMetricCard`) 및 상세 변환 카드.
+- **UI/UX 구조 및 네비게이션**:
+  - 카테고리 탭: 3대 탭 세그먼트(`DevToolsCategoryTabs`, `SegmentedControl`/`TabsList`)가 상단 네비게이션으로 직관적 배치.
+  - URL 딥링크 파라미터 동기화: `?tab=base|css|color` 쿼리를 통해 활성 탭 즉시 공유 및 상태 복원.
   - 최하단 `InfoCard`: 진법 체계(2/8/10/16진수 표기법), 웹 표준 CSS 단위 가이드(rem과 em의 차이), 디지털 색상 모델(RGB vs HSL) 가이드.
 
 ### 3.12 향후 확장 예정 모듈 및 TODO (Roadmap)
@@ -789,6 +790,7 @@ export type CalculatorId =
   | 'goal'
   | 'date'
   | 'cashflow';
+  | 'devtools';
 
 export type CalculatorCategory = 'finance' | 'lifestyle' | 'global';
 
@@ -1730,3 +1732,46 @@ export interface CashFlowCalculationResult {
   3. **네이티브 `updatefound` / `statechange` 리스너 연동**: 백그라운드에서 새 서비스 워커 다운로드가 완료(`state === 'installed'`)되는 순간 실시간으로 업데이트 토스트를 노출.
   4. **`controllerchange` 리스너 기반 무결점 새로고침**: 사용자가 "지금 업데이트" 버튼 클릭 시 서비스 워커가 `skipWaiting`을 수신하고 활성화되는 즉시 최신 애셋으로 페이지를 1회 안전하게 새로고침.
 
+
+
+### 4.13 개발자 도구 데이터 모델 (`src/types/devTools.ts`, `src/utils/devToolsCalculator.ts`)
+```typescript
+export type DevToolsTabType = 'base' | 'css' | 'color';
+
+export interface DevToolsDeepLinkParams {
+  tab?: DevToolsTabType;
+}
+
+export type SupportedRadix = 2 | 8 | 10 | 16;
+
+export interface BaseConversionResult {
+  binary: string;
+  octal: string;
+  decimal: string;
+  hex: string;
+  formattedBinary: string;
+  popcount: number;
+  bitDensity: number;
+}
+
+export interface CssUnitsResult {
+  px: number;
+  rem: number;
+  em: number;
+  percent: number;
+  pt: number;
+  tailwind: string | null;
+}
+
+export interface RgbColor {
+  r: number;
+  g: number;
+  b: number;
+}
+
+export interface HslColor {
+  h: number;
+  s: number;
+  l: number;
+}
+```

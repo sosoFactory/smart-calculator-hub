@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { DevToolsApp } from './DevToolsApp';
 
 describe('DevToolsApp Component', () => {
@@ -67,5 +67,37 @@ describe('DevToolsApp Component', () => {
 
     expect(screen.getByText('픽셀 (PX)')).toBeInTheDocument();
     expect(screen.getByText('렘 (REM)')).toBeInTheDocument();
+  });
+
+  it('copies base values with programming prefixes by default', async () => {
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, {
+      clipboard: {
+        writeText: writeTextMock,
+      },
+    });
+
+    render(<DevToolsApp />);
+
+    // 16진수 복사 버튼 클릭 -> 0xFF 복사
+    const hexCopyBtn = screen.getByRole('button', { name: '16진수 (Hexadecimal) 값 복사' });
+    await act(async () => {
+      fireEvent.click(hexCopyBtn);
+    });
+    expect(writeTextMock).toHaveBeenCalledWith('0xFF');
+
+    // 2진수 복사 버튼 클릭 -> 0b11111111 복사
+    const binCopyBtn = screen.getByRole('button', { name: '2진수 (Binary) 값 복사' });
+    await act(async () => {
+      fireEvent.click(binCopyBtn);
+    });
+    expect(writeTextMock).toHaveBeenCalledWith('0b11111111');
+
+    // 10진수 복사 버튼 클릭 -> 255 복사
+    const decCopyBtn = screen.getByRole('button', { name: '10진수 (Decimal) 값 복사' });
+    await act(async () => {
+      fireEvent.click(decCopyBtn);
+    });
+    expect(writeTextMock).toHaveBeenCalledWith('255');
   });
 });

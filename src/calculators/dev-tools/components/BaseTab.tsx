@@ -4,8 +4,11 @@ import {
   convertBase,
   formatBinaryNibbles,
   isValidBaseInput,
+  formatRadixWithPrefix,
   BaseConversionResult,
+  SupportedRadix,
 } from '../../../utils/devToolsCalculator';
+import { useClipboard } from '../../../hooks/useClipboard';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
 import { Input } from '../../../components/ui/input';
 
@@ -16,11 +19,11 @@ export const BaseTab: React.FC = () => {
   const hexInputId = useId();
 
   // 기본값: 255 (10진수)
-  const [activeBase, setActiveBase] = useState<number>(10);
+  const [activeBase, setActiveBase] = useState<SupportedRadix>(10);
   const [values, setValues] = useState<BaseConversionResult>(() => convertBase('255', 10));
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const { copy, isCopied } = useClipboard();
 
-  const handleInputChange = (val: string, base: number) => {
+  const handleInputChange = (val: string, base: SupportedRadix) => {
     setActiveBase(base);
     if (!val.trim()) {
       setValues({ bin: '', oct: '', dec: '', hex: '' });
@@ -35,25 +38,20 @@ export const BaseTab: React.FC = () => {
     setValues(res);
   };
 
-  const handleCopy = async (text: string, key: string) => {
-    if (!text) return;
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(text);
-        setCopiedKey(key);
-        setTimeout(() => setCopiedKey(null), 1500);
-      }
-    } catch {
-      // fallback
-    }
-  };
-
   // 통계 계산
   const bitLength = values.bin ? values.bin.length : 0;
   const byteLength = values.hex ? Math.ceil(values.hex.length / 2) : 0;
   const onesCount = values.bin ? (values.bin.match(/1/g) || []).length : 0;
 
-  const bases = [
+  const bases: Array<{
+    key: string;
+    name: string;
+    base: SupportedRadix;
+    value: string;
+    placeholder: string;
+    prefix: string;
+    id: string;
+  }> = [
     {
       key: 'dec',
       name: '10진수 (Decimal)',
@@ -98,7 +96,7 @@ export const BaseTab: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
         {bases.map((b) => {
           const isCurrentActive = activeBase === b.base;
-          const isCopied = copiedKey === b.key;
+          const copied = isCopied(b.key);
 
           return (
             <div
@@ -118,12 +116,12 @@ export const BaseTab: React.FC = () => {
                 </label>
                 <button
                   type="button"
-                  onClick={() => handleCopy(b.value, b.key)}
+                  onClick={() => copy(formatRadixWithPrefix(b.value, b.base), b.key)}
                   disabled={!b.value}
                   className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors disabled:opacity-30 disabled:pointer-events-none"
                   aria-label={`${b.name} 값 복사`}
                 >
-                  {isCopied ? (
+                  {copied ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                       <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
@@ -169,11 +167,11 @@ export const BaseTab: React.FC = () => {
           </span>
           <button
             type="button"
-            onClick={() => handleCopy(formatBinaryNibbles(values.bin), 'nibble')}
+            onClick={() => copy(formatBinaryNibbles(values.bin), 'nibble')}
             disabled={!values.bin}
             className="inline-flex items-center gap-1 text-[11px] font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute hover:text-ghost-ink dark:hover:text-ghost-dark-ink transition-colors disabled:opacity-30 disabled:pointer-events-none"
           >
-            {copiedKey === 'nibble' ? (
+            {isCopied('nibble') ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span className="text-emerald-600 dark:text-emerald-400">복사됨</span>
