@@ -105,6 +105,7 @@
     - **활성(즐겨찾기 등록)**: `fill-current` (단일 잉크 색상으로 속이 꽉 찬 솔리드 별).
     - **비활성(미등록)**: `fill-none` (동일한 잉크 색상의 외곽선 라인만 있는 빈 별).
     - **호버 및 탭 피드백**: 부드러운 스케일 애니메이션(`transition-transform active:scale-90 hover:scale-110`).
+    - **디자인 시스템 툴팁 필수 (`Tooltip`)**: 브라우저 기본 `title` 속성을 절대 사용하지 않고, 공통 `Tooltip`, `TooltipTrigger`, `TooltipContent` 컴포넌트를 필수로 적용하여 활성 시 "즐겨찾기 해제", 비활성 시 "즐겨찾기 추가" 툴팁을 일관되게 제공.
   - **이벤트 전파 방지**: 카드 클릭 링크 이동(`Link`)과 충돌하지 않도록 `e.preventDefault()`, `e.stopPropagation()` 필수 적용.
 - **홈 화면 단일 그리드 내 즐겨찾기 우선 정렬 (Pin-to-Top)**:
   - 상단 별도 분리 섹션 및 중복 탭을 제거하고, 단일 카드 그리드에서 즐겨찾기 등록 카드가 **맨 앞(1순위)**으로 자동 재배치되고, 동일 그룹 내에서는 한국어 가나다순(2순위)으로 정렬.
@@ -131,6 +132,7 @@
 | :--- | :--- | :--- |
 | **디자인 토큰** | `text-ghost-ink`, `border-ghost-hairline`, `text-ghost-lime` 등 정식 시맨틱 클래스 사용 | `text-[#112220]`, `border-[#e5e7eb]`, `bg-[#15171a]` 등 임의 대괄호 헥스코드 하드코딩 |
 | **별(즐겨찾기) 아이콘** | 활성/비활성 모두 `text-ghost-ink dark:text-ghost-dark-ink` 단일 색상으로 고정하고 `fill-current` / `fill-none`으로만 구분 | 활성은 `text-ghost-ink`, 비활성은 `text-ghost-ink-stone` 등으로 색상 클래스를 다르게 분기하는 행위 |
+| **툴팁 (Tooltip)** | 공통 `Tooltip`, `TooltipTrigger`, `TooltipContent` 컴포넌트 필수 사용 | `title="..."` 등 브라우저 네이티브 타이틀 속성 땜질 사용 |
 | **카드 아이콘 컬러** | 단정한 에디토리얼 모노크롬(`text-ghost-ink-soft group-hover:text-ghost-ink`) | 카드마다 에메랄드, 인디고, 바이올렛, 앰버 등 10색 무지개색 난립 |
 | **공통 컴포넌트** | `SubMetricCard`, `FormHeader`, `NumericInput`, `InfoCard` 필수 재사용 | 인라인 중복 div 태그 작성, 독자적 레이아웃 생성 |
 | **서브 카드 계층** | 1행(아이콘+라벨/배지) ➔ 2행(메인 수치) ➔ 3행(보조 설명/독음) 엄격 준수 | 아이콘을 우측에 배치하거나 독음을 상단에 배치하는 행 역전 |

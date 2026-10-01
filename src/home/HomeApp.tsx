@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
+import { Tooltip, TooltipTrigger, TooltipContent } from '../components/ui/tooltip';
 import { useToast } from '../hooks/use-toast';
 import { siteConfig } from '../config/site';
 import { useFavorites } from '../hooks/useFavorites';
@@ -156,23 +157,29 @@ export const HomeApp: React.FC = () => {
                   <span className="text-[10px] font-medium text-ghost-ink-stone dark:text-ghost-dark-ink-stone truncate max-w-[65px] sm:max-w-none text-right">
                     {CATEGORY_NAMES[item.category].split(' ')[0]}
                   </span>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggleFavorite(item.id);
-                    }}
-                    className="p-1 -mr-1 rounded-md text-ghost-ink dark:text-ghost-dark-ink transition-transform active:scale-90"
-                    aria-label={isFav ? `${item.shortName} 즐겨찾기 해제` : `${item.shortName} 즐겨찾기 추가`}
-                    title={isFav ? `${item.shortName} 즐겨찾기 해제` : `${item.shortName} 즐겨찾기 추가`}
-                  >
-                    <Star
-                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-ghost-ink dark:text-ghost-dark-ink transition-colors ${
-                        isFav ? 'fill-current' : 'fill-none'
-                      }`}
-                    />
-                  </button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleFavorite(item.id);
+                        }}
+                        className="p-1 -mr-1 rounded-md text-ghost-ink dark:text-ghost-dark-ink transition-transform active:scale-90"
+                        aria-label={isFav ? `${item.shortName} 즐겨찾기 해제` : `${item.shortName} 즐겨찾기 추가`}
+                      >
+                        <Star
+                          className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-ghost-ink dark:text-ghost-dark-ink transition-colors ${
+                            isFav ? 'fill-current' : 'fill-none'
+                          }`}
+                        />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      {isFav ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+                    </TooltipContent>
+                  </Tooltip>
                 </>
               )}
             </div>

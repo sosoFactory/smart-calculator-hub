@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import HomeApp from './HomeApp';
@@ -12,6 +13,8 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
+import { TooltipProvider } from '../components/ui/tooltip';
+
 describe('HomeApp Compact Dashboard Tests', () => {
   beforeEach(() => {
     mockNavigate.mockClear();
@@ -20,7 +23,9 @@ describe('HomeApp Compact Dashboard Tests', () => {
   const renderHomeApp = () =>
     render(
       <MemoryRouter>
-        <HomeApp />
+        <TooltipProvider delayDuration={0}>
+          <HomeApp />
+        </TooltipProvider>
       </MemoryRouter>
     );
 
@@ -131,5 +136,18 @@ describe('HomeApp Compact Dashboard Tests', () => {
     // 원래 가나다순으로 복귀
     const restoredHeadings = screen.getAllByRole('heading', { level: 3 });
     expect(restoredHeadings[0]).toHaveTextContent('날짜·디데이');
+  });
+
+  it('별 아이콘에 브라우저 기본 title 속성을 배제하고 Tooltip이 적용되어야 한다', async () => {
+    window.localStorage.clear();
+    renderHomeApp();
+
+    const starBtn = screen.getByRole('button', { name: '대출이자 계산기 즐겨찾기 추가' });
+    // 브라우저 기본 title 속성 배제 검증
+    expect(starBtn).not.toHaveAttribute('title');
+
+    // 마우스 호버 시 디자인 시스템 Tooltip 컨텐츠 노출 확인
+    await userEvent.hover(starBtn);
+    expect(await screen.findByText('즐겨찾기 추가')).toBeInTheDocument();
   });
 });
