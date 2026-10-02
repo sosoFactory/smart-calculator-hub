@@ -3,6 +3,12 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.15.3] - 2026-10-02
+
+### Added
+- **구글 서치 콘솔(Google Search Console) 사이트 소유권 확인 메타 태그 추가**:
+  - `index.html` 내 `<meta name="google-site-verification" content="Kc1VYlBdL45HnSEy1pQCv_vF4xmYAMKemuU6vQ5LTjg" />` 태그 등록으로 구글 검색 색인 및 서치 콘솔 소유권 인증 지원.
+
 ## [1.15.2] - 2026-10-01
 
 ### Refactor
