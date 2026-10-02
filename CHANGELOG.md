@@ -3,6 +3,12 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.15.4] - 2026-10-02
+
+### Added
+- **네이버 서치어드바이저(Naver Search Advisor) 사이트 소유권 확인 메타 태그 추가**:
+  - `index.html` 내 `<meta name="naver-site-verification" content="4ef100228466fd76bb27d955ed3a18de0c0cc0fe" />` 태그 등록으로 네이버 검색엔진 수집 및 서치어드바이저 소유권 인증 지원.
+
 ## [1.15.3] - 2026-10-02
 
 ### Added
