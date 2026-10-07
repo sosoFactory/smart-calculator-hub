@@ -86,60 +86,60 @@ export const CashFlowTable: React.FC<CashFlowTableProps> = ({ result }) => {
         </Button>
       </div>
 
-      {/* 전역 공통 Table 컴포넌트 */}
-      <div className="overflow-x-auto">
-        <Table>
+      {/* 전역 공통 Table 컴포넌트 (모바일 음수 마진 및 가로 스와이프 보장 - PRD 12.6 명세) */}
+      <div className="-mx-5 sm:mx-0 overflow-x-auto px-5 sm:px-0">
+        <Table className="min-w-[500px]">
           <TableHeader>
             <TableRow className="border-b border-[#e5e7eb] dark:border-ghost-dark-hairline">
-              <TableHead className="text-xs font-bold text-[#64748b] dark:text-ghost-dark-ink-mute">
+              <TableHead className="text-xs font-bold text-[#64748b] dark:text-ghost-dark-ink-mute whitespace-nowrap">
                 구분
               </TableHead>
-              <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute">
+              <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute whitespace-nowrap">
                 세전 필요 수익금
               </TableHead>
-              <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute">
+              <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute whitespace-nowrap">
                 예상 세금 ({taxRatePercent}%)
               </TableHead>
-              <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute">
+              <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute whitespace-nowrap">
                 세후 실수령액
               </TableHead>
-              <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute">
+              <TableHead className="text-xs font-bold text-right text-[#64748b] dark:text-ghost-dark-ink-mute whitespace-nowrap">
                 실효 수익률
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             <TableRow className="border-b border-slate-100 dark:border-ghost-dark-hairline/60">
-              <TableCell className="text-xs font-medium text-[#112220] dark:text-ghost-dark-ink">
+              <TableCell className="text-xs font-medium text-[#112220] dark:text-ghost-dark-ink whitespace-nowrap">
                 월간 기준
               </TableCell>
-              <TableCell className="text-xs text-right font-medium text-[#112220] dark:text-ghost-dark-ink tabular-nums">
+              <TableCell className="text-xs text-right font-medium text-[#112220] dark:text-ghost-dark-ink tabular-nums whitespace-nowrap">
                 {formatCurrency(monthlyGross)}
               </TableCell>
-              <TableCell className="text-xs text-right font-medium text-rose-500 tabular-nums">
+              <TableCell className="text-xs text-right font-medium text-rose-500 tabular-nums whitespace-nowrap">
                 -{formatCurrency(monthlyTax)}
               </TableCell>
-              <TableCell className="text-xs text-right font-bold text-emerald-600 dark:text-[#d1ff19] tabular-nums">
+              <TableCell className="text-xs text-right font-bold text-emerald-600 dark:text-[#d1ff19] tabular-nums whitespace-nowrap">
                 {formatCurrency(monthlyNet)}
               </TableCell>
-              <TableCell className="text-xs text-right text-[#64748b] dark:text-ghost-dark-ink-mute tabular-nums">
+              <TableCell className="text-xs text-right text-[#64748b] dark:text-ghost-dark-ink-mute tabular-nums whitespace-nowrap">
                 연 {effectiveNetReturnRate.toFixed(2)}%
               </TableCell>
             </TableRow>
             <TableRow className="border-b-0 bg-slate-50/50 dark:bg-ghost-dark-surface-deep">
-              <TableCell className="text-xs font-bold text-[#112220] dark:text-ghost-dark-ink">
+              <TableCell className="text-xs font-bold text-[#112220] dark:text-ghost-dark-ink whitespace-nowrap">
                 연간 기준
               </TableCell>
-              <TableCell className="text-xs text-right font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums">
+              <TableCell className="text-xs text-right font-bold text-[#112220] dark:text-ghost-dark-ink tabular-nums whitespace-nowrap">
                 {formatCurrency(annualGross)}
               </TableCell>
-              <TableCell className="text-xs text-right font-bold text-rose-500 tabular-nums">
+              <TableCell className="text-xs text-right font-bold text-rose-500 tabular-nums whitespace-nowrap">
                 -{formatCurrency(annualTax)}
               </TableCell>
-              <TableCell className="text-xs text-right font-bold text-emerald-600 dark:text-[#d1ff19] tabular-nums">
+              <TableCell className="text-xs text-right font-bold text-emerald-600 dark:text-[#d1ff19] tabular-nums whitespace-nowrap">
                 {formatCurrency(annualNet)}
               </TableCell>
-              <TableCell className="text-xs text-right font-bold text-emerald-600 dark:text-[#d1ff19] tabular-nums">
+              <TableCell className="text-xs text-right font-bold text-emerald-600 dark:text-[#d1ff19] tabular-nums whitespace-nowrap">
                 연 {effectiveNetReturnRate.toFixed(2)}%
               </TableCell>
             </TableRow>

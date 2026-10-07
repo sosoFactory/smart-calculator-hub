@@ -3,6 +3,18 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.15.6] - 2026-10-07
+
+### Fixed
+- **파이어 현금흐름 주기별 명세표 모바일 마이너스 부호 개행 분리 버그 및 테이블 레이아웃 수정**:
+  - `CashFlowTable.tsx`에 모바일 엣지 투 엣지 스크롤 래퍼(`-mx-5 sm:mx-0 px-5 sm:px-0`) 및 최소 너비(`min-w-[500px]`) 적용.
+  - 전 헤더 및 데이터 셀에 `whitespace-nowrap`을 적용하여 예상 세금 음수 금액(`-₩4,368,794`)에서 `-` 기호만 윗줄로 튕겨 나가는 소프트 랩 현상 및 우측 열 축소/잘림 문제 원천 차단.
+- **안드로이드 모바일 PWA 새로고침 토스트 실시간 격발 및 지속 시간 개선**:
+  - `PWAUpdateToast.tsx`에 네이티브 `ServiceWorkerRegistration` 직접 감시 로직 도입 (`reg.waiting` 즉시 감지 및 `reg.installing`의 `statechange` 다운로드 완료 실시간 추적).
+  - 실시간 폴링 주기를 30초로 단축하고 페이지/계산기 탭 이동 시 즉시 업데이트 검사 추가.
+  - "지금 업데이트" 클릭 시 `reg.waiting.postMessage({ type: 'SKIP_WAITING' })` 직접 전송으로 지연 없는 즉시 활성화 보장.
+  - 토스트 지속 시간을 무제한(`duration: Infinity`)으로 설정하여 사용자가 직접 조작할 때까지 상시 유지되도록 개선.
+
 ## [1.15.5] - 2026-10-07
 
 ### Fixed

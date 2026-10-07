@@ -11,7 +11,7 @@
 
   <p>
     <a href="https://soso-calculator.vercel.app"><img src="https://img.shields.io/badge/Web_Beta-soso--calculator.vercel.app-d1ff19?style=flat-square&logo=vercel&logoColor=black&labelColor=15171a" alt="웹 베타 서비스" /></a>
-    <img src="https://img.shields.io/badge/version-1.15.5-d1ff19?style=flat-square&labelColor=15171a" alt="Version" />
+    <img src="https://img.shields.io/badge/version-1.15.6-d1ff19?style=flat-square&labelColor=15171a" alt="Version" />
     <img src="https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=black&labelColor=15171a" alt="React 18" />
     <img src="https://img.shields.io/badge/TypeScript-5.5-3178c6?style=flat-square&logo=typescript&logoColor=white&labelColor=15171a" alt="TypeScript" />
     <img src="https://img.shields.io/badge/Vite-5.4-646cff?style=flat-square&logo=vite&logoColor=white&labelColor=15171a" alt="Vite" />
@@ -79,4 +79,4 @@ Font        Pretendard Variable (전역 단일 서체)
  
 - **제작**: © [sosoFactory](https://github.com/sosoFactory)
 - **라이선스**: MIT License
-- **버전**: `v1.15.5`
+- **버전**: `v1.15.6`

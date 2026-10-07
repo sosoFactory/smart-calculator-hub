@@ -1,6 +1,6 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.15.5  
+> **버전**: v1.15.6  
 > **최종 갱신일**: 2026-10-07  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
@@ -710,6 +710,7 @@ src/
     - **세전 수익 구성비 도넛차트 (`DonutChart`)**: 세후 실수령액 vs 연간 세금 비중 시각화.
   - **주기별 상세 명세 분석표 (`CashFlowTable.tsx` & `CSV 다운로드`)**:
     - 구분(월간 / 연간), 세전 필요 수익금, 예상 세금, 세후 실수령액, 실효 수익률 정밀 대조표.
+    - **모바일 반응형 뷰포트 최적화**: 엣지 투 엣지 스크롤 래퍼(`-mx-5 sm:mx-0 px-5 sm:px-0`), 테이블 최소 너비 보장(`min-w-[500px]`), 전 헤더 및 데이터 셀 `whitespace-nowrap` 필수 적용을 통해 마이너스(`-`) 부호 분리 및 숫자 개행 깨짐을 원천 방지하고 유려한 가로 스와이프 지원.
     - 우측 상단 표준 "CSV 다운로드" 버튼 연동 (엑셀 호환 UTF-8 BOM 인코딩).
   - **파이어 실전 금융 가이드 패널 (`CashFlowInfoCard`)**:
     - 1) 미국 트리니티 대학교 연구진의 '트리니티 4% 룰' 원리와 성공 확률(주식 75% + 채권 25% 포트폴리오 기준).
@@ -1728,9 +1729,16 @@ export interface CashFlowCalculationResult {
 - **문제점**: 데스크톱 브라우저는 탭 종료/F5 시 캐시 검증을 빈번히 수행하여 새 버전 토스트가 원활히 작동하지만, **안드로이드 설치형 PWA(WebAPK / Standalone)** 환경에서는 브라우저의 공격적인 로컬 HTTP 캐싱 및 백그라운드 프로세스 상주로 인해 `sw.js`의 변경을 감지하지 못하고 토스트가 누락되는 문제 발생.
 - **해결 방안**:
   1. **Vercel HTTP 캐시 무효화 헤더 강제**: `/sw.js` 및 `/workbox-*.js` 파일에 대해 `Cache-Control: no-cache, no-store, must-revalidate`를 설정하여 폰 접속 시마다 항상 네트워크를 통해 최신 서비스 워커 바이트를 확인.
-  2. **앱 복귀(`visibilitychange`, `focus`) 시 즉시 대기 워커 검사**: 백그라운드에서 실행 중이던 PWA가 포그라운드로 복귀할 때 `reg.waiting` 여부를 즉시 검사하여 대기 중인 새 버전이 있으면 토스트를 즉시 트리거.
-  3. **네이티브 `updatefound` / `statechange` 리스너 연동**: 백그라운드에서 새 서비스 워커 다운로드가 완료(`state === 'installed'`)되는 순간 실시간으로 업데이트 토스트를 노출.
-  4. **`controllerchange` 리스너 기반 무결점 새로고침**: 사용자가 "지금 업데이트" 버튼 클릭 시 서비스 워커가 `skipWaiting`을 수신하고 활성화되는 즉시 최신 애셋으로 페이지를 1회 안전하게 새로고침.
+  2. **네이티브 ServiceWorkerRegistration 직접 감시 및 다운로드 추적**:
+     - `reg.waiting` 존재 시 토스트 즉시 격발.
+     - 백그라운드 다운로드 중(`reg.installing`)일 경우 `statechange` 이벤트를 직접 감시하여 `installed` 상태 도달 즉시 100% 토스트 격발.
+     - `updatefound` 발생 시에도 신규 워커의 상태를 즉시 추적.
+  3. **실시간 폴링 주기 단축 및 다각적 트리거**:
+     - 30초 주기적 백그라운드 `reg.update()` 폴링 실행.
+     - 앱 포그라운드 복귀(`visibilitychange`, `focus`) 및 라우트 이동 시 즉시 업데이트 검사.
+  4. **무결점 즉시 활성화 및 영구 유지 토스트**:
+     - 토스트 자동 소멸 방지 (`duration: Infinity`)로 사용자가 인지하고 조작할 때까지 상시 유지.
+     - 사용자가 "지금 업데이트" 클릭 시 `reg.waiting.postMessage({ type: 'SKIP_WAITING' })`를 직접 전달하여 서비스 워커를 즉시 활성화하고, `controllerchange` 리스너를 통해 1회 안전하게 새로고침.
 
 
 

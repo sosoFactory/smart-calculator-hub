@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { PWAUpdateToast } from './PWAUpdateToast';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import * as useToastModule from '../../hooks/use-toast';
@@ -23,7 +24,11 @@ describe('PWAUpdateToast', () => {
       updateServiceWorker: vi.fn(),
     });
 
-    render(<PWAUpdateToast />);
+    render(
+      <MemoryRouter>
+        <PWAUpdateToast />
+      </MemoryRouter>
+    );
 
     expect(toastMock).not.toHaveBeenCalled();
   });
@@ -38,7 +43,11 @@ describe('PWAUpdateToast', () => {
       updateServiceWorker: updateServiceWorkerMock,
     });
 
-    render(<PWAUpdateToast />);
+    render(
+      <MemoryRouter>
+        <PWAUpdateToast />
+      </MemoryRouter>
+    );
 
     expect(toastMock).toHaveBeenCalledTimes(1);
     expect(toastMock).toHaveBeenCalledWith(
@@ -80,7 +89,11 @@ describe('PWAUpdateToast', () => {
       configurable: true,
     });
 
-    render(<PWAUpdateToast />);
+    render(
+      <MemoryRouter>
+        <PWAUpdateToast />
+      </MemoryRouter>
+    );
 
     await vi.waitFor(() => {
       expect(setNeedRefreshMock).toHaveBeenCalledWith(true);
