@@ -3,6 +3,13 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.15.5] - 2026-10-07
+
+### Fixed
+- **파이어 현금흐름 및 알바 급여 도넛 차트 툴팁 레이어 겹침 버그 수정**:
+  - `CashFlowCharts.tsx` 및 `PartTimeChartDashboard.tsx`에서 도넛 가운데 글씨 레이어를 차트 앞에 배치하도록 DOM 마크업 순서를 조정.
+  - 마우스 호버 시 뜨는 Recharts 툴팁이 도넛 중앙 텍스트 밑으로 가려지던 문제를 `z-index` 충돌 없이 자연스러운 브라우저 렌더링 스택으로 완벽하게 해결.
+
 ## [1.15.4] - 2026-10-02
 
 ### Added

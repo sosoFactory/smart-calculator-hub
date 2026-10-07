@@ -140,6 +140,14 @@ export const CashFlowCharts: React.FC<CashFlowChartsProps> = ({ result }) => {
 
           <div className="flex flex-col sm:flex-row items-center justify-around gap-4 pt-2">
             <div className="h-44 w-44 shrink-0 relative">
+              {/* 도넛 중앙 텍스트 (차트 아래 바닥 레이어에 먼저 배치하여 호버 시 툴팁을 가리지 않도록 보장) */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-[10px] text-[#64748b] dark:text-ghost-dark-ink-mute font-medium">실수령률</span>
+                <span className="text-base font-black text-emerald-600 dark:text-[#d1ff19] tabular-nums">
+                  {pieData[0]?.percentage || 100}%
+                </span>
+              </div>
+
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -173,12 +181,6 @@ export const CashFlowCharts: React.FC<CashFlowChartsProps> = ({ result }) => {
                   />
                 </PieChart>
               </ResponsiveContainer>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-[10px] text-[#64748b] dark:text-ghost-dark-ink-mute font-medium">실수령률</span>
-                <span className="text-base font-black text-emerald-600 dark:text-[#d1ff19] tabular-nums">
-                  {pieData[0]?.percentage || 100}%
-                </span>
-              </div>
             </div>
 
             <div className="space-y-2.5 w-full sm:w-auto">

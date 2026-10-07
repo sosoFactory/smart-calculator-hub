@@ -79,6 +79,14 @@ export const PartTimeChartDashboard: React.FC<PartTimeChartDashboardProps> = ({ 
             항목별 급여 구성
           </span>
           <div className="h-44 w-full relative">
+            {/* 도넛 중앙 텍스트 (차트 아래 바닥 레이어에 먼저 배치하여 툴팁 가림 방지) */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-mute">세전 총급여</span>
+              <span className="text-xs font-bold text-slate-800 dark:text-ghost-dark-ink tabular-nums">
+                {formatNumberWithWon(monthly.grossWage)}
+              </span>
+            </div>
+
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -106,12 +114,6 @@ export const PartTimeChartDashboard: React.FC<PartTimeChartDashboardProps> = ({ 
                 />
               </PieChart>
             </ResponsiveContainer>
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-mute">세전 총급여</span>
-              <span className="text-xs font-bold text-slate-800 dark:text-ghost-dark-ink tabular-nums">
-                {formatNumberWithWon(monthly.grossWage)}
-              </span>
-            </div>
           </div>
 
           <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs mt-1">
@@ -132,6 +134,14 @@ export const PartTimeChartDashboard: React.FC<PartTimeChartDashboardProps> = ({ 
             실수령 vs 공제율
           </span>
           <div className="h-44 w-full relative">
+            {/* 도넛 중앙 텍스트 (차트 아래 바닥 레이어에 먼저 배치하여 툴팁 가림 방지) */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-mute">실수령 비율</span>
+              <span className="text-xs font-bold text-slate-800 dark:text-ghost-dark-ink tabular-nums">
+                {netVsDeductionSegments[0]?.percentage || 100}%
+              </span>
+            </div>
+
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -159,12 +169,6 @@ export const PartTimeChartDashboard: React.FC<PartTimeChartDashboardProps> = ({ 
                 />
               </PieChart>
             </ResponsiveContainer>
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-[11px] text-slate-400 dark:text-ghost-dark-ink-mute">실수령 비율</span>
-              <span className="text-xs font-bold text-slate-800 dark:text-ghost-dark-ink tabular-nums">
-                {netVsDeductionSegments[0]?.percentage || 100}%
-              </span>
-            </div>
           </div>
 
           <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs mt-1">
