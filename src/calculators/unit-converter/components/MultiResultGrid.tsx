@@ -1,12 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { UnitConversionResult } from '../../../types/unit';
-import { Copy, Check } from 'lucide-react';
-import { Button } from '../../../components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '../../../components/ui/tooltip';
+import { CopyResultButton } from '../../../components/common/CopyResultButton';
 
 interface MultiResultGridProps {
   results: UnitConversionResult[];
@@ -21,16 +15,6 @@ export const MultiResultGrid: React.FC<MultiResultGridProps> = ({
   inputValue,
   activeUnitSymbol,
 }) => {
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => {
-      setCopiedId(null);
-    }, 1500);
-  };
-
   return (
     <div className="bg-white dark:bg-ghost-dark-surface rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline p-4 sm:p-6 space-y-3.5 shadow-2xs transition-colors">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-2">
@@ -59,7 +43,6 @@ export const MultiResultGrid: React.FC<MultiResultGridProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
         {results.map((item) => {
           const isCurrentActive = item.unit.id === activeUnitId;
-          const isCopied = copiedId === item.unit.id;
 
           return (
             <div
@@ -80,27 +63,15 @@ export const MultiResultGrid: React.FC<MultiResultGridProps> = ({
                   </span>
                 </div>
 
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopy(item.formattedValue, item.unit.id)}
-                      className="h-7 w-7 text-slate-500 hover:text-[#112220] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-ghost-dark-hover rounded-md"
-                      aria-label={`${item.unit.name} 복사`}
-                    >
-                      {isCopied ? (
-                        <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                      ) : (
-                        <Copy className="w-3.5 h-3.5" />
-                      )}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">
-                    {isCopied ? '복사 완료!' : '결과값 복사'}
-                  </TooltipContent>
-                </Tooltip>
+                <CopyResultButton
+                  text={item.formattedValue}
+                  label={`${item.unit.name} 복사`}
+                  copiedLabel="복사 완료!"
+                  size="icon"
+                  variant="ghost"
+                  tooltipSide="left"
+                  className="h-7 w-7 text-slate-500 hover:text-[#112220] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-ghost-dark-hover rounded-md shrink-0 p-0"
+                />
               </div>
 
               <div className="mt-1 flex items-baseline justify-between gap-1 overflow-x-auto">

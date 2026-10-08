@@ -11,7 +11,7 @@
 
   <p>
     <a href="https://soso-calculator.vercel.app"><img src="https://img.shields.io/badge/Web_Beta-soso--calculator.vercel.app-d1ff19?style=flat-square&logo=vercel&logoColor=black&labelColor=15171a" alt="웹 베타 서비스" /></a>
-    <img src="https://img.shields.io/badge/version-1.15.8-d1ff19?style=flat-square&labelColor=15171a" alt="Version" />
+    <img src="https://img.shields.io/badge/version-1.15.10-d1ff19?style=flat-square&labelColor=15171a" alt="Version" />
     <img src="https://img.shields.io/badge/React-18-61dafb?style=flat-square&logo=react&logoColor=black&labelColor=15171a" alt="React 18" />
     <img src="https://img.shields.io/badge/TypeScript-5.5-3178c6?style=flat-square&logo=typescript&logoColor=white&labelColor=15171a" alt="TypeScript" />
     <img src="https://img.shields.io/badge/Vite-5.4-646cff?style=flat-square&logo=vite&logoColor=white&labelColor=15171a" alt="Vite" />
@@ -59,7 +59,7 @@
 - **📶 100% 오프라인 동작 PWA**: 서비스 워커 캐싱을 통해 비행기 모드나 지하철 등 인터넷이 끊겨도 즉시 계산 가능.
 - **⚡ 인앱 원클릭 설치 지원**: 브라우저에 구애받지 않고 헤더 및 사이드바에서 홈 화면/데스크톱 앱으로 즉시 설치.
 - **🔒 데이터 프라이버시**: 모든 계산과 금융 수치는 외부 서버로 전송되지 않고 브라우저 로컬(`LocalStorage`)에만 안전하게 저장.
-- **🧪 신뢰성 검증**: Vitest 및 Testing Library 기반 238개 단위 테스트 100% 통과로 검증된 금융 계산 정확도.
+- **🧪 신뢰성 검증**: Vitest 및 Testing Library 기반 257개 단위 테스트 100% 통과로 검증된 금융 계산 정확도.
  
 ---
  
@@ -79,4 +79,4 @@ Font        Pretendard Variable (전역 단일 서체)
  
 - **제작**: © [sosoFactory](https://github.com/sosoFactory)
 - **라이선스**: MIT License
-- **버전**: `v1.15.6`
+- **버전**: `v1.15.10`

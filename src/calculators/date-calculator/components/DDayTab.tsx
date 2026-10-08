@@ -9,15 +9,14 @@ import { FormHeader } from '../../../components/common/FormHeader';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
 import { SegmentedControl } from '../../../components/ui/segmented-control';
 import { NumericInput } from '../../../components/ui/numeric-input';
-import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { DatePicker } from '../../../components/ui/date-picker';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
+import { ResultHeroCard } from '../../../components/common/ResultHeroCard';
+import { CopyResultButton } from '../../../components/common/CopyResultButton';
 import {
   Calendar,
   CalendarHeart,
-  Copy,
-  Check,
   Clock,
   ArrowRight,
   Sparkles,
@@ -48,7 +47,6 @@ export const DDayTab: React.FC = () => {
   const [amount, setAmount] = useState<number | ''>(100);
   const [unit, setUnit] = useState<DateCalcUnit>('days');
   const [operation, setOperation] = useState<DateCalcOp>('add');
-  const [copied, setCopied] = useState(false);
 
   const numericAmount = typeof amount === 'number' ? amount : 0;
 
@@ -61,32 +59,17 @@ export const DDayTab: React.FC = () => {
     [targetDate, numericAmount, unit, operation]
   );
 
-  const handleCopy = async () => {
+  const getCopyText = () => {
     const ddayText = ddayResult.isToday
       ? '오늘'
       : ddayResult.isPast
       ? `D+${Math.abs(ddayResult.diffDays)}일째`
       : `D-${ddayResult.diffDays}`;
 
-    const text = `[스마트 계산기] 디데이 및 날짜 연산 결과
+    return `[스마트 계산기] 디데이 및 날짜 연산 결과
 - 기준일: ${targetDate} (${ddayText})
 - 계산 결과: ${calcResult.resultDate} (${calcResult.dayOfWeek})
 - 연산 수식: 기준일로부터 ${operation === 'add' ? '+' : '-'}${numericAmount}${unitLabels[unit]} ${operation === 'add' ? '뒤' : '전'}`;
-
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
   };
 
   const handleReset = () => {
@@ -259,12 +242,9 @@ export const DDayTab: React.FC = () => {
       {/* 2. 우측 결과 대시보드 및 마일스톤 테이블 영역 (7컬럼) */}
       <div className="lg:col-span-7 space-y-4 sm:space-y-5 w-full min-w-0">
         <div className="space-y-3.5 sm:space-y-4 w-full">
-          <div className="relative overflow-hidden rounded-2xl bg-ghost-surface-elevated dark:bg-ghost-dark-surface-elevated border border-ghost-surface-elevated dark:border-ghost-dark-hairline-soft p-5 sm:p-6 text-white shadow-sm">
-          <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-ghost-lime/10 blur-2xl pointer-events-none" />
-
-          <div className="relative z-10 space-y-3">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2 min-w-0">
+          <ResultHeroCard
+            badge={
+              <>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-ghost-lime/20 text-ghost-lime border border-ghost-lime/30">
                   <CalendarHeart className="w-3.5 h-3.5" />
                   계산 도달 날짜
@@ -272,45 +252,22 @@ export const DDayTab: React.FC = () => {
                 <span className="text-xs text-ghost-lime font-bold px-2 py-0.5 rounded-full bg-ghost-lime/10 border border-ghost-lime/20 shrink-0">
                   기준일: {ddayResult.label}
                 </span>
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleCopy}
-                className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white rounded-lg shrink-0 flex items-center gap-1"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-3 h-3 text-ghost-lime" />
-                    <span>복사 완료</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3 h-3 text-slate-300" />
-                    <span>결과 복사</span>
-                  </>
-                )}
-              </Button>
-            </div>
-
-            <div>
-              <div className="flex items-baseline gap-2.5 flex-wrap pt-0.5">
-                <span className="text-3xl sm:text-4xl font-extrabold text-ghost-lime tracking-tight tabular-nums break-keep">
-                  {calcResult.resultDate}
-                </span>
+              </>
+            }
+            action={<CopyResultButton text={getCopyText} />}
+            mainValue={calcResult.resultDate}
+            subtext={
+              <div>
                 <span className="text-xs sm:text-sm text-slate-300 font-semibold break-keep">
                   ({calcResult.dayOfWeek})
                 </span>
+                <p className="text-xs text-slate-400 mt-1">
+                  기준일({targetDate})로부터 {operation === 'add' ? '+' : '-'}{numericAmount}
+                  {unitLabels[unit]} {operation === 'add' ? '뒤' : '전'} 시점
+                </p>
               </div>
-              <p className="text-xs text-slate-400 mt-1">
-                기준일({targetDate})로부터 {operation === 'add' ? '+' : '-'}{numericAmount}
-                {unitLabels[unit]} {operation === 'add' ? '뒤' : '전'} 시점
-              </p>
-            </div>
-          </div>
-        </div>
+            }
+          />
 
         {/* 3단 서브 요약 지표 카드 */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">

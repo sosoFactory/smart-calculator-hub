@@ -1,6 +1,6 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.15.8  
+> **버전**: v1.15.10  
 > **최종 갱신일**: 2026-10-08  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
@@ -71,6 +71,9 @@
     - 11.11 DataExportButton
     - 11.12 FormHeader 및 SummaryCards 단일 디자인 규격
     - 11.13 하이브리드 공통 캘린더 및 데이트피커 컴포넌트 표준 규격
+    - 11.14 결과 복사 버튼 공통 컴포넌트 표준 규격 (`CopyResultButton`)
+    - 11.15 결과 다크 히어로 카드 공통 래퍼 규격 (`ResultHeroCard`)
+    - 11.16 차트 커스텀 툴팁 카드 및 Y축 금액 포맷터 표준 규격 (`ChartTooltipCard`, `formatChartAxisWon`)
 12. [모바일 퍼스트 및 반응형 리플로우 전역 규격](#12-모바일-퍼스트-및-반응형-리플로우-전역-규격)
 13. [금융 및 생활 상식 안내 카드 규격 (`InfoCard`)](#13-금융-및-생활-상식-안내-카드-규격-infocard)
 14. [AI 에이전트 실행 프로토콜 및 작업 규칙](#14-ai-에이전트-실행-프로토콜-및-작업-규칙)
@@ -1318,34 +1321,55 @@ export interface CashFlowCalculationResult {
 - **공식 운영 도메인**: `https://soso-calculator.vercel.app`
 - **표준 메타 태그**:
   - `title`: `[계산기 이름] | 스마트 계산기 허브` (홈: `스마트 계산기 허브 | Smart Calculator Hub`)
-  - `description`: 8대 계산기별 타깃 키워드 및 기능 상세 설명 (CTR 최적화)
-  - `keywords`: 8대 계산기별 고유 검색 키워드 매핑
+  - `description`: 11대 계산기별 타깃 키워드 및 기능 상세 설명 (CTR 최적화)
+  - `keywords`: 11대 계산기별 고유 검색 키워드 매핑 및 `<meta name="keywords">` 동적 주입 (네이버·빙 연관 검색 대응)
   - `canonical`: 각 라우트별 고유 표준 대표 URL 지정 (`https://soso-calculator.vercel.app/{id}`)으로 중복 색인 제외 방지
-  - `robots`: `index, follow`
+  - `robots`: 활성 계산기 페이지는 `index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1`, 미출시 플레이스홀더 페이지는 `noindex, follow` 동적 전환.
 - **오픈그래프(OpenGraph) & 트위터 카드**:
   - 카카오톡, 슬랙, 페이스북 등 공유 시 현재 계산기별 `og:title`, `og:description`, `og:image`, `og:url` 실시간 동적 반영.
 
 ### 7.2 동적 페이지 헤드 및 캐노니컬 관리 (`PageMetaUpdater` / `src/components/common/PageMetaUpdater.tsx`)
-- 단일 페이지 애플리케이션(SPA) 내에서 사용자가 계산기를 전환(`홈` ↔ `연복리` ↔ `대출` ↔ `연봉` ↔ `알바` ↔ `목표` ↔ `BMI` ↔ `단위` ↔ `환율`)할 때:
+- 단일 페이지 애플리케이션(SPA) 내에서 사용자가 계산기를 전환(`홈` ↔ `연복리` ↔ `목표` ↔ `현금흐름` ↔ `대출` ↔ `연봉` ↔ `알바` ↔ `BMI` ↔ `단위` ↔ `환율` ↔ `날짜` ↔ `개발자도구`)할 때:
   - `document.title`: 현재 계산기명 기반 실시간 갱신 (`siteConfig.getTitle(currentCalculator.shortName)`).
   - `meta[name="description"]`: 현재 계산기 설명 반영.
-  - `link[rel="canonical"]`: 현재 라우트에 맞는 정규 URL 실시간 갱신(기존 루트 고정 canonical 결함 원천 해소).
+  - `meta[name="keywords"]`: `currentCalculator.keywords.join(', ')` 동적 반영.
+  - `meta[name="robots"]`: `currentCalculator.status !== 'active'`인 라우트(예: `/dividend`) 접속 시 `noindex, follow`로 갱신하여 Thin Content 색인 방어, 일반 활성 페이지 복귀 시 `index, follow` 복구.
+  - `link[rel="canonical"]`: 현재 라우트에 맞는 정규 URL 실시간 갱신(루트 고정 canonical 결함 원천 해소).
   - `meta[property="og:*"]` 및 `meta[name="twitter:*"]`: 현재 페이지 URL 및 타이틀/설명 동기화.
   - 브라우저 히스토리(`pushState`) 및 각 계산기 고유 딥링크(Deep Link) URL 공유 지원.
 
 ### 7.3 구조화된 데이터 (JSON-LD / Schema.org)
-- 검색엔진 크롤러가 사이트 및 각 도구의 성격을 즉시 파악하고 구글 검색결과에 리치 스니펫(Rich Snippet)으로 표시되도록 `ld+json` 구조화 데이터 삽입:
-  - 전역 스키마: `index.html` 내 `WebApplication` 스키마 탑재.
-  - 개별 계산기 스키마: `PageMetaUpdater`를 통해 현재 활성화된 계산기의 `SoftwareApplication` / `FinancialApplication` JSON-LD를 동적으로 주입하여 검색 결과 리치 스니펫 노출 극대화.
+- 검색엔진 크롤러가 사이트 및 각 도구의 성격을 즉시 파악하고 구글 검색결과에 리치 스니펫(Rich Snippet) 및 빵부스러기(Breadcrumb)로 표시되도록 `ld+json` 구조화 데이터 삽입:
+  - **전역 스키마**: `index.html` 내 `WebApplication` 스키마 탑재.
+  - **계산기 앱 스키마 (`SoftwareApplication`)**: `PageMetaUpdater`를 통해 현재 활성화된 계산기의 `SoftwareApplication` / `FinancialApplication` / `DeveloperApplication` / `UtilitiesApplication` JSON-LD를 동적으로 주입.
+  - **빵부스러기 스키마 (`BreadcrumbList`)**: 구글 검색 결과에 사이트 계층 구조(`홈 > [계산기 이름]`)가 노출되도록 `BreadcrumbList` JSON-LD 복합 주입:
+    ```json
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "홈", "item": "https://soso-calculator.vercel.app/" },
+        { "@type": "ListItem", "position": 2, "name": "[계산기 이름]", "item": "https://soso-calculator.vercel.app/[id]" }
+      ]
+    }
+    ```
 
-### 7.4 크롤러 수집 파일 및 시맨틱 내부 링킹 지원
-- **`public/robots.txt`**: 검색 크롤러의 전체 페이지 접근 허용 및 `Sitemap: https://soso-calculator.vercel.app/sitemap.xml` 지정.
-- **`public/sitemap.xml`**: 8대 전 계산기 및 홈 화면 총 9개 핵심 엔드포인트 완비:
-  - `/` (홈), `/compound` (연복리), `/goal` (목표자산), `/loan` (대출), `/salary` (연봉), `/part-time` (알바), `/bmi` (BMI), `/unit` (단위변환), `/exchange` (환율).
-- **시맨틱 내부 링크 구조 (Semantic Internal Linking)**:
-  - 자바스크립트 실행이 제한적인 검색 로봇(네이버, 빙 등)도 내부 페이지를 막힘없이 탐색할 수 있도록, 홈 카드 및 사이드바 메뉴에 시맨틱 앵커(`Link to="..."`) 구조 적용.
+### 7.4 크롤러 수집 파일 및 사이트맵 명세 (`robots.txt`, `sitemap.xml`)
+- **`public/robots.txt`**: 검색 크롤러의 전체 페이지 접근 허용(`User-agent: *`, `Allow: /`) 및 `Sitemap: https://soso-calculator.vercel.app/sitemap.xml` 지정.
+- **`public/sitemap.xml`**: 11대 전 계산기, 개발자 도구, 홈 화면 총 12개 핵심 엔드포인트 완비:
+  - 엔드포인트: `/` (홈), `/compound`, `/goal`, `/cashflow`, `/loan`, `/salary`, `/part-time`, `/bmi`, `/unit`, `/exchange`, `/date`, `/devtools`.
+  - **`<lastmod>` 명시 원칙**: 구글 검색 크롤러의 효율적 갱신 인지를 위해 모든 엔드포인트에 최신 갱신일(W3C Datetime `YYYY-MM-DD`, 예: `2026-10-08`)을 필수 포함.
 
-### 7.5 웹 로그 및 방문자 데이터 분석 (Vercel Web Analytics)
+### 7.5 글로벌 시맨틱 푸터 (`GlobalFooter` / `src/components/navigation/GlobalFooter.tsx`)
+- **도입 배경**:
+  - 모바일 뷰포트에서 좌측 데스크톱 사이드바가 숨겨지므로(`hidden lg:block`), 각 계산기 뷰포트 하단에 상호 연결 링크가 부족하여 모바일 크롤러(Googlebot Smartphone)의 크롤 경로 및 링크 에쿼티(Link Equity) 전달이 단절될 수 있음.
+- **컴포넌트 규격 및 기능**:
+  - `<main>` 하단에 상시 배치되는 시맨틱 `<footer role="contentinfo">`.
+  - 브랜드 아이덴티티: 로고, 사이트 이름, 서비스 슬로건.
+  - 11대 계산기 및 개발자 도구 전체 바로가기 시맨틱 `<Link>` 칩/그리드 목록 제공 (한눈에 보는 계산기 모음).
+  - 카피라이트, 오픈소스 깃허브 링크, 웹 표준 및 프라이버시 원칙 안내.
+
+### 7.6 웹 로그 및 방문자 데이터 분석 (Vercel Web Analytics)
 - **도입 목적**:
   - 개인정보를 침해하지 않는 프라이버시 중심(Cookie-less, GDPR 준수) 방식으로 방문자 트래픽, 인기 계산기 모듈, 유입 경로를 파악하여 서비스 품질 개선에 활용.
 - **아키텍처 및 동작 명세**:
@@ -1353,12 +1377,13 @@ export interface CashFlowCalculationResult {
   - 최상위 진입점(`src/App.tsx`)에 `<Analytics />` 컴포넌트 마운트로 SPA 라우트 전환에 따른 자동 페이지뷰 추적.
   - Vercel 프로덕션 대시보드와 실시간 연동되어 일별/월별 순 방문자 수(UV), 페이지뷰(PV), 국가/지역, 기기/브라우저, 유입 경로(Referrer) 집계.
 
-### 7.6 신규 계산기 및 라우트 출시 시 SEO 완료 기준 (SEO Definition of Done)
-향후 신규 계산기나 페이지를 추가하거나 라우트를 확장할 때 검색엔진 노출 누락을 방지하기 위해 다음 4대 항목을 배포 완료 기준(DoD)으로 필수 적용한다:
-1. **사이트맵 등록 (`public/sitemap.xml`)**: 신규 캐노니컬 엔드포인트 URL, 갱신 빈도(`changefreq`), 가중치(`priority`) 등록 필수.
-2. **동적 메타 및 구조화 데이터 연동 (`PageMetaUpdater.tsx`)**: `PAGE_SEO_DATA` 테이블에 고유한 `title`, `description`, `keywords`, 및 Schema.org `applicationCategory` 정의 필수.
-3. **시맨틱 크롤링 내부 링크 확보**: 홈 화면 카드 및 사이드바 메뉴 등 내부 링크 요소는 자바스크립트 `onClick`에만 의존하지 않고 시맨틱 `<Link to="...">` / `<a href="...">`로 래핑하여 검색엔진 크롤러가 사이트 구조를 누락 없이 수집하도록 보장.
-4. **캐노니컬 검증**: 라우트 이동 시 `link[rel="canonical"]`이 현재 URL로 실시간 갱신되어 중복 콘텐츠 페널티를 방지하는지 자체 검증.
+### 7.7 신규 계산기 및 라우트 출시 시 SEO 완료 기준 (SEO Definition of Done)
+향후 신규 계산기나 페이지를 추가하거나 라우트를 확장할 때 검색엔진 노출 누락을 방지하기 위해 다음 5대 항목을 배포 완료 기준(DoD)으로 필수 적용한다:
+1. **사이트맵 등록 (`public/sitemap.xml`)**: 신규 캐노니컬 엔드포인트 URL, 최종 갱신일(`<lastmod>`), 갱신 빈도(`changefreq`), 가중치(`priority`) 등록 필수.
+2. **동적 메타 및 구조화 데이터 연동 (`PageMetaUpdater.tsx`)**: 고유한 `title`, `description`, `keywords`, `BreadcrumbList`, 및 Schema.org `applicationCategory` 정의 필수.
+3. **시맨틱 크롤링 내부 링크 확보**: 홈 화면 카드, 사이드바, 하단 `GlobalFooter`에 시맨틱 `<Link to="...">` / `<a href="...">`로 래핑하여 검색엔진 크롤러가 사이트 구조를 누락 없이 수집하도록 보장.
+4. **캐노니컬 및 로봇 메타 검증**: 라우트 이동 시 `link[rel="canonical"]`이 현재 URL로 실시간 갱신되고, 미출시/임시 라우트는 `noindex, follow` 처리되는지 자체 검증.
+5. **글로벌 푸터 등록**: `GlobalFooter` 내 카테고리별 계산기 목록에 신규 링크 반영.
 
 ---
 
@@ -1620,6 +1645,45 @@ export interface CashFlowCalculationResult {
 - **적용 대상**:
   - `DDayTab.tsx`, `DateDiffTab.tsx`, `AgeTab.tsx`
 
+### 11.14 결과 복사 버튼 공통 컴포넌트 표준 규격 (`CopyResultButton`)
+- **도입 목적**:
+  - 10개 이상의 계산기 컴포넌트에서 반복되던 `useState(copied)` + 타이머 + 인라인 버튼 JSX를 단일 컴포넌트로 일원화하여 코드 중복을 제거하고 클립보드 피드백 UX의 일관성을 확보.
+- **컴포넌트 위치**: `src/components/common/CopyResultButton.tsx`
+- **핵심 사양**:
+  - `useClipboard` 훅(`src/hooks/useClipboard.ts`)을 내부에서 사용하여 복사 상태(`copied`) 및 자동 초기화(기본 2000ms) 제어.
+  - Ghost 디자인 시스템의 다크 베이스 및 Electric Lime 액센트 시각 피드백 유지:
+    - 기본 상태: `Copy` 아이콘 + "결과 복사" 라벨 (`text-slate-300`, `bg-slate-800/80`).
+    - 복사 완료 상태: `Check` 아이콘 + "복사 완료" 라벨 (`text-[#d1ff19]`).
+  - 다양한 카드 컨텍스트에 대응 가능하도록 `variant` ("ghost-dark" | "outline" | "ghost"), `size` ("sm" | "default"), `className` 커스텀 오버라이드 지원.
+- **적용 대상**:
+  - `LoanSummaryCards`, `SalarySummaryCards`, `GoalSummaryCards`, `PartTimeSummaryCards`, `CashFlowSummaryCards`, `SummaryCards` (Compound), `BmiSummaryCards`, `AgeTab`, `DDayTab`, `DateDiffTab`, `DualExchangeCard`, `MultiExchangeGrid`, `DualConverterCard`, `MultiResultGrid`.
+
+### 11.15 결과 다크 히어로 카드 공통 래퍼 규격 (`ResultHeroCard`)
+- **도입 목적**:
+  - 대출, 급여, 알바, 복리, 목표액, 현금흐름, BMI 등 8개 이상의 서머리 카드 최상단에 동일하게 복제되어 사용되던 다크 히어로 카드 래퍼를 단일 공통 컴포넌트로 추출하여 디자인 변경 시 일괄 대응 가능하도록 표준화.
+- **컴포넌트 위치**: `src/components/common/ResultHeroCard.tsx`
+- **구조 및 레이아웃 규격**:
+  - 배경: `bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-[#15171a] dark:border-ghost-dark-hairline-soft rounded-2xl text-white p-5 sm:p-6 shadow-sm relative overflow-hidden`.
+  - 장식: 우측 하단 Electric Lime 글로우 효과 (`absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none`).
+  - 슬롯 구조:
+    - `title`: 카드 상단 제목 (예: "만기 총 상환금액", "예상 월 실수령액", "총 수령 예상액")
+    - `subtitle`: 선택적 상단 보조 설명
+    - `headerAction`: 우측 액션 슬롯 (기본값으로 `CopyResultButton` 또는 사용자 정의 액션 배치)
+    - `mainValue`: 대형 메인 산출 금액/수치
+    - `koreanReading`: 선택적 한글 금액 독음 (예: "3억 4,500만 원")
+    - `badge`: 선택적 결과 상태 뱃지 (예: 정상/과체중, 비과세 적용 등)
+    - `footer`: 선택적 하단 추가 메트릭 또는 프로그레스 바 영역
+
+### 11.16 차트 커스텀 툴팁 카드 및 Y축 금액 포맷터 표준 규격 (`ChartTooltipCard`, `formatChartAxisWon`)
+- **도입 목적**:
+  - 6개 차트 파일에서 반복되는 툴팁 컨테이너 스타일 중복을 제거하고, Recharts Y축의 만/억 단위 변환 로직을 일원화하여 차트 전역 가독성과 유지보수성을 극대화.
+- **1. 차트 툴팁 공통 래퍼 (`src/components/common/ChartTooltipCard.tsx`)**:
+  - 고대비 글래스모피즘 다크 래퍼: `bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white border border-slate-700/60 rounded-xl shadow-xl p-3 text-xs min-w-[140px] pointer-events-none`.
+  - 헤더 레이블(X축 기준점)과 하단 컬러 인디케이터 도트/라벨/금액 행 슬롯 일원화.
+- **2. Y축 금액 단위 변환 유틸리티 (`formatChartAxisWon` in `src/utils/formatters.ts`)**:
+  - 1억 이상: `${(val / 100_000_000).toFixed(0)}억`
+  - 1만 이상: `${(val / 10_000).toFixed(0)}만`
+  - 1만 미만: `${val.toLocaleString()}원`
 
 ---
 

@@ -2,10 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { calculateDateDiff, formatLocalDate, getTodayString } from '../../../utils/dateCalculator';
 import { FormHeader } from '../../../components/common/FormHeader';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { Button } from '../../../components/ui/button';
 import { DatePicker } from '../../../components/ui/date-picker';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
-import { Calendar, Copy, Check, Briefcase, SunMedium, CalendarRange } from 'lucide-react';
+import { ResultHeroCard } from '../../../components/common/ResultHeroCard';
+import { CopyResultButton } from '../../../components/common/CopyResultButton';
+import { Calendar, Briefcase, SunMedium, CalendarRange } from 'lucide-react';
 
 export const DateDiffTab: React.FC = () => {
   const today = getTodayString();
@@ -17,32 +18,14 @@ export const DateDiffTab: React.FC = () => {
 
   const [startDate, setStartDate] = useState<string>(today);
   const [endDate, setEndDate] = useState<string>(getDefaultEnd);
-  const [copied, setCopied] = useState(false);
 
   const result = useMemo(() => calculateDateDiff(startDate, endDate), [startDate, endDate]);
 
-  const handleCopy = async () => {
-    const text = `[스마트 계산기] 날짜 간격 계산 결과
+  const getCopyText = () => `[스마트 계산기] 날짜 간격 계산 결과
 - 기간: ${result.startDate} ~ ${result.endDate}
 - 총 일수: ${result.totalDays.toLocaleString()}일 (${result.formattedPeriod})
 - 평일 근무일: ${result.businessDays.toLocaleString()}일 (주말 제외)
 - 주말(토/일): ${result.weekendDays.toLocaleString()}일`;
-
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   const setDiffPreset = (days: number) => {
     const start = new Date();
@@ -160,12 +143,9 @@ export const DateDiffTab: React.FC = () => {
       <div className="lg:col-span-7 space-y-4 sm:space-y-5 w-full min-w-0">
         <div className="space-y-3.5 sm:space-y-4 w-full">
           {/* 메인 다크 서피스 카드 */}
-          <div className="relative overflow-hidden rounded-2xl bg-ghost-surface-elevated dark:bg-ghost-dark-surface-elevated border border-ghost-surface-elevated dark:border-ghost-dark-hairline-soft p-5 sm:p-6 text-white shadow-sm">
-          <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-ghost-lime/10 blur-2xl pointer-events-none" />
-
-          <div className="relative z-10 space-y-3">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2 min-w-0">
+          <ResultHeroCard
+            badge={
+              <>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-ghost-lime/20 text-ghost-lime border border-ghost-lime/30">
                   <CalendarRange className="w-3.5 h-3.5" />
                   두 날짜 간격 계산 결과
@@ -173,44 +153,21 @@ export const DateDiffTab: React.FC = () => {
                 <span className="text-xs text-ghost-lime font-bold px-2 py-0.5 rounded-full bg-ghost-lime/10 border border-ghost-lime/20 shrink-0">
                   약 {result.weeks}주차
                 </span>
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleCopy}
-                className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white rounded-lg shrink-0 flex items-center gap-1"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-3 h-3 text-ghost-lime" />
-                    <span>복사 완료</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3 h-3 text-slate-300" />
-                    <span>결과 복사</span>
-                  </>
-                )}
-              </Button>
-            </div>
-
-            <div>
-              <div className="flex items-baseline gap-2.5 flex-wrap pt-0.5">
-                <span className="text-3xl sm:text-4xl font-extrabold text-ghost-lime tracking-tight tabular-nums break-keep">
-                  {result.totalDays.toLocaleString()}일간
-                </span>
+              </>
+            }
+            action={<CopyResultButton text={getCopyText} />}
+            mainValue={`${result.totalDays.toLocaleString()}일간`}
+            subtext={
+              <div>
                 <span className="text-xs sm:text-sm text-slate-300 font-semibold break-keep">
                   ({result.formattedPeriod})
                 </span>
+                <p className="text-xs text-slate-400 mt-1">
+                  {result.startDate} ~ {result.endDate}
+                </p>
               </div>
-              <p className="text-xs text-slate-400 mt-1">
-                {result.startDate} ~ {result.endDate}
-              </p>
-            </div>
-          </div>
-        </div>
+            }
+          />
 
         {/* 3단 서브 요약 지표 카드 */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">

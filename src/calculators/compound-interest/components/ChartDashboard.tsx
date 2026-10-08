@@ -13,7 +13,8 @@ import {
 } from 'recharts';
 import { useTheme } from '../../../context/ThemeContext';
 import { CalculationResult } from '../../../types/calculator';
-import { formatCurrency, formatKoreanUnit } from '../../../utils/formatters';
+import { formatCurrency, formatKoreanUnit, formatChartAxisWon } from '../../../utils/formatters';
+import { ChartTooltipCard } from '../../../components/common/ChartTooltipCard';
 
 interface ChartDashboardProps {
   resultA: CalculationResult;
@@ -49,17 +50,6 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
     };
   });
 
-  const formatYAxis = (val: number) => {
-    if (val === 0) return '0';
-    if (Math.abs(val) >= 100_000_000) {
-      return `${(val / 100_000_000).toFixed(0)}억`;
-    }
-    if (Math.abs(val) >= 10_000) {
-      return `${(val / 10_000).toFixed(0)}만`;
-    }
-    return `${val}`;
-  };
-
   const gridStroke = isDark ? '#22252a' : '#e5e7eb';
   const axisStroke = isDark ? '#2a2e36' : '#cbd5e1';
   const tickFill = isDark ? '#8a919e' : '#64748b';
@@ -70,10 +60,13 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white rounded-lg p-3 shadow-xl border border-[#1f2937] dark:border-ghost-dark-hairline-soft text-xs space-y-2 min-w-[170px] z-50">
-          <div className="font-bold border-b border-white/10 pb-1.5 flex justify-between items-center">
-            <span>{label}차 경과</span>
-          </div>
+        <ChartTooltipCard
+          title={
+            <div className="flex justify-between items-center border-b border-white/10 pb-1.5">
+              <span>{label}차 경과</span>
+            </div>
+          }
+        >
           <div className="space-y-1.5">
             {payload.map((entry: any, index: number) => {
               const val = entry.value;
@@ -94,7 +87,7 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
               );
             })}
           </div>
-        </div>
+        </ChartTooltipCard>
       );
     }
     return null;
@@ -128,7 +121,7 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
                 tick={{ fontSize: 11, fill: tickFill }}
               />
               <YAxis
-                tickFormatter={formatYAxis}
+                tickFormatter={formatChartAxisWon}
                 tickLine={false}
                 axisLine={false}
                 tick={{ fontSize: 11, fill: tickFill }}
@@ -200,7 +193,7 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
                 tick={{ fontSize: 11, fill: tickFill }}
               />
               <YAxis
-                tickFormatter={formatYAxis}
+                tickFormatter={formatChartAxisWon}
                 tickLine={false}
                 axisLine={false}
                 tick={{ fontSize: 11, fill: tickFill }}

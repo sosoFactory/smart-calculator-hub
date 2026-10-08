@@ -3,6 +3,34 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.15.10] - 2026-10-08
+
+### Feat
+- **전방위 SEO 고도화 및 글로벌 시맨틱 푸터(`GlobalFooter`) 탑재**:
+  - **`sitemap.xml` 최종 수정일(`lastmod`) 명시**: 11대 전 계산기, 개발자 도구, 홈 화면 총 12개 엔드포인트 전체에 W3C 최신 수정일(`<lastmod>2026-10-08</lastmod>`)을 일괄 명시하여 검색엔진 재색인 우선순위 최적화.
+  - **구글 SERP 빵부스러기 스키마(`BreadcrumbList`) JSON-LD 동적 주입**: [PageMetaUpdater.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/common/PageMetaUpdater.tsx)에 `@graph` 규격을 적용하여 `SoftwareApplication` 스키마와 함께 `BreadcrumbList`(`홈 > [계산기 이름]`)를 복합 주입하여 검색 결과 리치 스니펫 가독성 극대화.
+  - **네이버/빙 검색 엔진 키워드 동적 메타태그(`meta[name="keywords"]`) 주입**: 각 계산기별 세부 타깃 키워드를 DOM 헤더에 실시간 동기화.
+  - **미출시/플레이스홀더 라우트(`status: 'coming-soon'`) `noindex, follow` 방어**: 빈약한 콘텐츠(Thin Content) 색인 페널티를 원천 차단하고 일반 계산기 복귀 시 `index, follow`로 안전하게 복원.
+  - **`index.html` 표준 `robots` 메타태그 보강**: `max-image-preview:large, max-snippet:-1, max-video-preview:-1`을 명시하여 소셜/검색 대형 이미지 미리보기 및 리치 스니펫 활성화.
+  - **글로벌 시맨틱 푸터([GlobalFooter.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/navigation/GlobalFooter.tsx)) 신설**: 모바일 및 데스크톱 환경 전체에서 11대 계산기 및 홈 화면으로 통하는 시맨틱 `<Link>` 내부 링크 그래프(Link Equity)를 구축하고 프라이버시 원칙 및 카피라이트 명시.
+
+## [1.15.9] - 2026-10-08
+
+### Refactor
+- **전체 코드베이스 컴포넌트/포맷터 중복 제거 및 공통화**:
+  - **차트 Y축 원화 단위 포맷터 통합 (`formatChartAxisWon`)**:
+    - [formatters.ts](file:///c:/Users/hakso/_work/smart-calculator/www/src/utils/formatters.ts): 계산기마다 중복 작성되어 있던 `1억`, `5000만`, `0` 단위 변환 함수를 `formatChartAxisWon`으로 표준화.
+    - [LoanChartDashboard.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/loan-calculator/components/LoanChartDashboard.tsx), [SalaryChartDashboard.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/salary-calculator/components/SalaryChartDashboard.tsx), [PartTimeChartDashboard.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/part-time-calculator/components/PartTimeChartDashboard.tsx), [GoalChartCard.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/goal-calculator/components/GoalChartCard.tsx), [ChartDashboard.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/compound-interest/components/ChartDashboard.tsx), [CashFlowCharts.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/cashflow-calculator/components/CashFlowCharts.tsx)의 Y축 `tickFormatter` 일원화.
+  - **차트 다크 툴팁 컴포넌트 공통화 (`ChartTooltipCard`)**:
+    - [ChartTooltipCard.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/common/ChartTooltipCard.tsx): Recharts 차트 호버 툴팁의 반투명 다크 컨테이너(`bg-[#15171a]/95`), 헤더 라벨, 키-값 리스트 규격을 표준 컴포넌트로 공통화하고 전 계산기 차트에 일괄 적용.
+  - **계산 결과 복사 버튼 일원화 (`CopyResultButton`)**:
+    - [CopyResultButton.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/common/CopyResultButton.tsx): `useClipboard` 훅 기반의 통일된 클립보드 복사 버튼 컴포넌트 제작(일반 버튼 모드 및 `size="icon"` 툴팁 모드 동시 지원).
+    - 계산기별로 개별 관리되던 `copied` 상태 및 중복 툴팁 로직 제거 ([DualExchangeCard.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/exchange-rate/components/DualExchangeCard.tsx), [MultiExchangeGrid.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/exchange-rate/components/MultiExchangeGrid.tsx), [DualConverterCard.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/unit-converter/components/DualConverterCard.tsx), [MultiResultGrid.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/unit-converter/components/MultiResultGrid.tsx)).
+  - **결과 서머리 다크 히어로 카드 공통화 (`ResultHeroCard`)**:
+    - [ResultHeroCard.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/common/ResultHeroCard.tsx): 고대비 블랙 배경(`#15171a`), 상단 라벨/뱃지, 주요 결과 수치/단위, 액션 슬롯을 지원하는 다크 히어로 카드 공통화.
+    - [LoanSummaryCards.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/loan-calculator/components/LoanSummaryCards.tsx), [SalarySummaryCards.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/salary-calculator/components/SalarySummaryCards.tsx), [GoalSummaryCards.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/goal-calculator/components/GoalSummaryCards.tsx), [PartTimeSummaryCards.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/part-time-calculator/components/PartTimeSummaryCards.tsx), [CashFlowSummaryCards.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/cashflow-calculator/components/CashFlowSummaryCards.tsx), [SummaryCards.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/compound-interest/components/SummaryCards.tsx), [BmiSummaryCards.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/bmi-calculator/components/BmiSummaryCards.tsx), [AgeTab.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/date-calculator/components/AgeTab.tsx), [DDayTab.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/date-calculator/components/DDayTab.tsx), [DateDiffTab.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/date-calculator/components/DateDiffTab.tsx)에 전면 도입.
+  - **FormHeader 격리 유지**: 사용자의 의도적 제외 지침을 준수하여 탭별 `FormHeader`는 억지 주입 없이 개별 유지.
+
 ## [1.15.8] - 2026-10-08
 
 ### Fixed

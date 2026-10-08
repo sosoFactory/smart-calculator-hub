@@ -71,3 +71,20 @@ export function formatMultiple(value: number): string {
   if (isNaN(value) || !isFinite(value) || value <= 0) return '1.0배';
   return `${value.toFixed(2)}배`;
 }
+
+/**
+ * 차트 Y축 전용 원화 축약 포맷터 (억, 만 단위)
+ * 예: 100,000,000 -> "1억"
+ * 예: 10,000,000 -> "1000만"
+ * 예: 5,000 -> "5,000"
+ */
+export function formatChartAxisWon(val: number): string {
+  if (isNaN(val) || !isFinite(val)) return '0';
+  if (val >= 100_000_000) {
+    return `${(val / 100_000_000).toFixed(0)}억`;
+  }
+  if (val >= 10_000) {
+    return `${(val / 10_000).toFixed(0)}만`;
+  }
+  return val.toLocaleString('ko-KR');
+}

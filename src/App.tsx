@@ -12,6 +12,7 @@ import { PWAInstallModal } from './components/pwa/PWAInstallModal';
 import { usePWAInstall } from './hooks/usePWAInstall';
 import { FloatingShareButton } from './components/common/FloatingShareButton';
 import { PageMetaUpdater } from './components/common/PageMetaUpdater';
+import { GlobalFooter } from './components/navigation/GlobalFooter';
 import { Analytics } from '@vercel/analytics/react';
 
 const HomeApp = lazy(() =>
@@ -149,6 +150,7 @@ export const App: React.FC = () => {
             </Suspense>
           </div>
         </main>
+        <GlobalFooter />
       </div>
       <PWAUpdateToast />
       <PWAInstallModal

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   CurrencyCode,
   ExchangeRateSnapshot,
@@ -11,12 +11,13 @@ import {
   getExchangeRateText,
 } from '../../../utils/exchangeCalculator';
 import { CurrencySelect } from './CurrencySelect';
-import { ArrowLeftRight, Check, Copy, TrendingUp, Calendar } from 'lucide-react';
+import { ArrowLeftRight, TrendingUp, Calendar } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
 import { Badge } from '../../../components/ui/badge';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
 import { Tabs, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { CopyResultButton } from '../../../components/common/CopyResultButton';
 import {
   Tooltip,
   TooltipContent,
@@ -64,18 +65,8 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
   onDiscountChange,
   snapshot,
 }) => {
-  const [copied, setCopied] = useState(false);
-
   const fromCurr = CURRENCIES_DATA[fromCode];
   const toCurr = CURRENCIES_DATA[toCode];
-
-  const handleCopyResult = () => {
-    if (convertedAmount > 0) {
-      navigator.clipboard.writeText(convertedAmount.toString());
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   const discountOptions: SpreadDiscount[] = [90, 80, 50, 0];
 
@@ -227,27 +218,13 @@ export const DualExchangeCard: React.FC<DualExchangeCardProps> = ({
               결과 (To)
             </span>
             <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleCopyResult}
-                    className="h-7 w-7 text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-ghost-dark-surface rounded-md shrink-0"
-                    aria-label="결과값 복사"
-                  >
-                    {copied ? (
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="top">
-                  {copied ? '복사 완료!' : '결과값 복사'}
-                </TooltipContent>
-              </Tooltip>
+              <CopyResultButton
+                text={convertedAmount > 0 ? convertedAmount.toString() : ''}
+                label="결과값 복사"
+                size="icon"
+                variant="ghost"
+                className="h-7 w-7 text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-ghost-dark-surface rounded-md shrink-0 p-0"
+              />
               <div className="w-28 sm:w-36 lg:w-44 shrink-0">
                 <CurrencySelect
                   id="to-currency"

@@ -10,6 +10,8 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { formatKoreanLoanAmount } from '../../../utils/loanCalculator';
+import { formatChartAxisWon } from '../../../utils/formatters';
+import { ChartTooltipCard } from '../../../components/common/ChartTooltipCard';
 import { Tabs, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 
 interface LoanChartDashboardProps {
@@ -103,13 +105,7 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
                 stroke="#94a3b8"
                 fontSize={11}
                 tickLine={false}
-                tickFormatter={(val) =>
-                  val >= 100_000_000
-                    ? `${(val / 100_000_000).toFixed(0)}억`
-                    : val >= 10_000
-                    ? `${(val / 10_000).toFixed(0)}만`
-                    : val
-                }
+                tickFormatter={formatChartAxisWon}
               />
               <Tooltip
                 wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
@@ -117,13 +113,16 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
                     return (
-                      <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white p-3 rounded-xl shadow-lg border border-slate-700 dark:border-ghost-dark-hairline-soft text-xs space-y-1">
-                        <div className="font-bold text-[#d1ff19]">{data.name}말 기준</div>
-                        <div>남은 잔액: {formatKoreanLoanAmount(data.remainingBalance)}</div>
-                        <div className="text-slate-400">
-                          ({data.remainingBalance.toLocaleString('ko-KR')}원)
-                        </div>
-                      </div>
+                      <ChartTooltipCard
+                        title={`${data.name}말 기준`}
+                        items={[
+                          {
+                            label: '남은 잔액',
+                            value: formatKoreanLoanAmount(data.remainingBalance),
+                            subValue: `(${data.remainingBalance.toLocaleString('ko-KR')}원)`,
+                          },
+                        ]}
+                      />
                     );
                   }
                   return null;
@@ -158,13 +157,7 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
                 stroke="#94a3b8"
                 fontSize={11}
                 tickLine={false}
-                tickFormatter={(val) =>
-                  val >= 100_000_000
-                    ? `${(val / 100_000_000).toFixed(0)}억`
-                    : val >= 10_000
-                    ? `${(val / 10_000).toFixed(0)}만`
-                    : val
-                }
+                tickFormatter={formatChartAxisWon}
               />
               <Tooltip
                 wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
@@ -172,18 +165,25 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
                     return (
-                      <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white p-3 rounded-xl shadow-lg border border-slate-700 dark:border-ghost-dark-hairline-soft text-xs space-y-1">
-                        <div className="font-bold text-[#d1ff19]">{data.name} 누적 납입액</div>
-                        <div className="text-sky-400">
-                          납입 원금: {formatKoreanLoanAmount(data.cumulativePrincipal)}
-                        </div>
-                        <div className="text-rose-400">
-                          납입 이자: {formatKoreanLoanAmount(data.cumulativeInterest)}
-                        </div>
+                      <ChartTooltipCard
+                        title={`${data.name} 누적 납입액`}
+                        items={[
+                          {
+                            label: '납입 원금',
+                            value: formatKoreanLoanAmount(data.cumulativePrincipal),
+                            color: 'text-sky-400',
+                          },
+                          {
+                            label: '납입 이자',
+                            value: formatKoreanLoanAmount(data.cumulativeInterest),
+                            color: 'text-rose-400',
+                          },
+                        ]}
+                      >
                         <div className="text-slate-300 font-bold border-t border-slate-700 dark:border-ghost-dark-hairline-soft pt-1 mt-1">
                           총 합계: {formatKoreanLoanAmount(data.totalPaid)}
                         </div>
-                      </div>
+                      </ChartTooltipCard>
                     );
                   }
                   return null;

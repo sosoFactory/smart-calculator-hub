@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CalculationResult } from '../../../types/calculator';
 import {
   formatCurrency,
@@ -7,10 +7,11 @@ import {
   formatNumberWithWon,
   formatPercent,
 } from '../../../utils/formatters';
-import { Wallet, PiggyBank, ArrowUpRight, ShieldAlert, Copy, Check } from 'lucide-react';
+import { Wallet, PiggyBank, ArrowUpRight, ShieldAlert } from 'lucide-react';
 import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
+import { ResultHeroCard } from '../../../components/common/ResultHeroCard';
+import { CopyResultButton } from '../../../components/common/CopyResultButton';
 import {
   Tooltip,
   TooltipContent,
@@ -32,7 +33,6 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
   title,
   theme = 'teal',
 }) => {
-  const [copied, setCopied] = useState(false);
   const isIndigo = theme === 'indigo';
   const principalRatio =
     result.futureValuePostTax > 0
@@ -42,29 +42,12 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
   const isLoss = result.netInterest < 0;
 
   // 복리 결과 클립보드 원클릭 복사
-  const handleCopy = async () => {
-    const text = `[스마트 계산기] 연복리 자산 증식 계산 결과
+  const getCopyText = () => `[스마트 계산기] 연복리 자산 증식 계산 결과
 - 세후 최종 수령액: ${formatCurrency(result.futureValuePostTax)} (${formatKoreanUnit(result.futureValuePostTax)})
 - 총 투자원금: ${formatCurrency(result.totalPrincipal)} (${formatKoreanUnit(result.totalPrincipal)})
 - 세후 순수익: ${formatCurrency(result.netInterest)} (${formatKoreanUnit(result.netInterest)})
 - 이자소득세: ${formatCurrency(result.taxAmount)} (${formatKoreanUnit(result.taxAmount)})
 - 원금 대비 배수: ${formatMultiple(result.principalMultiple)}`;
-
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   return (
     <div className="space-y-3">
@@ -77,58 +60,29 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
         </div>
       )}
 
-      {/* 최종 수령액 하이라이트 대형 카드 (Ghost Ink-Base 다크 서피스) */}
-      <div className="relative overflow-hidden bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white rounded-2xl p-5 sm:p-6 border border-[#15171a] dark:border-ghost-dark-hairline-soft shadow-sm">
-        <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none" />
-
-        <div className="relative z-10 space-y-3">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2 min-w-0">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30">
-                <Wallet className="w-3 h-3" />
-                세후 최종 수령액
-              </span>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold border ${
-                isLoss ? 'bg-rose-500/20 text-rose-300 border-rose-500/30' : 'bg-[#d1ff19]/10 text-[#d1ff19] border-[#d1ff19]/20'
-              }`}>
-                {formatMultiple(result.principalMultiple)}
-              </span>
-            </div>
-
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleCopy}
-              className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white rounded-lg shrink-0 flex items-center gap-1"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-3 h-3 text-[#d1ff19]" />
-                  <span>복사 완료</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3 h-3 text-slate-300" />
-                  <span>결과 복사</span>
-                </>
-              )}
-            </Button>
-          </div>
-
-          <div>
-            <div className="flex flex-wrap items-baseline gap-2 pt-0.5">
-              <div className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums whitespace-nowrap ${
-                isLoss ? 'text-rose-400' : 'text-[#d1ff19]'
-              }`}>
-                {formatCurrency(result.futureValuePostTax)}
-              </div>
-              <span className="text-xs sm:text-sm font-medium text-slate-400 whitespace-nowrap">
-                ({formatKoreanUnit(result.futureValuePostTax)})
-              </span>
-            </div>
-          </div>
-        </div>
+      {/* 최종 수령액 하이라이트 대형 카드 */}
+      <ResultHeroCard
+        badge={
+          <>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30">
+              <Wallet className="w-3 h-3" />
+              세후 최종 수령액
+            </span>
+            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold border ${
+              isLoss ? 'bg-rose-500/20 text-rose-300 border-rose-500/30' : 'bg-[#d1ff19]/10 text-[#d1ff19] border-[#d1ff19]/20'
+            }`}>
+              {formatMultiple(result.principalMultiple)}
+            </span>
+          </>
+        }
+        action={<CopyResultButton text={getCopyText} />}
+        mainValue={
+          <span className={isLoss ? 'text-rose-400' : 'text-[#d1ff19]'}>
+            {formatCurrency(result.futureValuePostTax)}
+          </span>
+        }
+        koreanReading={formatKoreanUnit(result.futureValuePostTax)}
+      >
 
         {/* 원금 및 이자 구성 바 */}
         <div className="relative z-10 mt-3 pt-3 border-t border-slate-800 dark:border-ghost-dark-hairline">
@@ -160,7 +114,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
             </Tooltip>
           </div>
         </div>
-      </div>
+      </ResultHeroCard>
 
       {/* 3단 서브 지표 그리드 (비교 모드에서는 좌우 분할 공간 협소 방지를 위해 1열 세로 배치, 단일 모드에서는 sm 3열) */}
       <div className={title ? "grid grid-cols-1 gap-2.5" : "grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3"}>

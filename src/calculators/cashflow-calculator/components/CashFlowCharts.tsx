@@ -1,6 +1,7 @@
 import React from 'react';
 import { CashFlowCalculationResult } from '../../../types/cashFlow';
-import { formatCurrency, formatKoreanCurrency } from '../../../utils/formatters';
+import { formatCurrency, formatKoreanCurrency, formatChartAxisWon } from '../../../utils/formatters';
+import { ChartTooltipCard } from '../../../components/common/ChartTooltipCard';
 import {
   ResponsiveContainer,
   BarChart,
@@ -27,16 +28,6 @@ export const CashFlowCharts: React.FC<CashFlowChartsProps> = ({ result }) => {
     capital: item.requiredCapital,
     isCurrent: item.isCurrent,
   }));
-
-  const formatYAxis = (val: number) => {
-    if (val >= 100_000_000) {
-      return (val / 100_000_000).toFixed(val % 100_000_000 === 0 ? 0 : 1) + '억';
-    }
-    if (val >= 10_000) {
-      return Math.round(val / 10_000) + '만';
-    }
-    return String(val);
-  };
 
   const pieData = [
     {
@@ -80,7 +71,7 @@ export const CashFlowCharts: React.FC<CashFlowChartsProps> = ({ result }) => {
                 tick={{ fontSize: 11, fill: '#64748b' }}
               />
               <YAxis
-                tickFormatter={formatYAxis}
+                tickFormatter={formatChartAxisWon}
                 axisLine={false}
                 tickLine={false}
                 tick={{ fontSize: 11, fill: '#64748b' }}
@@ -91,22 +82,25 @@ export const CashFlowCharts: React.FC<CashFlowChartsProps> = ({ result }) => {
                   if (!active || !payload || !payload.length) return null;
                   const d = payload[0].payload;
                   return (
-                    <div className="bg-[#15171a] text-white p-2.5 rounded-xl border border-slate-700 shadow-xl text-xs space-y-1">
-                      <div className="font-bold text-[#d1ff19] flex items-center gap-1.5">
-                        <span>수익률 연 {d.name}</span>
-                        {d.isCurrent && (
-                          <span className="text-[10px] bg-[#d1ff19]/20 text-[#d1ff19] px-1.5 py-0.2 rounded">
-                            현재 설정
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-slate-300">
-                        필요 원금: <span className="font-bold text-white">{formatKoreanCurrency(d.capital)}</span>
-                      </div>
-                      <div className="text-[10px] text-slate-400">
-                        ({formatCurrency(d.capital)})
-                      </div>
-                    </div>
+                    <ChartTooltipCard
+                      title={
+                        <div className="flex items-center gap-1.5">
+                          <span>수익률 연 {d.name}</span>
+                          {d.isCurrent && (
+                            <span className="text-[10px] bg-[#d1ff19]/20 text-[#d1ff19] px-1.5 py-0.2 rounded">
+                              현재 설정
+                            </span>
+                          )}
+                        </div>
+                      }
+                      items={[
+                        {
+                          label: '필요 원금',
+                          value: formatKoreanCurrency(d.capital),
+                          subValue: `(${formatCurrency(d.capital)})`,
+                        },
+                      ]}
+                    />
                   );
                 }}
               />
@@ -170,14 +164,13 @@ export const CashFlowCharts: React.FC<CashFlowChartsProps> = ({ result }) => {
                       if (!active || !payload || !payload.length) return null;
                       const d = payload[0].payload;
                       return (
-                        <div className="bg-[#15171a] text-white p-2 rounded-lg text-xs space-y-0.5">
-                          <span className="font-bold" style={{ color: d.color }}>
-                            {d.name}
-                          </span>
+                        <ChartTooltipCard
+                          title={<span style={{ color: d.color }}>{d.name}</span>}
+                        >
                           <div>
                             {formatKoreanCurrency(d.value)} ({d.percentage}%)
                           </div>
-                        </div>
+                        </ChartTooltipCard>
                       );
                     }}
                   />

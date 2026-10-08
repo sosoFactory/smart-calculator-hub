@@ -1,8 +1,9 @@
 import React from 'react';
 import { GoalYearlyBreakdown, EarlyAchievementInfo } from '../../../types/goal';
-import { formatCurrency, formatKoreanCurrency } from '../../../utils/formatters';
+import { formatCurrency, formatKoreanCurrency, formatChartAxisWon } from '../../../utils/formatters';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine } from 'recharts';
 import { Target } from 'lucide-react';
+import { ChartTooltipCard } from '../../../components/common/ChartTooltipCard';
 
 interface GoalChartCardProps {
   breakdown: GoalYearlyBreakdown[];
@@ -18,16 +19,6 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
     interest: item.accumulatedInterest,
     total: item.totalAsset,
   }));
-
-  const formatYAxis = (val: number) => {
-    if (val >= 100000000) {
-      return (val / 100000000).toFixed(val % 100000000 === 0 ? 0 : 1) + '억';
-    }
-    if (val >= 10000) {
-      return Math.round(val / 10000) + '만';
-    }
-    return String(val);
-  };
 
   const isEarly = earlyAchievement?.isEarlyAchieved;
 
@@ -103,7 +94,7 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
               tick={{ fontSize: 11, fill: '#64748b' }}
               tickLine={false}
               axisLine={false}
-              tickFormatter={formatYAxis}
+              tickFormatter={formatChartAxisWon}
             />
             <Tooltip
               wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
@@ -113,17 +104,18 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
                 const isTargetReached = data.total >= targetAmount;
 
                 return (
-                  <div className='bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white p-3 rounded-xl shadow-xl border border-slate-700 dark:border-ghost-dark-hairline-soft text-xs space-y-1.5 min-w-[170px]'>
-                    <div className='flex items-center justify-between border-b border-slate-800 dark:border-ghost-dark-hairline pb-1 gap-2'>
-                      <p className='font-bold text-slate-200'>
-                        {label}차 말 자산 현황
-                      </p>
-                      {isTargetReached && (
-                        <span className='text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-1.5 py-0.5 rounded'>
-                          ✓ 목표 달성
-                        </span>
-                      )}
-                    </div>
+                  <ChartTooltipCard
+                    title={
+                      <div className='flex items-center justify-between gap-2 border-b border-slate-800 dark:border-ghost-dark-hairline pb-1'>
+                        <span className='font-bold text-slate-200'>{label}차 말 자산 현황</span>
+                        {isTargetReached && (
+                          <span className='text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-1.5 py-0.5 rounded'>
+                            ✓ 목표 달성
+                          </span>
+                        )}
+                      </div>
+                    }
+                  >
                     <div className='flex justify-between gap-2'>
                       <span className='text-slate-400'>총 평가 자산:</span>
                       <span className='font-bold text-[#d1ff19] tabular-nums'>
@@ -142,7 +134,7 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
                       <span className='text-emerald-400'>복리 수익:</span>
                       <span className='tabular-nums'>+{formatCurrency(data.interest)}</span>
                     </div>
-                  </div>
+                  </ChartTooltipCard>
                 );
               }}
             />

@@ -2,6 +2,7 @@ import React from 'react';
 import { PartTimeCalculationResult } from '../../../types/partTime';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { formatNumberWithWon } from '../../../utils/formatters';
+import { ChartTooltipCard } from '../../../components/common/ChartTooltipCard';
 
 interface PartTimeChartDashboardProps {
   result: PartTimeCalculationResult;
@@ -108,18 +109,21 @@ export const PartTimeChartDashboard: React.FC<PartTimeChartDashboardProps> = ({ 
                     if (active && payload && payload.length) {
                       const data = payload[0].payload as ChartSegment;
                       return (
-                        <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white text-xs p-2.5 rounded-lg shadow-xl border border-slate-700/60 dark:border-ghost-dark-hairline-soft pointer-events-none z-50">
-                          <div className="font-semibold flex items-center gap-1.5 mb-1 whitespace-nowrap">
-                            <span
-                              className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
-                              style={{ backgroundColor: data.color }}
-                            />
-                            <span>{data.name}</span>
-                          </div>
+                        <ChartTooltipCard
+                          title={
+                            <div className="flex items-center gap-1.5">
+                              <span
+                                className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
+                                style={{ backgroundColor: data.color }}
+                              />
+                              <span>{data.name}</span>
+                            </div>
+                          }
+                        >
                           <div className="text-slate-200 tabular-nums whitespace-nowrap">
                             {formatNumberWithWon(data.value)} ({data.percentage}%)
                           </div>
-                        </div>
+                        </ChartTooltipCard>
                       );
                     }
                     return null;
@@ -176,18 +180,21 @@ export const PartTimeChartDashboard: React.FC<PartTimeChartDashboardProps> = ({ 
                     if (active && payload && payload.length) {
                       const data = payload[0].payload as ChartSegment;
                       return (
-                        <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white text-xs p-2.5 rounded-lg shadow-xl border border-slate-700/60 dark:border-ghost-dark-hairline-soft pointer-events-none z-50">
-                          <div className="font-semibold flex items-center gap-1.5 mb-1 whitespace-nowrap">
-                            <span
-                              className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
-                              style={{ backgroundColor: data.color }}
-                            />
-                            <span>{data.name}</span>
-                          </div>
+                        <ChartTooltipCard
+                          title={
+                            <div className="flex items-center gap-1.5">
+                              <span
+                                className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
+                                style={{ backgroundColor: data.color }}
+                              />
+                              <span>{data.name}</span>
+                            </div>
+                          }
+                        >
                           <div className="text-slate-200 tabular-nums whitespace-nowrap">
                             {formatNumberWithWon(data.value)} ({data.percentage}%)
                           </div>
-                        </div>
+                        </ChartTooltipCard>
                       );
                     }
                     return null;

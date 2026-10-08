@@ -2,40 +2,23 @@ import React, { useState, useMemo } from 'react';
 import { calculateAge } from '../../../utils/dateCalculator';
 import { FormHeader } from '../../../components/common/FormHeader';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { Button } from '../../../components/ui/button';
 import { DatePicker } from '../../../components/ui/date-picker';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
-import { Calendar, Copy, Check, Sparkles, Heart, Gift } from 'lucide-react';
+import { ResultHeroCard } from '../../../components/common/ResultHeroCard';
+import { CopyResultButton } from '../../../components/common/CopyResultButton';
+import { Calendar, Sparkles, Heart, Gift } from 'lucide-react';
 
 export const AgeTab: React.FC = () => {
   const [birthDate, setBirthDate] = useState<string>('2000-01-01');
-  const [copied, setCopied] = useState(false);
 
   const result = useMemo(() => calculateAge(birthDate), [birthDate]);
 
-  const handleCopy = async () => {
-    const text = `[스마트 계산기] 만 나이 및 생애 지표 결과
+  const getCopyText = () => `[스마트 계산기] 만 나이 및 생애 지표 결과
 - 생년월일: ${result.birthDate}
 - 공식 만 나이: 만 ${result.internationalAge}세 (연 나이: ${result.annualAge}세)
 - 살아온 일수: 태어난 지 ${result.daysLived.toLocaleString()}일째
 - 띠/별자리: ${result.zodiac} / ${result.horoscope}
 - 다음 생일: ${result.daysToNextBirthday === 0 ? '오늘' : `D-${result.daysToNextBirthday}`}`;
-
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   const setYearPreset = (year: number) => {
     setBirthDate(`${year}-01-01`);
@@ -96,12 +79,9 @@ export const AgeTab: React.FC = () => {
       <div className="lg:col-span-7 space-y-4 sm:space-y-5 w-full min-w-0">
         <div className="space-y-3.5 sm:space-y-4 w-full">
           {/* 메인 다크 서피스 카드 */}
-          <div className="relative overflow-hidden rounded-2xl bg-ghost-surface-elevated dark:bg-ghost-dark-surface-elevated border border-ghost-surface-elevated dark:border-ghost-dark-hairline-soft p-5 sm:p-6 text-white shadow-sm">
-          <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-ghost-lime/10 blur-2xl pointer-events-none" />
-
-          <div className="relative z-10 space-y-3">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2 min-w-0">
+          <ResultHeroCard
+            badge={
+              <>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-ghost-lime/20 text-ghost-lime border border-ghost-lime/30">
                   <Calendar className="w-3.5 h-3.5" />
                   공식 만 나이 (2023년 통일법)
@@ -109,41 +89,16 @@ export const AgeTab: React.FC = () => {
                 <span className="text-xs text-ghost-lime font-bold px-2 py-0.5 rounded-full bg-ghost-lime/10 border border-ghost-lime/20 shrink-0">
                   연 나이 {result.annualAge}세
                 </span>
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleCopy}
-                className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white rounded-lg shrink-0 flex items-center gap-1"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-3 h-3 text-ghost-lime" />
-                    <span>복사 완료</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3 h-3 text-slate-300" />
-                    <span>결과 복사</span>
-                  </>
-                )}
-              </Button>
-            </div>
-
-            <div>
-              <div className="flex items-baseline gap-2.5 flex-wrap pt-0.5">
-                <span className="text-3xl sm:text-4xl font-extrabold text-ghost-lime tracking-tight tabular-nums break-keep">
-                  만 {result.internationalAge}세
-                </span>
-                <span className="text-xs sm:text-sm text-slate-300 font-semibold break-keep">
-                  (출생일 {result.birthDate} 기준 법적 연령)
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+              </>
+            }
+            action={<CopyResultButton text={getCopyText} />}
+            mainValue={`만 ${result.internationalAge}세`}
+            subtext={
+              <span className="text-xs sm:text-sm text-slate-300 font-semibold break-keep">
+                (출생일 {result.birthDate} 기준 법적 연령)
+              </span>
+            }
+          />
 
         {/* 3단 서브 요약 지표 카드 */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">

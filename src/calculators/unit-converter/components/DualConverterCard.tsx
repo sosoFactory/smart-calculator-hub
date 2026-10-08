@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DecimalPrecision, UnitDefinition } from '../../../types/unit';
-import { ArrowLeftRight, HelpCircle, Check, Copy } from 'lucide-react';
+import { ArrowLeftRight, HelpCircle } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
+import { CopyResultButton } from '../../../components/common/CopyResultButton';
 import { Input } from '../../../components/ui/input';
 import { SegmentedControl } from '../../../components/ui/segmented-control';
 import {
@@ -48,18 +49,6 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
 }) => {
   const fromUnit = units.find((u) => u.id === fromUnitId) || units[0];
   const toUnit = units.find((u) => u.id === toUnitId) || units[1] || units[0];
-  const [copied, setCopied] = useState(false);
-
-  const handleCopyResult = async () => {
-    const text = `${formattedConvertedValue} ${toUnit?.symbol || ''}`.trim();
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      // fallback
-    }
-  };
 
   const precisionOptions: DecimalPrecision[] = [0, 2, 4, 6];
 
@@ -175,27 +164,13 @@ export const DualConverterCard: React.FC<DualConverterCardProps> = ({
               결과 (To)
             </span>
             <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleCopyResult}
-                    className="h-7 w-7 text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-ghost-dark-surface rounded-md shrink-0"
-                    aria-label="결과값 복사"
-                  >
-                    {copied ? (
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="top">
-                  {copied ? '복사 완료!' : '결과값 복사'}
-                </TooltipContent>
-              </Tooltip>
+              <CopyResultButton
+                text={`${formattedConvertedValue} ${toUnit?.symbol || ''}`.trim()}
+                label="결과값 복사"
+                size="icon"
+                variant="ghost"
+                className="h-7 w-7 text-slate-300 hover:text-white hover:bg-slate-800 dark:hover:bg-ghost-dark-surface rounded-md shrink-0 p-0"
+              />
               <div className="w-28 sm:w-36 lg:w-44 shrink-0">
                 <Select value={toUnitId} onValueChange={onToUnitChange}>
                   <SelectTrigger className="h-8 text-xs bg-[#24272c] dark:bg-ghost-dark-surface text-white border-slate-700 dark:border-ghost-dark-hairline-soft font-bold hover:bg-[#2e3238] dark:hover:bg-ghost-dark-hover focus:ring-[#d1ff19] px-2 sm:px-3 truncate">

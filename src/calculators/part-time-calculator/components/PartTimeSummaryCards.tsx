@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { PartTimeCalculationResult, PartTimeInput } from '../../../types/partTime';
 import { formatKoreanUnit, formatNumberWithWon } from '../../../utils/formatters';
-import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { SegmentedControl, SegmentedOption } from '../../../components/ui/segmented-control';
 import { SubMetricCard } from '../../../components/common/SubMetricCard';
-import { Copy, Check, Sparkles, Clock, Calendar, ShieldCheck, AlertCircle } from 'lucide-react';
+import { ResultHeroCard } from '../../../components/common/ResultHeroCard';
+import { CopyResultButton } from '../../../components/common/CopyResultButton';
+import { Sparkles, Clock, Calendar, ShieldCheck, AlertCircle } from 'lucide-react';
 
 interface PartTimeSummaryCardsProps {
   input: PartTimeInput;
@@ -13,7 +14,6 @@ interface PartTimeSummaryCardsProps {
 }
 
 export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ input, result }) => {
-  const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<'monthly' | 'weekly'>('monthly');
 
   const { weekly, monthly, isHolidayAllowanceEligible, ineligibilityReason, effectiveHourlyRate, effectiveRateIncreasePercent } = result;
@@ -22,8 +22,7 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
 
   const workHoursToDisplay = `주 ${input.weeklyWorkHours}시간`;
 
-  const handleCopy = async () => {
-    const text = `[스마트 계산기] 2026 알바 급여 & 주휴수당 계산 결과
+  const getCopyText = () => `[스마트 계산기] 2026 알바 급여 & 주휴수당 계산 결과
 - 시급: ${formatNumberWithWon(input.hourlyWage)}
 - 주당 근로시간: ${workHoursToDisplay}
 - 주휴수당 발생 여부: ${isHolidayAllowanceEligible ? `발생 (주 ${weekly.holidayAllowanceHours.toFixed(1)}시간 인정)` : `미발생 (${ineligibilityReason ?? '요건 미충족'})`}
@@ -43,22 +42,6 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
 - 주 세전 총급여: ${formatNumberWithWon(weekly.grossWage)}
   * 주 기본급: ${formatNumberWithWon(weekly.baseWage)}
   * 주 주휴수당: ${formatNumberWithWon(weekly.holidayAllowance)}`;
-
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   const VIEW_OPTIONS: SegmentedOption<'monthly' | 'weekly'>[] = [
     { id: 'monthly', label: '월급 기준' },
@@ -83,86 +66,51 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
       </div>
 
       {/* 1. 최상단 대형 메인 하이라이트 카드 (예상 실수령액) */}
-      <div className="relative overflow-hidden rounded-2xl bg-[#15171a] dark:bg-ghost-dark-surface-elevated border border-[#15171a] dark:border-ghost-dark-hairline-soft text-white p-5 sm:p-6 shadow-sm">
-        <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-[#d1ff19]/10 blur-2xl pointer-events-none" />
+      <ResultHeroCard
+        badge={
+          <>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30">
+              <Sparkles className="w-3 h-3" />
+              {periodLabel} 예상 실수령액
+            </span>
 
-        <div className="relative z-10 space-y-3">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2 min-w-0">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#d1ff19]/20 text-[#d1ff19] border border-[#d1ff19]/30">
-                <Sparkles className="w-3 h-3" />
-                {periodLabel} 예상 실수령액
+            {isHolidayAllowanceEligible ? (
+              <Badge
+                variant="outline"
+                className="text-[11px] font-semibold border-[#d1ff19]/40 text-[#d1ff19] bg-[#d1ff19]/10 whitespace-nowrap"
+              >
+                주휴수당 포함 (실질시급 {formatNumberWithWon(effectiveHourlyRate)})
+              </Badge>
+            ) : (
+              <Badge
+                variant="outline"
+                className="text-[11px] font-medium border-slate-700 dark:border-ghost-dark-hairline-soft text-slate-400 bg-slate-800/60 dark:bg-ghost-dark-hairline whitespace-nowrap"
+              >
+                주휴수당 미발생
+              </Badge>
+            )}
+          </>
+        }
+        action={<CopyResultButton text={getCopyText} />}
+        mainValue={`${currentView.netWage.toLocaleString('ko-KR')}원`}
+        koreanReading={formatKoreanUnit(currentView.netWage)}
+        subtext={
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            {isHolidayAllowanceEligible ? (
+              <span className="break-keep">
+                기본시급 <strong className="text-white tabular-nums">{formatNumberWithWon(input.hourlyWage)}</strong> ➔ 
+                주휴 포함 실질 시급 <strong className="text-[#d1ff19] tabular-nums">{formatNumberWithWon(effectiveHourlyRate)}</strong>
+                <span className="text-[#d1ff19] font-medium ml-1">(+{effectiveRateIncreasePercent}%)</span>
               </span>
-
-              {isHolidayAllowanceEligible ? (
-                <Badge
-                  variant="outline"
-                  className="text-[11px] font-semibold border-[#d1ff19]/40 text-[#d1ff19] bg-[#d1ff19]/10 whitespace-nowrap"
-                >
-                  주휴수당 포함 (실질시급 {formatNumberWithWon(effectiveHourlyRate)})
-                </Badge>
-              ) : (
-                <Badge
-                  variant="outline"
-                  className="text-[11px] font-medium border-slate-700 dark:border-ghost-dark-hairline-soft text-slate-400 bg-slate-800/60 dark:bg-ghost-dark-hairline whitespace-nowrap"
-                >
-                  주휴수당 미발생
-                </Badge>
-              )}
-            </div>
-
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleCopy}
-              className="h-7 px-2.5 text-xs bg-slate-800/80 dark:bg-ghost-dark-hairline hover:bg-slate-700 dark:hover:bg-ghost-dark-hairline-soft border-slate-700 dark:border-ghost-dark-hairline-soft text-white rounded-lg shrink-0 flex items-center gap-1"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-3 h-3 text-[#d1ff19]" />
-                  <span>복사 완료</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3 h-3 text-slate-300" />
-                  <span>결과 복사</span>
-                </>
-              )}
-            </Button>
-          </div>
-
-          <div>
-            <div className="flex flex-wrap items-baseline gap-2 pt-0.5">
-              <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#d1ff19] tabular-nums whitespace-nowrap">
-                {currentView.netWage.toLocaleString('ko-KR')}
-                <span className="text-lg sm:text-xl font-medium text-slate-200 ml-1">
-                  원
-                </span>
-              </div>
-              <span className="text-xs sm:text-sm font-medium text-slate-400 whitespace-nowrap">
-                ({formatKoreanUnit(currentView.netWage)})
+            ) : (
+              <span className="text-slate-400 break-keep flex items-center gap-1">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-400 inline shrink-0" />
+                {ineligibilityReason ?? '주 15시간 미만 초단시간 근로 (주휴수당 미발생)'}
               </span>
-            </div>
-
-            {/* 실질 시급 인상 효과 배너 */}
-            <div className="text-xs text-slate-300 pt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-              {isHolidayAllowanceEligible ? (
-                <span className="break-keep">
-                  기본시급 <strong className="text-white tabular-nums">{formatNumberWithWon(input.hourlyWage)}</strong> ➔ 
-                  주휴 포함 실질 시급 <strong className="text-[#d1ff19] tabular-nums">{formatNumberWithWon(effectiveHourlyRate)}</strong>
-                  <span className="text-[#d1ff19] font-medium ml-1">(+{effectiveRateIncreasePercent}%)</span>
-                </span>
-              ) : (
-                <span className="text-slate-400 break-keep flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5 text-amber-400 inline shrink-0" />
-                  {ineligibilityReason ?? '주 15시간 미만 초단시간 근로 (주휴수당 미발생)'}
-                </span>
-              )}
-            </div>
+            )}
           </div>
-        </div>
-
+        }
+      >
         {/* 하단 요약 인포 바 */}
         <div className="mt-4 pt-3 border-t border-slate-800 dark:border-ghost-dark-hairline flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
           <span>
@@ -173,7 +121,7 @@ export const PartTimeSummaryCards: React.FC<PartTimeSummaryCardsProps> = ({ inpu
             세전 {periodLabel}급: <strong className="text-white tabular-nums">{formatNumberWithWon(currentView.grossWage)}</strong>
           </span>
         </div>
-      </div>
+      </ResultHeroCard>
 
       {/* 2. 하단 3단 서브 요약 카드 */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
