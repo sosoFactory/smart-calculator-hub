@@ -181,7 +181,7 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
         </div>
 
         {/* 빠른 증감 칩 */}
-        <div className="grid grid-cols-4 gap-1.5 mt-1.5">
+        <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
           {incrementPresets.map((inc) => (
             <Button
               key={inc.label}
@@ -189,20 +189,11 @@ export const SalaryForm: React.FC<SalaryFormProps> = ({
               variant="outline"
               size="sm"
               onClick={() => handleAmountIncrement(inc.value)}
-              className="h-7 px-1 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover whitespace-nowrap"
+              className="h-7 px-2.5 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover whitespace-nowrap"
             >
               {inc.label}
             </Button>
           ))}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => updateField('grossAmount', 0)}
-            className="h-7 px-1 text-xs font-semibold text-rose-500 border-rose-200 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-950/30 whitespace-nowrap"
-          >
-            정정
-          </Button>
         </div>
       </div>
 

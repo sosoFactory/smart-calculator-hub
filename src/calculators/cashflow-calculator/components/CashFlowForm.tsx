@@ -4,6 +4,7 @@ import { formatKoreanCurrency } from '../../../utils/formatters';
 import { NumericInput } from '../../../components/ui/numeric-input';
 import { Slider } from '../../../components/ui/slider';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
+import { Button } from '../../../components/ui/button';
 import { FormHeader } from '../../../components/common/FormHeader';
 
 interface CashFlowFormProps {
@@ -42,7 +43,7 @@ export const CashFlowForm: React.FC<CashFlowFormProps> = ({ input, onChange, onR
   };
 
   const handleAddMonthlyNet = (addVal: number) => {
-    const next = Math.min(100_000_000, input.monthlyNetDesired + addVal);
+    const next = Math.min(100_000_000, (input.monthlyNetDesired || 0) + addVal);
     updateField('monthlyNetDesired', next);
   };
 
@@ -78,16 +79,18 @@ export const CashFlowForm: React.FC<CashFlowFormProps> = ({ input, onChange, onR
             placeholder="3,000,000"
           />
 
-          <div className="flex flex-wrap gap-1.5 pt-2">
+          <div className="flex items-center gap-1.5 mt-2 flex-wrap">
             {MONTHLY_NET_PRESETS.map((p) => (
-              <SelectableChip
+              <Button
                 key={p.label}
-                isSelected={false}
-                onClick={() => handleAddMonthlyNet(p.value)}
+                type="button"
+                variant="outline"
                 size="sm"
+                onClick={() => handleAddMonthlyNet(p.value)}
+                className="h-7 px-2.5 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover"
               >
                 {p.label}
-              </SelectableChip>
+              </Button>
             ))}
           </div>
         </div>

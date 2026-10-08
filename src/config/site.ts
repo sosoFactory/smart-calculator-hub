@@ -16,7 +16,7 @@ export const siteConfig = {
   copyright: '© sosoFactory',
   
   // 버전 정보
-  version: '1.15.6',
+  version: '1.15.7',
   
   // 링크
   links: {

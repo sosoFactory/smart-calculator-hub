@@ -34,8 +34,7 @@ describe('Deep Link App Integration Tests', () => {
     const amountInput = screen.getByLabelText('대출 원금 입력') as HTMLInputElement;
     expect(amountInput.value).toBe('500,000,000');
 
-    const rateInput = screen.getByLabelText('연 대출 금리 입력') as HTMLInputElement;
-    expect(rateInput.value).toBe('3.5');
+    expect(screen.getByText('연 3.50%')).toBeInTheDocument();
   });
 
   it('restores salary calculator inputs from URL search parameters', () => {

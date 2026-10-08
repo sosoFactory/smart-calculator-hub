@@ -4,6 +4,7 @@ import { formatKoreanCurrency } from '../../../utils/formatters';
 import { NumericInput } from '../../../components/ui/numeric-input';
 import { Slider } from '../../../components/ui/slider';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
+import { Button } from '../../../components/ui/button';
 import { FormHeader } from '../../../components/common/FormHeader';
 
 interface GoalFormProps {
@@ -30,7 +31,6 @@ const RATE_PRESETS = [
 ];
 
 const INITIAL_AMOUNT_PRESETS = [
-  { label: '0원', value: 0 },
   { label: '+1,000만', value: 10_000_000 },
   { label: '+3,000만', value: 30_000_000 },
   { label: '+5,000만', value: 50_000_000 },
@@ -52,16 +52,12 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
   };
 
   const handleAddTargetAmount = (addVal: number) => {
-    const next = Math.min(10_000_000_000, input.targetAmount + addVal);
+    const next = Math.min(10_000_000_000, (input.targetAmount || 0) + addVal);
     updateField('targetAmount', next);
   };
 
   const handleAddInitialAmount = (addVal: number) => {
-    if (addVal === 0) {
-      updateField('initialAmount', 0);
-      return;
-    }
-    const next = Math.min(input.targetAmount, input.initialAmount + addVal);
+    const next = Math.min(input.targetAmount, (input.initialAmount || 0) + addVal);
     updateField('initialAmount', next);
   };
 
@@ -89,22 +85,24 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
 
           <NumericInput
             value={input.targetAmount}
-            onNumberChange={(val) => updateField('targetAmount', Math.max(10_000_000, Math.min(10_000_000_000, val || 0)))}
+            onNumberChange={(val) => updateField('targetAmount', Math.min(10_000_000_000, val || 0))}
             suffix="원"
             thousandSeparator={true}
             placeholder="500,000,000"
           />
 
-          <div className="flex flex-wrap gap-1.5 pt-2">
+          <div className="flex items-center gap-1.5 mt-2 flex-wrap">
             {TARGET_AMOUNT_PRESETS.map((p) => (
-              <SelectableChip
+              <Button
                 key={p.label}
-                isSelected={false}
-                onClick={() => handleAddTargetAmount(p.value)}
+                type="button"
+                variant="outline"
                 size="sm"
+                onClick={() => handleAddTargetAmount(p.value)}
+                className="h-7 px-2.5 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover"
               >
                 {p.label}
-              </SelectableChip>
+              </Button>
             ))}
           </div>
         </div>
@@ -194,16 +192,18 @@ export const GoalForm: React.FC<GoalFormProps> = ({ input, onChange, onReset }) 
             placeholder="0"
           />
 
-          <div className="flex flex-wrap gap-1.5 pt-2">
+          <div className="flex items-center gap-1.5 mt-2 flex-wrap">
             {INITIAL_AMOUNT_PRESETS.map((p) => (
-              <SelectableChip
+              <Button
                 key={p.label}
-                isSelected={input.initialAmount === p.value}
-                onClick={() => handleAddInitialAmount(p.value)}
+                type="button"
+                variant="outline"
                 size="sm"
+                onClick={() => handleAddInitialAmount(p.value)}
+                className="h-7 px-2.5 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover"
               >
                 {p.label}
-              </SelectableChip>
+              </Button>
             ))}
           </div>
         </div>

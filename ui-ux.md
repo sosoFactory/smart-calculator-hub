@@ -124,6 +124,14 @@
   - `border-t border-ghost-hairline/60 dark:border-ghost-dark-hairline flex items-center justify-between text-[11px] sm:text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink`.
   - 불필요한 라임 하이라이트를 배제하고 차분한 모노크롬 잉크 톤으로 절제 유지.
 
+### 2.11 금액 입력창(`NumericInput`) 내부 좌측 '정정' 미니 캡슐 버튼 규격
+- **역할 및 배치**:
+  - `NumericInput` 내부 좌측(`left-2.5`)에 **`RotateCcw` 회전 화살표 아이콘 + '정정' 텍스트 미니 캡슐 버튼**을 배치하여, 가로로 넓은 인풋의 좌측 여백을 활용하고 원클릭 `0원` 리셋을 제공한다.
+  - **시각 피드백 및 상태**:
+    - 금액이 `0`이거나 비어있을 때는 `opacity-0 pointer-events-none`으로 숨김 처리하여 깔끔한 기본 인풋 룩앤필을 유지.
+    - 금액이 입력되어 있을 때(`value > 0`) `opacity-100`으로 부드럽게 나타나며, 로즈 톤(`text-rose-500 hover:text-rose-600 bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200/70 dark:border-rose-900/50`)을 적용.
+  - **입력 여백(Padding)**: 좌측 버튼과 텍스트 충돌을 방지하기 위해 `showClear` 활성 시 인풋에 `pl-16` 좌측 패딩을 유지하여 큰 자릿수 입력 시에도 겹침 없이 안전하게 렌더링.
+
 ---
 
 ## 3. UI 구현 시 금지 및 주의사항 (Do & Don't)

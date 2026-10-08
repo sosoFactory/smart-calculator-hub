@@ -3,6 +3,15 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.15.7] - 2026-10-08
+
+### Refactor
+- **금액 입력 컴포넌트(`NumericInput`) 내부 좌측 '정정' 캡슐 버튼 표준화**:
+  - `NumericInput.tsx`: 가로로 넓은 금액 인풋의 좌측 여백을 활용하여, 내부 좌측(`left-2.5`)에 `RotateCcw` 아이콘과 '정정' 텍스트가 결합된 미니 캡슐 버튼 탑재. 금액이 0보다 클 때만 부드럽게 페이드인되며 원클릭 `0원` 리셋 제공.
+  - 전 계산기([LoanForm.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/loan-calculator/components/LoanForm.tsx), [GoalForm.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/goal-calculator/components/GoalForm.tsx), [CashFlowForm.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/cashflow-calculator/components/CashFlowForm.tsx), [SalaryForm.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/salary-calculator/components/SalaryForm.tsx), [QuickAmountButtons.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/compound-interest/components/QuickAmountButtons.tsx))의 하단 프리셋 행에서 중복된 '정정' 버튼을 정리하고, 순수 증액 칩 행으로 일원화.
+- **대출이자 계산기 연 대출 금리 입력 컴포넌트 일원화 (규칙 준수)**:
+  - "금액은 `NumericInput`, 비율/기간은 `Slider`" 단일 원칙에 맞춰 `LoanForm.tsx`의 대출 금리 입력을 `NumericInput`에서 슬라이더(`Slider`, 0.1% ~ 15.0%, step 0.1%) + 주요 금리 프리셋 칩(`3.2% 특판`, `3.8% 주담대`, `4.5% 전세대출`, `5.5% 신용대출`)으로 전면 전환.
+
 ## [1.15.6] - 2026-10-07
 
 ### Fixed

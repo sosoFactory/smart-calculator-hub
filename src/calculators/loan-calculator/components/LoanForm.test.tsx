@@ -75,4 +75,49 @@ describe('Seam: LoanForm Early Repayment Switch Toggle Interaction', () => {
     expect(updatedSwitchBtn).toHaveAttribute('aria-checked', 'true');
     expect(screen.getByText('중도상환 시점')).toBeInTheDocument();
   });
+
+  it('대출 금리 프리셋 칩 클릭 시 해당 금리로 onChange가 호출되어야 한다', () => {
+    const handleChange = vi.fn();
+    const handleReset = vi.fn();
+
+    render(
+      <LoanForm
+        input={MOCK_INPUT_OFF}
+        onChange={handleChange}
+        onReset={handleReset}
+      />
+    );
+
+    const ratePreset = screen.getByRole('button', { name: '3.8% 주담대' });
+    ratePreset.click();
+
+    expect(handleChange).toHaveBeenCalledWith(
+      expect.objectContaining({ annualRate: 3.8 })
+    );
+  });
+
+  it('중도상환 금액 프리셋 및 정정 버튼 클릭 시 올바른 금액이 반영되어야 한다', () => {
+    const handleChange = vi.fn();
+    const handleReset = vi.fn();
+
+    render(
+      <LoanForm
+        input={MOCK_INPUT_ON}
+        onChange={handleChange}
+        onReset={handleReset}
+      />
+    );
+
+    // 중도상환 정정 버튼 클릭 -> amount: 0
+    const resetButtons = screen.getAllByRole('button', { name: '금액 정정' });
+    // 첫 번째는 대출원금 정정, 두 번째는 중도상환금액 정정
+    expect(resetButtons.length).toBe(2);
+    resetButtons[1].click();
+
+    expect(handleChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        earlyRepayment: expect.objectContaining({ amount: 0 }),
+      })
+    );
+  });
 });

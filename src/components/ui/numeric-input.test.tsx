@@ -92,4 +92,25 @@ describe('NumericInput Component', () => {
     expect(input.value).toBe('4.5');
     expect(handleNumberChange).toHaveBeenLastCalledWith(4.5);
   });
+
+  it('금액이 입력되어 있을 때 인풋 좌측 정정 버튼이 활성화되고, 클릭 시 0으로 초기화되어야 한다', async () => {
+    const handleNumberChange = vi.fn();
+    render(
+      <NumericInput
+        aria-label="금액 입력"
+        value={10000000}
+        thousandSeparator
+        suffix="원"
+        onNumberChange={handleNumberChange}
+      />
+    );
+
+    const clearBtn = screen.getByRole('button', { name: '금액 정정' });
+    expect(clearBtn).toBeInTheDocument();
+    expect(clearBtn).toHaveTextContent('정정');
+    expect(clearBtn).toHaveClass('opacity-100');
+
+    await userEvent.click(clearBtn);
+    expect(handleNumberChange).toHaveBeenCalledWith(0);
+  });
 });

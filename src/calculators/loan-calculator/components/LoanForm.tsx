@@ -50,6 +50,12 @@ const EARLY_MONTH_PRESETS = [
   { label: '5년 뒤', months: 60 },
 ];
 
+const EARLY_AMOUNT_PRESETS = [
+  { label: '+500만', value: 5_000_000 },
+  { label: '+1,000만', value: 10_000_000 },
+  { label: '+5,000만', value: 50_000_000 },
+];
+
 export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) => {
   const updateField = <K extends keyof LoanInput>(field: K, val: LoanInput[K]) => {
     onChange({
@@ -77,14 +83,6 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
 
   const isEarlyEnabled = input.earlyRepayment?.enabled ?? false;
 
-  const rateInput = useClampedNumberInput({
-    value: input.annualRate,
-    onChange: (val) => updateField('annualRate', val),
-    min: 0.1,
-    max: 30,
-    fallback: 4.2,
-    precision: 2,
-  });
 
   const feeRateInput = useClampedNumberInput({
     value: input.earlyRepayment?.feeRate ?? 1.2,
@@ -165,47 +163,34 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
               {preset.label}
             </Button>
           ))}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => updateField('loanAmount', 0)}
-            className="h-7 px-2 text-xs font-semibold text-rose-500 border-rose-200 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-950/30"
-          >
-            정정
-          </Button>
         </div>
       </div>
 
       {/* 4. 대출 금리 (% 연이율) */}
       <div>
-        <div className="flex flex-wrap items-baseline justify-between gap-1 mb-1">
-          <label htmlFor="loan-rate" className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
+        <div className="flex flex-wrap items-baseline justify-between gap-1 mb-2">
+          <label htmlFor="loan-rate-slider" className="text-xs sm:text-sm font-bold text-[#112220] dark:text-ghost-dark-ink-base cursor-pointer">
             연 대출 금리
           </label>
-          <span className="text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base">
+          <span className="text-xs font-bold text-[#112220] dark:text-[#d1ff19] tabular-nums">
             연 {input.annualRate.toFixed(2)}%
           </span>
         </div>
-        <NumericInput
-          id="loan-rate"
-          aria-label="연 대출 금리 입력"
-          type="number"
-          step="0.1"
-          min="0.1"
-          max="30"
-          value={rateInput.value}
-          placeholder="4.2"
-          onChange={rateInput.onChange}
-          onBlur={rateInput.onBlur}
-          suffix="%"
-          allowDecimals
+        <Slider
+          id="loan-rate-slider"
+          aria-label="연 대출 금리 슬라이더"
+          value={[input.annualRate]}
+          min={0.1}
+          max={15.0}
+          step={0.1}
+          onValueChange={([val]) => updateField('annualRate', Number(val.toFixed(2)))}
+          className="my-2.5"
         />
         <div className="flex items-center gap-1.5 mt-2 flex-wrap">
           {RATE_PRESETS.map((preset) => (
             <SelectableChip
               key={preset.label}
-              isSelected={input.annualRate === preset.value}
+              isSelected={Math.abs(input.annualRate - preset.value) < 0.05}
               onClick={() => updateField('annualRate', preset.value)}
             >
               {preset.label}
@@ -347,38 +332,38 @@ export const LoanForm: React.FC<LoanFormProps> = ({ input, onChange, onReset }) 
                   {formatKoreanLoanAmount(input.earlyRepayment?.amount || 0)}
                 </span>
               </div>
-              <div className="relative">
-                <Input
-                  id="early-amount"
-                  aria-label="중도상환 금액 직접 입력"
-                  type="text"
-                  inputMode="numeric"
-                  value={
-                    input.earlyRepayment?.amount
-                      ? input.earlyRepayment.amount.toLocaleString('ko-KR')
-                      : ''
-                  }
-                  placeholder="10,000,000"
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/[^0-9]/g, '');
-                    updateEarlyRepayment((prev) => ({
-                      ...prev,
-                      amount: raw ? parseInt(raw, 10) : 0,
-                    }));
-                  }}
-                  onBlur={() => {
-                    if (input.earlyRepayment?.enabled && !input.earlyRepayment?.amount) {
+              <NumericInput
+                id="early-amount"
+                aria-label="중도상환 금액 직접 입력"
+                suffix="원"
+                thousandSeparator
+                value={input.earlyRepayment?.amount || 0}
+                placeholder="10,000,000"
+                onNumberChange={(val) => {
+                  updateEarlyRepayment((prev) => ({
+                    ...prev,
+                    amount: val,
+                  }));
+                }}
+              />
+              <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                {EARLY_AMOUNT_PRESETS.map((preset) => (
+                  <Button
+                    key={preset.label}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
                       updateEarlyRepayment((prev) => ({
                         ...prev,
-                        amount: 10_000_000,
-                      }));
+                        amount: (prev.amount || 0) + preset.value,
+                      }))
                     }
-                  }}
-                  className="w-full text-right font-bold pl-3 pr-10 py-1.5 h-9 text-sm border-[#e5e7eb] dark:border-ghost-dark-hairline-soft bg-white dark:bg-ghost-dark-surface-deep"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">
-                  원
-                </span>
+                    className="h-7 px-2.5 text-xs font-semibold bg-white dark:bg-ghost-dark-surface-deep border-[#e5e7eb] dark:border-ghost-dark-hairline-soft hover:bg-slate-50 dark:hover:bg-ghost-dark-hover"
+                  >
+                    {preset.label}
+                  </Button>
+                ))}
               </div>
             </div>
 
