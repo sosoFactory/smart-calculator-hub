@@ -112,6 +112,7 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
                 }
               />
               <Tooltip
+                wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
@@ -166,6 +167,7 @@ export const LoanChartDashboard: React.FC<LoanChartDashboardProps> = ({ schedule
                 }
               />
               <Tooltip
+                wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;

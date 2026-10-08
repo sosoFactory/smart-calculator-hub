@@ -86,6 +86,7 @@ export const CashFlowCharts: React.FC<CashFlowChartsProps> = ({ result }) => {
                 tick={{ fontSize: 11, fill: '#64748b' }}
               />
               <Tooltip
+                wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
                 content={({ active, payload }) => {
                   if (!active || !payload || !payload.length) return null;
                   const d = payload[0].payload;
@@ -164,6 +165,7 @@ export const CashFlowCharts: React.FC<CashFlowChartsProps> = ({ result }) => {
                     ))}
                   </Pie>
                   <Tooltip
+                    wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
                     content={({ active, payload }) => {
                       if (!active || !payload || !payload.length) return null;
                       const d = payload[0].payload;

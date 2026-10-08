@@ -135,7 +135,7 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
                 width={45}
                 tickMargin={4}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }} content={<CustomTooltip />} />
               <Legend
                 verticalAlign="top"
                 align="right"
@@ -207,7 +207,7 @@ export const ChartDashboard: React.FC<ChartDashboardProps> = ({
                 width={45}
                 tickMargin={4}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }} content={<CustomTooltip />} />
               <Legend
                 verticalAlign="top"
                 align="right"

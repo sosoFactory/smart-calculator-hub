@@ -103,13 +103,26 @@ export const PartTimeChartDashboard: React.FC<PartTimeChartDashboardProps> = ({ 
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value: any) => [formatNumberWithWon(Number(value) || 0), '금액']}
-                  contentStyle={{
-                    backgroundColor: 'rgba(19, 21, 24, 0.95)',
-                    borderRadius: '8px',
-                    border: '1px solid #2a2e36',
-                    fontSize: '12px',
-                    color: '#fff',
+                  wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload as ChartSegment;
+                      return (
+                        <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white text-xs p-2.5 rounded-lg shadow-xl border border-slate-700/60 dark:border-ghost-dark-hairline-soft pointer-events-none z-50">
+                          <div className="font-semibold flex items-center gap-1.5 mb-1 whitespace-nowrap">
+                            <span
+                              className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
+                              style={{ backgroundColor: data.color }}
+                            />
+                            <span>{data.name}</span>
+                          </div>
+                          <div className="text-slate-200 tabular-nums whitespace-nowrap">
+                            {formatNumberWithWon(data.value)} ({data.percentage}%)
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
                   }}
                 />
               </PieChart>
@@ -158,13 +171,26 @@ export const PartTimeChartDashboard: React.FC<PartTimeChartDashboardProps> = ({ 
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value: any) => [formatNumberWithWon(Number(value) || 0), '금액']}
-                  contentStyle={{
-                    backgroundColor: 'rgba(19, 21, 24, 0.95)',
-                    borderRadius: '8px',
-                    border: '1px solid #2a2e36',
-                    fontSize: '12px',
-                    color: '#fff',
+                  wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload as ChartSegment;
+                      return (
+                        <div className="bg-[#15171a] dark:bg-ghost-dark-surface-elevated text-white text-xs p-2.5 rounded-lg shadow-xl border border-slate-700/60 dark:border-ghost-dark-hairline-soft pointer-events-none z-50">
+                          <div className="font-semibold flex items-center gap-1.5 mb-1 whitespace-nowrap">
+                            <span
+                              className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
+                              style={{ backgroundColor: data.color }}
+                            />
+                            <span>{data.name}</span>
+                          </div>
+                          <div className="text-slate-200 tabular-nums whitespace-nowrap">
+                            {formatNumberWithWon(data.value)} ({data.percentage}%)
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
                   }}
                 />
               </PieChart>

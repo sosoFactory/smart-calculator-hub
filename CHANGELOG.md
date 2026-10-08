@@ -3,6 +3,13 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.15.8] - 2026-10-08
+
+### Fixed
+- **알바 급여 계산기 차트 툴팁 텍스트 미노출 버그 수정 및 전 차트 툴팁 안정화**:
+  - `PartTimeChartDashboard.tsx`: Recharts 기본 툴팁의 내부 텍스트 색상 누락으로 발생하던 어두운 배경 위 텍스트 미노출 문제를 연봉 계산기 검증 규격과 동일한 고대비 커스텀 툴팁(`content={...}`)으로 전면 교체하여 해결.
+  - 전 계산기 차트(`LoanChartDashboard.tsx`, `GoalChartCard.tsx`, `CashFlowCharts.tsx`, `ChartDashboard.tsx`, `PartTimeChartDashboard.tsx`)의 `<Tooltip>`에 `wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}`를 일괄 적용하여 호버 깜빡임(flickering) 및 레이어 충돌 원천 차단.
+
 ## [1.15.7] - 2026-10-08
 
 ### Refactor

@@ -106,6 +106,7 @@ export const GoalChartCard: React.FC<GoalChartCardProps> = ({ breakdown, targetA
               tickFormatter={formatYAxis}
             />
             <Tooltip
+              wrapperStyle={{ zIndex: 50, pointerEvents: 'none' }}
               content={({ active, payload, label }) => {
                 if (!active || !payload || payload.length === 0) return null;
                 const data = payload[0].payload;
