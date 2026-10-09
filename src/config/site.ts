@@ -16,11 +16,12 @@ export const siteConfig = {
   copyright: '© sosoFactory',
   
   // 버전 정보
-  version: '1.15.10',
+  version: '1.15.11',
   
   // 링크
   links: {
-    github: 'https://github.com/sosoFactory',
+    hub: 'https://haksoo0918.github.io',
+    github: 'https://github.com/sosoFactory/smart-calculator-hub',
   },
 
   // 동적 브라우저 타이틀 헬퍼

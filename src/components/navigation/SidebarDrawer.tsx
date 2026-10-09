@@ -245,16 +245,9 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
       </nav>
 
       {/* 메뉴 목록 하단 PWA 설치 가이드 버튼 영역 (PRD 8.2 명세 준수) */}
-      <div className="p-3 pb-0">
+      <div className="p-3 pb-4">
         <PWAInstallButton variant="sidebar" onActionComplete={onCloseMobile} />
       </div>
-
-      {/* 하단 버전 및 카피라이트 푸터 */}
-      <footer className="p-3 mt-3 border-t border-ghost-hairline dark:border-ghost-dark-hairline bg-ghost-surface-deep/50 dark:bg-ghost-dark-canvas/60 text-center">
-        <p className="text-[11px] text-ghost-ink-stone dark:text-ghost-dark-ink-stone font-medium">
-          {siteConfig.copyright} • {siteConfig.shortName} v{siteConfig.version}
-        </p>
-      </footer>
     </div>
   );
 

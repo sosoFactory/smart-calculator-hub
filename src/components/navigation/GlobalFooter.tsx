@@ -101,6 +101,14 @@ export const GlobalFooter: React.FC = () => {
               홈 (대시보드)
             </Link>
             <a
+              href={siteConfig.links.hub}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-ghost-ink-soft dark:text-ghost-dark-ink-soft hover:text-black dark:hover:text-white transition-colors font-medium"
+            >
+              <span>HS HUB</span>
+            </a>
+            <a
               href={siteConfig.links.github}
               target="_blank"
               rel="noopener noreferrer"

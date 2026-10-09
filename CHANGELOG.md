@@ -3,6 +3,13 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.15.11] - 2026-10-09
+
+### Refactor
+- **좌측 네비게이션 중복 푸터 제거 및 글로벌 푸터 외부 허브 랜딩(`HS HUB`) 링크 연결**:
+  - **사이드바 중복 푸터 제거 ([SidebarDrawer.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/navigation/SidebarDrawer.tsx))**: 메인 뷰포트 하단에 `GlobalFooter`가 정상 탑재됨에 따라 좌측 사이드바 하단에 중복 노출되던 카피라이트/버전 푸터 영역을 제거하고, PWA 설치 버튼 하단 여백(`pb-4`)을 정돈하여 Ghost 미니멀 디자인 완성도 제고.
+  - **글로벌 푸터 공식 허브 링크 연동 ([GlobalFooter.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/navigation/GlobalFooter.tsx), [site.ts](file:///c:/Users/hakso/_work/smart-calculator/www/src/config/site.ts))**: 제작자 공식 프로젝트 허브인 `HS HUB` (https://haksoo0918.github.io) 링크를 하단 글로벌 푸터에 추가하고, GitHub 링크(https://github.com/sosoFactory/smart-calculator-hub)와 함께 일관된 외부 시맨틱 링크 체계 구축.
+
 ## [1.15.10] - 2026-10-08
 
 ### Feat

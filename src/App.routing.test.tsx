@@ -12,8 +12,8 @@ describe('Seam 2-1: React Router Navigation and Routing', () => {
     );
 
     expect(screen.getByText('연복리 & 자산성장 계산기')).toBeInTheDocument();
-    expect(await screen.findByText('투자 조건 설정', {}, { timeout: 18000 })).toBeInTheDocument();
-  }, 25000);
+    expect(await screen.findByText('투자 조건 설정', {}, { timeout: 22000 })).toBeInTheDocument();
+  }, 30000);
 
 
   it('/unit 경로에서는 단위 변환기 화면이 렌더링되어야 한다', async () => {

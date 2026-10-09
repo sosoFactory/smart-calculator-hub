@@ -9,8 +9,10 @@ describe('siteConfig Tests', () => {
     expect(siteConfig.shortNameEn).toBe('Smart Calculator');
     expect(siteConfig.company).toBe('sosoFactory');
     expect(siteConfig.copyright).toBe('© sosoFactory');
-    expect(siteConfig.version).toBe('1.15.10');
+    expect(siteConfig.version).toBe('1.15.11');
     expect(siteConfig.url).toBe('https://soso-calculator.vercel.app');
+    expect(siteConfig.links.hub).toBe('https://haksoo0918.github.io');
+    expect(siteConfig.links.github).toBe('https://github.com/sosoFactory/smart-calculator-hub');
   });
 
   it('getTitle 헬퍼가 페이지 제목을 일관된 포맷으로 반환해야 한다', () => {

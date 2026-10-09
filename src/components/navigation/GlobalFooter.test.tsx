@@ -35,12 +35,17 @@ describe('GlobalFooter Tests', () => {
     expect(salaryLink).toHaveAttribute('href', '/salary');
   });
 
-  it('GitHub 외부 링크가 올바른 rel 속성과 함께 제공되어야 한다', () => {
+  it('HS HUB 및 GitHub 외부 링크가 올바른 href 및 rel 속성과 함께 제공되어야 한다', () => {
     render(
       <MemoryRouter>
         <GlobalFooter />
       </MemoryRouter>
     );
+
+    const hubLink = screen.getByRole('link', { name: /HS HUB/i });
+    expect(hubLink).toHaveAttribute('href', siteConfig.links.hub);
+    expect(hubLink).toHaveAttribute('target', '_blank');
+    expect(hubLink).toHaveAttribute('rel', 'noopener noreferrer');
 
     const githubLink = screen.getByRole('link', { name: /GitHub/i });
     expect(githubLink).toHaveAttribute('href', siteConfig.links.github);
