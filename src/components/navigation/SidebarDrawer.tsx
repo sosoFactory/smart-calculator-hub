@@ -23,6 +23,7 @@ import {
   Flame,
   Star,
   CodeXml,
+  PiggyBank,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTitle } from '../ui/sheet';
 import { Button } from '../ui/button';
@@ -76,6 +77,8 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
         return <CalendarDays className={cls} />;
       case 'devtools':
         return <CodeXml className={cls} />;
+      case 'severance':
+        return <PiggyBank className={cls} />;
       default:
         return <Calculator className={cls} />;
     }

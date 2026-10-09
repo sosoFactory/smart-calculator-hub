@@ -1,6 +1,6 @@
 # [PRD] 모바일 우선 스마트 멀티 계산기 플랫폼 (Smart Calculator Hub)
 
-> **버전**: v1.15.11  
+> **버전**: v1.16.0  
 > **최종 갱신일**: 2026-10-09  
 > **제작 및 브랜딩**: © sosoFactory  
 > **기본 원칙**: Ghost 디자인 시스템 원칙 준수, 전역 프리텐다드(Pretendard Variable) 단일 폰트 원칙, 모바일 퍼스트(Mobile-First), 일관된 UI/UX, 100% 오프라인 동작(PWA), WCAG 웹 접근성 준수, 미니멀 네비게이션(불필요한 라벨/뱃지 배제)
@@ -32,7 +32,8 @@
    - 3.9 [생활/일정] 날짜 & 디데이 계산기 (`DateApp` - 구현 완료)
    - 3.10 [금융/투자] 파이어 현금흐름 계산기 (`CashFlowApp` - 구현 완료)
    - 3.11 [개발/도구] 개발자 도구 (`DevToolsApp` - 구현 완료, /devtools)
-   - 3.12 향후 확장 예정 모듈 및 TODO (Roadmap)
+   - 3.12 [금융/급여] 퇴직금 & 퇴직소득세 계산기 (`SeveranceApp` - 신규 개발, /severance)
+   - 3.13 향후 확장 예정 모듈 및 TODO (Roadmap)
 4. [데이터 모델 (Data Models)](#4-데이터-모델-data-models)
    - 4.0 사이트 전역 설정 모델 (`src/config/site.ts`)
    - 4.1 글로벌 네비게이션 모델 (`src/types/navigation.ts`)
@@ -46,6 +47,7 @@
    - 4.9 알바 급여 & 주휴수당 데이터 모델 (`src/types/partTime.ts`)
    - 4.10 날짜 & 디데이 계산 데이터 모델 (`src/types/date.ts`)
    - 4.11 파이어 현금흐름 데이터 모델 (`src/types/cashFlow.ts`)
+   - 4.12 퇴직금 및 퇴직소득세 데이터 모델 (`src/types/severance.ts`)
 5. [기술 스택 및 아키텍처](#5-기술-스택-및-아키텍처)
 6. [비기능적 요구사항 및 품질 검증 기준](#6-비기능적-요구사항-및-품질-검증-기준)
 7. [검색엔진 최적화 (SEO) 전략 및 웹 분석 명세](#7-검색엔진-최적화-seo-전략-및-웹-분석-명세)
@@ -452,6 +454,7 @@ src/
   8. **환율 계산기 (`/exchange`)**: `from`(출발통화), `to`(도착통화), `amount`(금액), `spread`(우대율)
   9. **날짜 & 디데이 (`/date`)**: `tab`(활성탭: dday/diff/age), `target`(기준일), `unit`(연산단위), `amount`(연산수량), `op`(연산방향), `start`(시작일), `end`(종료일), `birth`(생년월일)
   10. **파이어 현금흐름 (`/cashflow`)**: `net`(목표월수령액), `rate`(수익률), `tax`(과세유형)
+  11. **퇴직금 & 퇴직소득세 (`/severance`)**: `start`(입사일), `end`(퇴사일), `salary`(3개월평균급여), `bonus`(연간상여금), `leave`(연간연차수당)
 
 ---
 
@@ -749,7 +752,65 @@ src/
   - URL 딥링크 파라미터 동기화: `?tab=base|css|color` 쿼리를 통해 활성 탭 즉시 공유 및 상태 복원.
   - 최하단 `InfoCard`: 진법 체계(2/8/10/16진수 표기법), 웹 표준 CSS 단위 가이드(rem과 em의 차이), 디지털 색상 모델(RGB vs HSL) 가이드.
 
-### 3.12 향후 확장 예정 모듈 및 TODO (Roadmap)
+### 3.12 [금융/급여] 퇴직금 & 퇴직소득세 계산기 (`SeveranceApp` - 신규 개발, /severance)
+- **기능 요약**:
+  - 입사일과 퇴사일 기반 총 재직일수 및 근속기간(N년 N개월, 총 N일) 자동 산출.
+  - 근로기준법 및 근로자퇴직급여 보장법 제8조에 따른 **법정 퇴직금(세전)** 산정.
+  - 2024~2026 현행 소득세법 기준 **퇴직소득세(소득세 + 지방소득세 10%)** 및 **세후 실수령 퇴직금** 정밀 산정.
+  - IRP(개인형 퇴직연금) 계좌 이전 후 연금 수령 시 퇴직소득세 30%~40% 절세 혜택 시뮬레이션 제공.
+- **주요 입력 파라미터**:
+  - 입사일자 (`startDate`): YYYY-MM-DD (기본값: 오늘 기준 3년 전)
+  - 퇴사일자 (`endDate`): YYYY-MM-DD (기본값: 오늘)
+  - 최근 3개월 월 평균 기본급여 (`baseSalary`): 원 단위 (빠른 프리셋: `+10만`, `+50만`, `+100만`, `+300만`, `+500만`, 기본 3,000,000원)
+  - 연간 상여금 총액 (`annualBonus`): 원 단위 (선택 입력, 3/12 분할 자동 산입, 기본 0원)
+  - 연간 연차수당 총액 (`annualLeaveAllowance`): 원 단위 (선택 입력, 3/12 분할 자동 산입, 기본 0원)
+- **핵심 퇴직금 및 세무 산출 로직**:
+  1. **근속일수 및 요건 판정**:
+     - `재직일수 = (퇴사일 - 입사일) + 1` (근무 시작일부터 마지막 근무일까지)
+     - 1년 미만(365일 미만) 시 법정 퇴직금 미지급 대상 경고 뱃지 및 안내 문구 노출.
+     - 근속연수(세법상): 1년 미만 단수는 올림 처리 (`Math.ceil(재직일수 / 365)`).
+  2. **1일 평균임금 산정**:
+     - `3개월간 임금 총액 = (월 평균 급여 × 3) + (연간 상여금 × 3/12) + (연간 연차수당 × 3/12)`
+     - `1일 평균임금 = 3개월간 임금 총액 / 3개월 총 일수` (약 91일 또는 실제 일수 기준)
+  3. **법정 퇴직금 총액 (세전)**:
+     - `퇴직금 = 1일 평균임금 × 30일 × (재직일수 / 365)`
+  4. **현행 퇴직소득세 정밀 계산**:
+     - **근속연수공제**:
+       - 5년 이하: `100만원 × 근속연수`
+       - 5년 초과 ~ 10년 이하: `500만원 + 200만원 × (근속연수 - 5년)`
+       - 10년 초과 ~ 20년 이하: `1,500만원 + 250만원 × (근속연수 - 10년)`
+       - 20년 초과: `4,000만원 + 300만원 × (근속연수 - 20년)`
+     - **환산급여**: `(퇴직소득 - 근속연수공제) ÷ 근속연수 × 12`
+     - **환산급여공제**:
+       - 800만원 이하: 100%
+       - 800만원 초과 ~ 7,000만원 이하: 800만원 + (환산급여 - 800만원) × 60%
+       - 7,000만원 초과 ~ 1.5억원 이하: 4,520만원 + (환산급여 - 7,000만원) × 55%
+       - 1.5억원 초과 ~ 3억원 이하: 8,920만원 + (환산급여 - 1.5억원) × 45%
+       - 3억원 초과: 1억 5,670만원 + (환산급여 - 3억원) × 35%
+     - **퇴직소득 과세표준**: `환산급여 - 환산급여공제`
+     - **환산산출세액**: 소득세 기본 8단계 누진세율(6% ~ 45%) 적용
+     - **퇴직소득 산출세액**: `환산산출세액 ÷ 12 × 근속연수`
+     - **지방소득세**: `산출세액 × 10%`
+     - **총 퇴직소득세**: `산출세액 + 지방소득세`
+     - **실수령 퇴직금**: `퇴직금 총액 - 총 퇴직소득세`
+     - **실효세율**: `(총 퇴직소득세 ÷ 퇴직금 총액) × 100` (%)
+  5. **IRP(개인형 퇴직연금) 이전 시 절세 혜택 분석**:
+     - 일시금 수령 시: 세금 100% 전액 징수
+     - IRP 연금 수령(만 55세 이후):
+       - 10년 이하 수령: 퇴직소득세 30% 감면 (실제 세금 70% 납부 ➔ 절세액 = 세금 × 30%)
+       - 10년 초과 수령: 퇴직소득세 40% 감면 (실제 세금 60% 납부 ➔ 절세액 = 세금 × 40%)
+- **UI/UX 구조 및 결과 화면**:
+  - 상단: `ResultHeroCard`로 **세후 예상 실수령 퇴직금** 대형 노출 및 원클릭 복사 버튼.
+  - 서브 지표: `SubMetricCard` 4개 그리드 (세전 퇴직금 총액, 총 퇴직소득세(실효세율), 1일 평균임금, 총 재직기간 N년 N개월/총 N일).
+  - IRP 절세 비교 카드: 일반 수령 vs IRP 연금 수령 시 세금 및 추가 절세 금액 시각 비교.
+  - 퇴직소득세 상세 공제 내역 표/아코디언 (`SeveranceBreakdownTable`):
+    - 근속연수공제, 환산급여, 환산급여공제, 과세표준, 환산산출세액, 소득세, 지방소득세 상세 표시.
+  - 최하단 `InfoCard`:
+    - 법정 퇴직금 지급 요건 (1주 15시간 이상, 1년 이상 계속 근로).
+    - 퇴직금 지급 기한 (퇴사일로부터 14일 이내 지급 의무, 위반 시 3년 이하 징역 또는 3천만원 이하 벌금, 지연이자 연 20%).
+    - IRP 의무 이전 예외 규정 (만 55세 이후 퇴직, 퇴직금 300만원 이하 등).
+
+### 3.13 향후 확장 예정 모듈 및 TODO (Roadmap)
 - **[TODO] BMI 종합 헬스케어 확장 (기초대사량 BMR & 하루 권장 칼로리 TDEE)**:
   - 활동량 수준(좌식 생활, 가벼운 활동, 보통 활동, 격렬한 활동 등) 선택 옵션 추가.
   - Mifflin-St Jeor 공식을 적용한 기초대사량(BMR) 산출.
@@ -1269,6 +1330,57 @@ export interface CashFlowCalculationResult {
   requiredCapital: number;     // 필요 총 은퇴 원금 (원)
   isComprehensiveTaxWarning: boolean; // 연 세전 2,000만원 초과 여부
   sensitivityList: SensitivityItem[]; // 2% ~ 10% 민감도 분석 리스트
+}
+```
+
+### 4.12 퇴직금 및 퇴직소득세 데이터 모델 (`src/types/severance.ts`)
+```typescript
+export interface SeveranceInput {
+  startDate: string;              // 입사일 (YYYY-MM-DD)
+  endDate: string;                // 퇴사일 (YYYY-MM-DD)
+  baseSalary: number;             // 최근 3개월 월 평균 급여 (원)
+  annualBonus: number;            // 최근 1년 연간 상여금 총액 (원, 기본 0원)
+  annualLeaveAllowance: number;   // 최근 1년 연간 연차수당 총액 (원, 기본 0원)
+}
+
+export interface SeveranceTaxDetail {
+  serviceYears: number;           // 세법상 근속연수 (년)
+  serviceDeduction: number;       // 근속연수공제 (원)
+  convertedSalary: number;        // 환산급여 (원)
+  convertedDeduction: number;     // 환산급여공제 (원)
+  taxBase: number;                // 퇴직소득 과세표준 (원)
+  convertedTaxAmount: number;     // 환산산출세액 (원)
+  calculatedTax: number;          // 퇴직소득 산출세액 (원)
+  localTax: number;               // 지방소득세 (10%) (원)
+  totalTax: number;               // 총 퇴직소득세 (소득세 + 지방세) (원)
+  effectiveTaxRate: number;       // 실효세율 (%)
+}
+
+export interface IrpComparison {
+  lumpSumTax: number;             // 일시금 수령 시 세금 (총 퇴직소득세)
+  irpTax10Years: number;          // IRP 10년 이하 연금 수령 시 세금 (30% 감면)
+  irpTaxOver10Years: number;      // IRP 10년 초과 연금 수령 시 세금 (40% 감면)
+  taxSavings10Years: number;      // 10년 이하 절세액
+  taxSavingsOver10Years: number;  // 10년 초과 절세액
+}
+
+export interface SeveranceResult {
+  // 1. 근속 기간 지표
+  totalDays: number;              // 총 재직일수 (일)
+  formattedServicePeriod: string; // "N년 M개월 D일"
+  isEligible: boolean;            // 법정 퇴직금 수급 요건 충족 여부 (1년 이상, 365일 이상)
+
+  // 2. 임금 및 퇴직금 (세전)
+  dailyAverageWage: number;       // 1일 평균임금 (원)
+  threeMonthsTotalPay: number;    // 3개월간 임금 총액 (기본급여 + 상여금3/12 + 연차수당3/12)
+  grossSeverancePay: number;      // 세전 법정 퇴직금 총액 (원)
+
+  // 3. 세금 및 실수령액 (세후)
+  taxDetail: SeveranceTaxDetail;  // 퇴직소득세 상세 공제 내역
+  netSeverancePay: number;        // 세후 예상 실수령 퇴직금 (원)
+
+  // 4. IRP 연금 수령 절세 비교
+  irpComparison: IrpComparison;
 }
 ```
 

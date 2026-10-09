@@ -33,6 +33,9 @@ describe('GlobalFooter Tests', () => {
 
     const salaryLink = screen.getByRole('link', { name: /연봉/i });
     expect(salaryLink).toHaveAttribute('href', '/salary');
+
+    const severanceLink = screen.getByRole('link', { name: /퇴직금/i });
+    expect(severanceLink).toHaveAttribute('href', '/severance');
   });
 
   it('HS HUB 및 GitHub 외부 링크가 올바른 href 및 rel 속성과 함께 제공되어야 한다', () => {

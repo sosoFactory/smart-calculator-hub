@@ -3,6 +3,21 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.16.0] - 2026-10-09
+
+### Feat
+- **신규 계산기 모듈 퇴직금 & 퇴직소득세 계산기 (`SeveranceApp`, `/severance`) 추가**:
+  - **법정 퇴직금 산정 로직 탑재**: 입사일 및 퇴사일 기반 총 재직일수(`totalDays`), 근속기간(N년 N개월 D일) 및 1년(365일) 이상 수급 자격을 자동 판정하고, 최근 3개월 평균 기본급여와 연간 상여금/연차수당(각 3/12 산입) 기반 1일 평균임금 및 세전 법정 퇴직금을 산출.
+  - **2024~2026 현행 소득세법 기준 퇴직소득세 및 세후 실수령액 산정**: 근속연수공제(5년/10년/20년 구간), 환산급여 및 환산급여공제(800만/7천만/1.5억/3억 구간), 과세표준, 기본 8단계 누진세율(6%~45%), 지방소득세(10%)를 정밀 반영하여 실효세율(%)과 세후 실수령 퇴직금을 도출.
+  - **IRP(개인형 퇴직연금) 이전 절세 혜택 분석**: 일반 일시금 수령 vs IRP 10년 이하 연금 수령(30% 감면) vs 10년 초과 연금 수령(40% 감면) 간 납부 세금과 추가 절세액을 한눈에 비교할 수 있는 시각 카드 제공.
+  - **퇴직소득세 상세 공제 산출 내역 표 (`SeveranceBreakdownTable`)**: 세법상 근속연수부터 환산급여, 공제액, 과세표준, 산출세액 단계별 내역을 펼침/접힘으로 투명하게 확인 가능.
+  - **URL 딥링크 동기화 (`/severance`)**: `?start=...&end=...&salary=...&bonus=...&leave=...` 파라미터를 실시간 양방향 동기화하여 플로팅 공유 버튼(FAB)을 통한 모바일/웹 원터치 조건 공유 지원.
+  - **글로벌 통합 및 SEO DoD 준수**:
+    - [SidebarDrawer.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/navigation/SidebarDrawer.tsx), [HomeApp.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/home/HomeApp.tsx)에 `PiggyBank` 아이콘 연동 및 가나다 한국어 사전순 자동 배치.
+    - [GlobalFooter.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/navigation/GlobalFooter.tsx) 금융 카테고리에 시맨틱 링크 추가.
+    - [sitemap.xml](file:///c:/Users/hakso/_work/smart-calculator/www/public/sitemap.xml)에 `/severance` 엔드포인트 및 최신 수정일(`<lastmod>2026-10-09</lastmod>`) 등록.
+    - [PageMetaUpdater.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/components/common/PageMetaUpdater.tsx)를 통해 `FinanceApplication` 및 `BreadcrumbList` 구조화 데이터(JSON-LD) 자동 주입.
+
 ## [1.15.11] - 2026-10-09
 
 ### Refactor

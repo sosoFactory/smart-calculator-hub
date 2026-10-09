@@ -25,6 +25,7 @@ import {
   Flame,
   Star,
   CodeXml,
+  PiggyBank,
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
@@ -96,6 +97,8 @@ export const HomeApp: React.FC = () => {
         return <CalendarDays className={iconCls} />;
       case 'devtools':
         return <CodeXml className={iconCls} />;
+      case 'severance':
+        return <PiggyBank className={iconCls} />;
       default:
         return <Calculator className={iconCls} />;
     }

@@ -51,6 +51,9 @@ const DateApp = lazy(() =>
 const DevToolsApp = lazy(() =>
   import('./calculators/dev-tools/DevToolsApp').then((m) => ({ default: m.DevToolsApp }))
 );
+const SeveranceApp = lazy(() =>
+  import('./calculators/severance-calculator/SeveranceApp').then((m) => ({ default: m.SeveranceApp }))
+);
 
 const CalculatorLoadingFallback = () => (
   <div className="w-full py-20 flex flex-col items-center justify-center space-y-3">
@@ -143,6 +146,10 @@ export const App: React.FC = () => {
                 <Route
                   path="/devtools"
                   element={<DevToolsApp />}
+                />
+                <Route
+                  path="/severance"
+                  element={<SeveranceApp />}
                 />
                 {/* 정의되지 않은 경로는 메인 홈 대시보드로 리다이렉트 */}
                 <Route path="*" element={<Navigate to="/" replace />} />

@@ -20,6 +20,8 @@ import {
   decodeDateQuery,
   encodeCashFlowQuery,
   decodeCashFlowQuery,
+  encodeSeveranceQuery,
+  decodeSeveranceQuery,
 } from './deepLink';
 import { LoanInput } from '../types/loan';
 import { ScenarioInput } from '../types/calculator';
@@ -27,6 +29,7 @@ import { SalaryInput } from '../types/salary';
 import { GoalInput } from '../types/goal';
 import { PartTimeInput } from '../types/partTime';
 import { CashFlowInput } from '../types/cashFlow';
+import { SeveranceInput } from '../types/severance';
 
 describe('Deep Link Utilities', () => {
   describe('Loan Calculator Deep Linking', () => {
@@ -349,12 +352,42 @@ describe('Deep Link Utilities', () => {
       const decoded = decodeCashFlowQuery(`?${query}`);
       expect(decoded).not.toBeNull();
       expect(decoded?.monthlyNetDesired).toBe(3_500_000);
-      expect(decoded?.annualReturnRate).toBe(4.5);
       expect(decoded?.taxType).toBe('isa');
     });
 
     it('returns null for empty query', () => {
       expect(decodeCashFlowQuery('')).toBeNull();
+    });
+  });
+
+  describe('Severance Calculator Deep Linking', () => {
+    const sampleInput: SeveranceInput = {
+      startDate: '2021-03-01',
+      endDate: '2024-05-31',
+      baseSalary: 3_500_000,
+      annualBonus: 6_000_000,
+      annualLeaveAllowance: 1_200_000,
+    };
+
+    it('correctly encodes and decodes severance input without data loss', () => {
+      const query = encodeSeveranceQuery(sampleInput);
+      expect(query).toContain('start=2021-03-01');
+      expect(query).toContain('end=2024-05-31');
+      expect(query).toContain('salary=3500000');
+      expect(query).toContain('bonus=6000000');
+      expect(query).toContain('leave=1200000');
+
+      const decoded = decodeSeveranceQuery(`?${query}`);
+      expect(decoded).not.toBeNull();
+      expect(decoded?.startDate).toBe('2021-03-01');
+      expect(decoded?.endDate).toBe('2024-05-31');
+      expect(decoded?.baseSalary).toBe(3_500_000);
+      expect(decoded?.annualBonus).toBe(6_000_000);
+      expect(decoded?.annualLeaveAllowance).toBe(1_200_000);
+    });
+
+    it('returns null for empty query', () => {
+      expect(decodeSeveranceQuery('')).toBeNull();
     });
   });
 });

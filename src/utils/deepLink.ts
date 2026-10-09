@@ -8,6 +8,7 @@ import { UnitCategory } from '../types/unit';
 import { DateTabType, DateCalcOp, DateCalcUnit } from '../types/date';
 import { CashFlowInput, CashFlowTaxType } from '../types/cashFlow';
 import { DevToolsTabType } from '../types/devTools';
+import { SeveranceInput } from '../types/severance';
 
 /**
  * 브라우저 히스토리 스택을 오염시키지 않고 주소창 URL 쿼리를 실시간 갱신
@@ -598,6 +599,50 @@ export const decodeDevToolsQuery = (search: string): DevToolsDeepLinkParams | nu
   const result: DevToolsDeepLinkParams = {};
   if (['base', 'css', 'color'].includes(tab)) {
     result.tab = tab;
+  }
+
+  return Object.keys(result).length > 0 ? result : null;
+};
+
+// ==========================================
+// 12. 퇴직금 계산기 (/severance)
+// ==========================================
+
+export const encodeSeveranceQuery = (input: SeveranceInput): string => {
+  const p = new URLSearchParams();
+  if (input.startDate) p.set('start', input.startDate);
+  if (input.endDate) p.set('end', input.endDate);
+  if (input.baseSalary > 0) p.set('salary', String(input.baseSalary));
+  if (input.annualBonus > 0) p.set('bonus', String(input.annualBonus));
+  if (input.annualLeaveAllowance > 0) p.set('leave', String(input.annualLeaveAllowance));
+  return p.toString();
+};
+
+export const decodeSeveranceQuery = (search: string): Partial<SeveranceInput> | null => {
+  if (!search) return null;
+  const p = new URLSearchParams(search);
+  const start = p.get('start');
+  const end = p.get('end');
+  const salaryStr = p.get('salary');
+  const bonusStr = p.get('bonus');
+  const leaveStr = p.get('leave');
+
+  if (!start && !end && !salaryStr && !bonusStr && !leaveStr) return null;
+
+  const result: Partial<SeveranceInput> = {};
+  if (start) result.startDate = start;
+  if (end) result.endDate = end;
+  if (salaryStr) {
+    const s = Number(salaryStr);
+    if (!isNaN(s) && s >= 0) result.baseSalary = s;
+  }
+  if (bonusStr) {
+    const b = Number(bonusStr);
+    if (!isNaN(b) && b >= 0) result.annualBonus = b;
+  }
+  if (leaveStr) {
+    const l = Number(leaveStr);
+    if (!isNaN(l) && l >= 0) result.annualLeaveAllowance = l;
   }
 
   return Object.keys(result).length > 0 ? result : null;

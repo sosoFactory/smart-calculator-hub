@@ -11,7 +11,8 @@ export type CalculatorId =
   | 'goal'
   | 'cashflow'
   | 'date'
-  | 'devtools';
+  | 'devtools'
+  | 'severance';
 
 export type CalculatorCategory = 'finance' | 'lifestyle' | 'global';
 
@@ -123,6 +124,15 @@ export const CALCULATORS_LIST: CalculatorItem[] = [
     category: 'finance',
     status: 'active',
     keywords: ['연봉', '월급', '실수령액', '4대보험', '국민연금', '건강보험', '고용보험', '소득세', '식대', '비과세', '급여', '세금'],
+  },
+  {
+    id: 'severance',
+    name: '퇴직금 & 퇴직소득세 계산기',
+    shortName: '퇴직금 계산기',
+    description: '입·퇴사일 기준 재직일수 산정, 법정 퇴직금, 2026년 퇴직소득세 및 IRP 절세 비교',
+    category: 'finance',
+    status: 'active',
+    keywords: ['퇴직금', '퇴직소득세', '실수령액', 'irp', '평균임금', '근속연수', '퇴직연금', '퇴직', '사직', '퇴사'],
   },
   {
     id: 'cashflow',

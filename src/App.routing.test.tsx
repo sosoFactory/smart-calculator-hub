@@ -132,5 +132,17 @@ describe('Seam 2-1: React Router Navigation and Routing', () => {
     expect(await screen.findByText('진수 변환', {}, { timeout: 10000 })).toBeInTheDocument();
     expect(await screen.findByText('2진수 (Binary)', {}, { timeout: 10000 })).toBeInTheDocument();
   }, 15000);
+
+  it('/severance 경로에서는 퇴직금 계산기 화면이 렌더링되어야 한다', async () => {
+    render(
+      <MemoryRouter initialEntries={['/severance']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    expect(screen.getAllByText('퇴직금 & 퇴직소득세 계산기').length).toBeGreaterThanOrEqual(1);
+    expect(await screen.findByText('근무 기간 및 임금 조건', {}, { timeout: 10000 })).toBeInTheDocument();
+    expect(await screen.findByText('예상 실수령 퇴직금 (세후)', {}, { timeout: 10000 })).toBeInTheDocument();
+  }, 15000);
 });
 
