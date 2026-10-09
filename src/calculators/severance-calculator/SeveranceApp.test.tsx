@@ -17,22 +17,19 @@ describe('SeveranceApp Component Tests', () => {
     // 서브 메트릭 지표
     expect(screen.getByText('세전 퇴직금')).toBeInTheDocument();
     expect(screen.getByText('퇴직소득세')).toBeInTheDocument();
-    expect(screen.getByText('1일 평균임금')).toBeInTheDocument();
     expect(screen.getByText('총 재직기간')).toBeInTheDocument();
 
     // IRP 절세 카드
-    expect(screen.getByText('IRP(퇴직연금) 이전 시 절세 혜택')).toBeInTheDocument();
+    expect(screen.getByText('IRP(퇴직연금) 계좌 수령 시 절세 혜택')).toBeInTheDocument();
 
     // 하단 정보 가이드 카드
     expect(screen.getByText('퇴직금 & 퇴직소득세 법률·세무 상식')).toBeInTheDocument();
   });
 
-  it('상세 내역 펼치기 클릭 시 세법상 근속연수와 과세표준이 노출된다', () => {
+  it('퇴직소득세 산출 명세표에 세법상 근속연수와 과세표준이 노출된다', () => {
     render(<SeveranceApp />);
 
-    const toggleButton = screen.getByRole('button', { name: /퇴직소득세 단계별 상세 산출 내역/i });
-    fireEvent.click(toggleButton);
-
+    expect(screen.getByText('퇴직소득세 단계별 산출 명세표')).toBeInTheDocument();
     expect(screen.getByText('세법상 근속연수')).toBeInTheDocument();
     expect(screen.getByText('근속연수공제')).toBeInTheDocument();
     expect(screen.getByText('퇴직소득 과세표준')).toBeInTheDocument();

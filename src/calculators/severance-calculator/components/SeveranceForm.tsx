@@ -1,11 +1,11 @@
 import React from 'react';
-import { Calendar, RotateCcw, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { SeveranceInput } from '../../../types/severance';
 import { calculateServicePeriod } from '../../../utils/severanceCalculator';
 import { NumericInput } from '../../../components/ui/numeric-input';
 import { DatePicker } from '../../../components/ui/date-picker';
 import { SelectableChip } from '../../../components/ui/selectable-chip';
-import { Button } from '../../../components/ui/button';
+import { FormHeader } from '../../../components/common/FormHeader';
 import { formatKoreanCurrency } from '../../../utils/formatters';
 
 interface SeveranceFormProps {
@@ -13,6 +13,14 @@ interface SeveranceFormProps {
   onChange: (input: SeveranceInput) => void;
   onReset: () => void;
 }
+
+const SALARY_PRESETS = [
+  { label: '+10만', val: 100_000 },
+  { label: '+50만', val: 500_000 },
+  { label: '+100만', val: 1_000_000 },
+  { label: '+300만', val: 3_000_000 },
+  { label: '+500만', val: 5_000_000 },
+];
 
 export const SeveranceForm: React.FC<SeveranceFormProps> = ({
   input,
@@ -36,38 +44,23 @@ export const SeveranceForm: React.FC<SeveranceFormProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-ghost-dark-surface rounded-2xl border border-ghost-hairline dark:border-ghost-dark-hairline p-5 sm:p-6 shadow-2xs space-y-6 transition-colors">
-      {/* 폼 헤더 */}
-      <div className="flex items-center justify-between pb-4 border-b border-ghost-hairline dark:border-ghost-dark-hairline">
-        <div className="space-y-1">
-          <h2 className="text-base sm:text-lg font-bold text-ghost-ink dark:text-ghost-dark-ink flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-ghost-ink-mute dark:text-ghost-dark-ink-mute" />
-            근무 기간 및 임금 조건
-          </h2>
-          <p className="text-xs text-ghost-ink-mute dark:text-ghost-dark-ink-mute">
-            입·퇴사일과 최근 3개월 평균 급여를 입력하세요.
-          </p>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onReset}
-          className="h-8 px-2.5 text-xs text-ghost-ink-stone hover:text-ghost-ink dark:hover:text-ghost-dark-ink gap-1.5"
-          title="기본값으로 초기화"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>초기화</span>
-        </Button>
-      </div>
+    <div className="@container bg-white dark:bg-ghost-dark-surface p-5 sm:p-6 rounded-[24px] border border-[#e5e7eb] dark:border-ghost-dark-hairline shadow-sm transition-colors space-y-5 sm:space-y-6">
+      {/* 1. 표준 공통 폼 헤더 */}
+      <FormHeader
+        badge="퇴직 설계"
+        title="근무 기간 및 임금 조건"
+        description="입·퇴사일과 최근 3개월 평균 급여를 입력하세요"
+        onReset={onReset}
+      />
 
-      {/* 1. 입사일 & 퇴사일 영역 */}
-      <div className="space-y-4">
+      {/* 2. 입사일 & 퇴사일 영역 */}
+      <div className="space-y-3.5">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           {/* 입사일 */}
           <div className="space-y-1.5">
             <label
               htmlFor="severance-start-date"
-              className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink"
+              className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base"
             >
               입사일자
             </label>
@@ -84,7 +77,7 @@ export const SeveranceForm: React.FC<SeveranceFormProps> = ({
           <div className="space-y-1.5">
             <label
               htmlFor="severance-end-date"
-              className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink"
+              className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base"
             >
               퇴사일자 (마지막 근무일)
             </label>
@@ -123,16 +116,16 @@ export const SeveranceForm: React.FC<SeveranceFormProps> = ({
         </div>
       </div>
 
-      {/* 2. 최근 3개월 월 평균 급여 */}
-      <div className="space-y-2 pt-1 border-t border-ghost-hairline/80 dark:border-ghost-dark-hairline/80">
+      {/* 3. 최근 3개월 월 평균 급여 */}
+      <div className="space-y-2 pt-1 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline">
         <div className="flex items-center justify-between">
           <label
             htmlFor="severance-base-salary"
-            className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink"
+            className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base"
           >
             최근 3개월 월 평균 급여 (기본급 + 고정수당)
           </label>
-          <span className="text-xs font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute">
+          <span className="text-xs font-medium text-[#64748b] dark:text-ghost-dark-ink-mute">
             {formatKoreanCurrency(input.baseSalary)}
           </span>
         </div>
@@ -144,21 +137,12 @@ export const SeveranceForm: React.FC<SeveranceFormProps> = ({
           thousandSeparator
           showClear
           placeholder="3,000,000"
-          className="h-10 text-right pr-8"
+          className="h-11 text-right pr-8"
         />
 
         {/* 빠른 금액 추가 칩 */}
         <div className="flex flex-wrap items-center gap-1.5 pt-1">
-          <span className="text-[11px] text-ghost-ink-stone dark:text-ghost-dark-ink-stone mr-1">
-            빠른 추가:
-          </span>
-          {[
-            { label: '+10만', val: 100_000 },
-            { label: '+50만', val: 500_000 },
-            { label: '+100만', val: 1_000_000 },
-            { label: '+300만', val: 3_000_000 },
-            { label: '+500만', val: 5_000_000 },
-          ].map((item) => (
+          {SALARY_PRESETS.map((item) => (
             <SelectableChip
               key={item.label}
               onClick={() => handleSalaryPreset(item.val)}
@@ -170,21 +154,21 @@ export const SeveranceForm: React.FC<SeveranceFormProps> = ({
         </div>
       </div>
 
-      {/* 3. 연간 상여금 총액 */}
-      <div className="space-y-2 pt-1 border-t border-ghost-hairline/80 dark:border-ghost-dark-hairline/80">
+      {/* 4. 연간 상여금 총액 */}
+      <div className="space-y-2 pt-1 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <label
               htmlFor="severance-annual-bonus"
-              className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink"
+              className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base"
             >
               최근 1년 연간 상여금 총액 (선택)
             </label>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute">
+            <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute">
               퇴직 전 1년간 지급된 정기 상여금의 3/12 자동 산입
             </p>
           </div>
-          <span className="text-xs font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute">
+          <span className="text-xs font-medium text-[#64748b] dark:text-ghost-dark-ink-mute">
             {input.annualBonus > 0 ? formatKoreanCurrency(input.annualBonus) : '0원'}
           </span>
         </div>
@@ -196,25 +180,25 @@ export const SeveranceForm: React.FC<SeveranceFormProps> = ({
           thousandSeparator
           showClear
           placeholder="0"
-          className="h-10 text-right pr-8"
+          className="h-11 text-right pr-8"
         />
       </div>
 
-      {/* 4. 연간 연차수당 총액 */}
-      <div className="space-y-2 pt-1 border-t border-ghost-hairline/80 dark:border-ghost-dark-hairline/80">
+      {/* 5. 연간 연차수당 총액 */}
+      <div className="space-y-2 pt-1 border-t border-[#e5e7eb] dark:border-ghost-dark-hairline">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <label
               htmlFor="severance-annual-leave"
-              className="text-xs font-semibold text-ghost-ink dark:text-ghost-dark-ink"
+              className="block text-xs font-bold text-[#112220] dark:text-ghost-dark-ink-base"
             >
               최근 1년 연차유급휴가 미사용수당 (선택)
             </label>
-            <p className="text-[11px] text-ghost-ink-mute dark:text-ghost-dark-ink-mute">
+            <p className="text-[11px] text-[#64748b] dark:text-ghost-dark-ink-mute">
               퇴직 전 지급받은 미사용 연차수당의 3/12 자동 산입
             </p>
           </div>
-          <span className="text-xs font-medium text-ghost-ink-mute dark:text-ghost-dark-ink-mute">
+          <span className="text-xs font-medium text-[#64748b] dark:text-ghost-dark-ink-mute">
             {input.annualLeaveAllowance > 0 ? formatKoreanCurrency(input.annualLeaveAllowance) : '0원'}
           </span>
         </div>
@@ -226,7 +210,7 @@ export const SeveranceForm: React.FC<SeveranceFormProps> = ({
           thousandSeparator
           showClear
           placeholder="0"
-          className="h-10 text-right pr-8"
+          className="h-11 text-right pr-8"
         />
       </div>
     </div>

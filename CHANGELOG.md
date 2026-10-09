@@ -3,6 +3,15 @@
 모든 주요 변경 사항은 본 문서에 기록됩니다.
 버전 체계는 [Semantic Versioning (SemVer)](https://semver.org/)을 준수합니다.
 
+## [1.16.1] - 2026-10-09
+
+### Refactor
+- **퇴직금 계산기 UI 공용 컴포넌트 표준화 및 원형 복제 프로토콜 반영**:
+  - **입력 폼 표준화 ([SeveranceForm.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/severance-calculator/components/SeveranceForm.tsx))**: 독자적 헤더를 공용 `FormHeader`로 일원화하고, 임의 텍스트 라벨을 제거하여 기존 폼들과 동일한 여백/스타일 적용.
+  - **결과 카드 규격화 ([SeveranceSummaryCards.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/severance-calculator/components/SeveranceSummaryCards.tsx))**: 최상단 `ResultHeroCard` Electric Lime 시그니처 뱃지 적용 및 서브 지표 3열(`SubMetricCard`) 그리드 표준화.
+  - **공용 테이블 컴포넌트 일원화 ([SeveranceBreakdownTable.tsx](file:///c:/Users/hakso/_work/smart-calculator/www/src/calculators/severance-calculator/components/SeveranceBreakdownTable.tsx))**: 임의 아코디언 레이아웃을 폐기하고 `Table` 기반 표준 명세표 및 `rounded-[24px]` 카드 컨테이너 적용.
+  - **개발 가이드 보강 ([GEMINI.md](file:///c:/Users/hakso/_work/smart-calculator/www/GEMINI.md))**: 신규 UI 제작 시 '원형 복제 원칙(Archetype-First)' 및 '시각적·구조적 동등성 검증 의무' 프로토콜 명시.
+
 ## [1.16.0] - 2026-10-09
 
 ### Feat

@@ -41,6 +41,9 @@ All AI coding assistants must strictly follow this protocol. Always consult appl
   - Before writing or modifying UI, always comply with `./ui-ux.md` (component layout & interaction) and `./ghost.design.md` (typography & color tokens), utilizing skills `.agents/skills/shadcn/SKILL.md` and `.agents/skills/frontend-design/SKILL.md`.
   - Mandatory reuse of standard components defined in `./ui-ux.md` instead of writing duplicate inline tags.
   - Never write raw Tailwind classes or inline styles into `./PRD.md`; keep PRD focused on functional logic and component architecture, and place UI/UX/layout specifications in `./ui-ux.md`.
+- **Archetype-First UI Development (원형 복제 원칙)**:
+  - 신규 UI/계산기 구현 시 백지에서 임의로 창작하는 행위를 금지한다.
+  - 기존 검증된 표준 페이지(`SalaryApp` 등)를 '기준 원형(Archetype)'으로 삼아 구조·컴포넌트를 복제한 뒤 도메인 로직만 치환한다.
 
 ### 1.4 Domain Governance & Rules
 - Consult domain rules before performing specialized tasks:
@@ -65,6 +68,7 @@ All AI coding assistants must strictly follow this protocol. Always consult appl
 4. **Step 4: Implement & Verify**
    - Implement according to the approved PRD using TDD.
    - Validate with all unit tests (`npm test -- --run`) and production build checks (`npm run build`).
+   - **시각적·구조적 동등성 검증**: 개발 서버에서 기준 원형 페이지와 신규 페이지를 렌더링하여 공용 컴포넌트, 여백, 레이아웃의 시각적 일치를 직접 확인한다.
 5. **Step 5: Review & Local Commit**
    - Share change summary with the user and commit locally only after confirmation. Never push automatically.
 
@@ -84,3 +88,4 @@ Whenever adding a new calculator, page, or route, the following must be satisfie
 2. **SEO Metadata & Structured Data**: Register route in `src/components/common/PageMetaUpdater.tsx` (`PAGE_SEO_DATA`) with unique `title`, `description`, `keywords`, and JSON-LD schema.
 3. **Semantic Crawling & Linking**: Ensure home cards (`HomeApp.tsx`), sidebar (`SidebarDrawer.tsx`), and footer render semantic `<Link>` / `<a href>` elements.
 4. **Canonical Tag Verification**: Ensure the dynamic canonical tag updates correctly upon route transition.
+5. **Visual & Structural Parity**: 기준 원형(`SalaryApp` 등)과 대조하여 공용 컴포넌트(`FormHeader`, `ResultHeroCard`, `SubMetricCard`, `Table`), 여백, 정보 구조의 일치를 개발 서버 화면에서 검증 완료.
